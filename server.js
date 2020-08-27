@@ -9,6 +9,13 @@ const app = express();
 
 
 
+// configuring routes
+const defaultRoutes = require('./routers/api/defaultRoute');
+const adminRoutes = require('./routers/api/adminRoute');
+const userRoutes = require('./routers/api/userRoute');
+
+
+
 
 // body parser middleware
 app.use(bodyParser.urlencoded({extended: false}));
@@ -28,8 +35,10 @@ mongoose
     .catch(err => console.log(err));
 
 
-
-
+// 
+app.use("/api", defaultRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/user', userRoutes);
 
 
 const port = process.env.PORT || 3000;

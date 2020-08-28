@@ -3,12 +3,13 @@ const randomString = require('randomstring');
 const bcrypt = require('bcryptjs');
 const keys = require('../../config/keys');
 const mailer = require('../../misc/mailer');
+const ErrorResponse = require('../../utils/errorResponse');
 // config = require('../../config/keys');
 
 
 module.exports = {
      // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::REGISTRATION:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-     register: async (req, res) =>{
+     register: async (req, res, next) =>{
         
 
         let { username, email, phoneNumber, password, confirmPassword } = req.body;
@@ -19,16 +20,12 @@ module.exports = {
             // If username is taken  
             if (user) {
                 console.log('username already exists')
-                res.json({success: false, message: "username already exits"})
+                next(new ErrorResponse("Username already exists", 400))   
             }else{
 
                  // Comparison of passwords
                 if (password !== confirmPassword) {
-                    return res.json({
-                        success: false,
-                        message: 'password and confirm password do not match'
-                    })
-              
+                    return next(new ErrorResponse("Passwords do not match", 400))              
                 }
                 
 
@@ -110,11 +107,7 @@ module.exports = {
     
                 // If the secretToken is invalid
                 if(!user) {
-                    res.json({
-                        success: false,
-                        message: 'your token is not valid'
-                    })
-                    return;
+                    return next(new ErrorResponse("Token is invalid", 400)) 
                 }
     
                 // If the secretToken is valid

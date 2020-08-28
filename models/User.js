@@ -5,10 +5,16 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique:true
     },
     email: {
         type: String,
+        unique: true,
+        match: [
+          /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+          'Please add a valid email'
+        ]
     },
     picture: {
         type: String,

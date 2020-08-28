@@ -35,7 +35,8 @@ mongoose
     .connect(db, {
         useFindAndModify: true,
         useUnifiedTopology: true,
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        useCreateIndex: true
     })
     .then(conn => console.log(`mongodb connected successfully:${conn.connection.host}`.cyan.underline.bold))
     .catch(err => console.log(`Server connection error: ${err.message}`.red));

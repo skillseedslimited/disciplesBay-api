@@ -2,6 +2,12 @@ const express =  require('express');
 const mongoose =  require('mongoose');
 const bodyParser = require('body-parser');
 
+const dotenv = require('dotenv').config();
+const colors = require('colors');
+
+// Global error handlers
+const errorHandler = require('./middlewares/error');
+
 const app = express();
 
 
@@ -39,8 +45,16 @@ mongoose
 app.use("/api", defaultRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
+app.use(errorHandler);
 
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`server running on port ${port}!!`));
+const server = app.listen(port, () => console.log(`server running on port ${port}!!`));
+
+process.on('unhandledRejection', (err, promise) => {
+    console.log(`Error: ${err.message}`.red);
+    //Close server & exit process
+   // server.close(() => process.exit(1));
+
+})

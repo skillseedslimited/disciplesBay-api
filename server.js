@@ -37,20 +37,20 @@ mongoose
         useUnifiedTopology: true,
         useNewUrlParser: true
     })
-    .then(() => console.log('mongodb connected successfully!'))
-    .catch(err => console.log(err));
+    .then(conn => console.log(`mongodb connected successfully:${conn.connection.host}`.cyan.underline.bold))
+    .catch(err => console.log(`Server connection error: ${err.message}`.red));
 
 
 // 
-app.use("/api", defaultRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/user', userRoutes);
+app.use("/api/v1", defaultRoutes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/user', userRoutes);
 app.use(errorHandler);
 
 
 const port = process.env.PORT || 3000;
 
-const server = app.listen(port, () => console.log(`server running on port ${port}!!`));
+const server = app.listen(port, () => console.log(`server running on port ${port}!!`.yellow.bold));
 
 process.on('unhandledRejection', (err, promise) => {
     console.log(`Error: ${err.message}`.red);

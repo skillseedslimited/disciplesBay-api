@@ -60,7 +60,7 @@ module.exports = {
 
                 // ===================sending email message=========================================
                 // Create email
-                const url = `http://${req.headers.host}/api/verifyGetByEmail/${secretToken}`
+                const url = `http://${req.headers.host}/api/v1/verifyGetByEmail/${secretToken}`
                 const html = `Hello ${newUser.username},
 
                 <br/>

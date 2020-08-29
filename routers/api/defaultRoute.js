@@ -5,36 +5,39 @@ const login = require('../../controllers/default/login');
 const router = express.Router();
 
 
-
-// router.all('/*', (req, res, next)=>{
-//     req.app.locals.layout = 'default';
-//     next()
-// });
+router.all('/*', (req, res, next)=>{
+    req.app.locals.layout = 'default';
+    next()
+});
 
 // @route Get /
 // @desc adds
 // @access Public
-router.route('/')
- .get(defaultController.index);
+router
+.route('/')
+.get(defaultController.index);
 
 
 // @route Get api/users/register
 // @desc register user
 // @access Public
-router.route('/register')
-    .post(registerController.register);
+router
+.route('/register')
+.post(registerController.register);
 
     // @route Get api/users/register
 // @desc register user
 // @access Public
-router.route('/login')
+router
+.route('/login')
 .post(login);
 
 // @route Get verifyGetByEmail
 // @desc verify user by email
 // @access Public    
-router.route('/verifyGetByEmail/:secretToken')
-    .get(registerController.verifyGetByEmail); 
+router
+.route('/verifyGetByEmail/:secretToken')
+.get(registerController.verifyGetByEmail); 
 
 
  module.exports = router;

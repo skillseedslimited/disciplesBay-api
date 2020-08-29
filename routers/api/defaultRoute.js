@@ -1,14 +1,15 @@
 const defaultController = require('../../controllers/default/index');
 const registerController = require('../../controllers/default/register');
 const express = require('express');
+const login = require('../../controllers/default/login');
 const router = express.Router();
 
 
 
-router.all('/*', (req, res, next)=>{
-    req.app.locals.layout = 'default';
-    next()
-});
+// router.all('/*', (req, res, next)=>{
+//     req.app.locals.layout = 'default';
+//     next()
+// });
 
 // @route Get /
 // @desc adds
@@ -22,6 +23,12 @@ router.route('/')
 // @access Public
 router.route('/register')
     .post(registerController.register);
+
+    // @route Get api/users/register
+// @desc register user
+// @access Public
+router.route('/login')
+.post(login);
 
 // @route Get verifyGetByEmail
 // @desc verify user by email

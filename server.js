@@ -10,22 +10,13 @@ const errorHandler = require('./middlewares/error');
 
 const app = express();
 
-
-// configuring routes
-
-
-
-// configuring routes
-const defaultRoutes = require('./routers/api/defaultRoute');
-const adminRoutes = require('./routers/api/adminRoute');
-const userRoutes = require('./routers/api/userRoute');
-
-
-
-
 // body parser middleware
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+// Routes config
+require('./routers/api/index')(app);
+app.use(errorHandler);
 
 // DB config
 const db = require('./config/keys').mongoURL;
@@ -42,11 +33,7 @@ mongoose
     .catch(err => console.log(`Server connection error: ${err.message}`.red));
 
 
-// 
-app.use("/api/v1", defaultRoutes);
-app.use('/api/v1/admin', adminRoutes);
-app.use('/api/v1/user', userRoutes);
-app.use(errorHandler);
+
 
 
 const port = process.env.PORT || 3000;

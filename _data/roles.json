@@ -1,0 +1,23 @@
+[
+    {
+        "name":"admin"
+    },
+    {
+        "name":"supportAdmin"
+    },
+    {
+        "name":"branchAdmin"
+    },
+    {
+        "name":"mediaAdmin"
+    },
+    {
+        "name":"accountsAdmin"
+    },
+    {
+        "name":"subscriber"
+    },
+    {
+        "name":"member"
+    }
+]

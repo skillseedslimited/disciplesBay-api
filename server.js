@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('*', cloudinaryConfig)
 
 // Routes config
-require('./routers/api/index')(app);
+require('./routers/index')(app);
 app.use(errorHandler);
 
 // DB config
@@ -28,7 +28,7 @@ const db = require('./config/keys').mongoURL;
 // connect to mongoDB
 mongoose
     .connect(db, {
-        useFindAndModify: true,
+        useFindAndModify: false,
         useUnifiedTopology: true,
         useNewUrlParser: true,
         useCreateIndex: true

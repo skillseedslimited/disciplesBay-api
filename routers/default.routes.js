@@ -1,7 +1,7 @@
-const defaultController = require('../controllers/default/index');
-const registerController = require('../controllers/default/register');
+const defaultController = require('../controllers/default/index.controller');
+const registerController = require('../controllers/default/register.controller');
 const express = require('express');
-const login = require('../controllers/default/login');
+const login = require('../controllers/default/login.controller');
 const router = express.Router();
 
 
@@ -25,7 +25,7 @@ router
 .route('/register')
 .post(registerController.register);
 
-    // @route Get api/users/register
+// @route Get api/users/register
 // @desc register user
 // @access Public
 router

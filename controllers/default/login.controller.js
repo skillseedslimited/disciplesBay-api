@@ -6,7 +6,7 @@ const Role = require('../../models/Role');
 
 const config = require('../../config/auth.config');
 const ErrorResponse = require('../../utils/errorResponse');
-const asyncHandler = require('../../middlewares/async');
+const asyncHandler = require('../../middleware/async');
 
 const login = asyncHandler( async (req, res, next) => {
     const { id, password } = req.body;

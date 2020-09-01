@@ -1,8 +1,8 @@
 
-const Role = require('../../models/Role');
-const asyncHandler = require("../../middlewares/async");
-const ErrorResponse = require("../../utils/errorResponse.js");
-const User = require('../../models/User');
+const Role = require('../models/Role');
+const asyncHandler = require("../middleware/async");
+const ErrorResponse = require("../utils/errorResponse.js");
+const User = require('../models/User');
 
 const createRole = asyncHandler(async(req, res, next) => {
     const role = await Role.create(req.body);

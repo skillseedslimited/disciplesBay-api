@@ -1,7 +1,7 @@
-const indexController = require('../controllers/user/profile');
+const indexController = require('../controllers/profile.controller');
 const express = require('express');
 const router = express.Router();
-const { verifyToken, authorize } = require('../middlewares/authJwt');
+const { verifyToken, authorize } = require('../middleware/authJwt');
 
 
 router.all('/*', (req, res, next)=>{
@@ -13,8 +13,8 @@ router.all('/*', (req, res, next)=>{
 // @desc adds
 // @access Public
 router.route('/index')
- .get( verifyToken, indexController.index)
- .post( verifyToken, indexController.profile);
+ .get( indexController.index )
+ .post( indexController.profile );
 
 
  module.exports = router;

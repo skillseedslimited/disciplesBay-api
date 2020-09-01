@@ -7,7 +7,7 @@ const dotenv = require('dotenv').config();
 const colors = require('colors');
 
 // Global error handlers
-const errorHandler = require('./middlewares/error');
+const errorHandler = require('./middleware/error');
 const {cloudinaryConfig} = require('./config/cloudinary.config');
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('*', cloudinaryConfig)
 
 // Routes config
-require('./routers/index')(app);
+require('./routers/index.routes')(app);
 app.use(errorHandler);
 
 // DB config

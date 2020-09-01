@@ -1,4 +1,4 @@
-const Profile = require('../../models/Profile');
+const Profile = require('../models/Profile');
 
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
                     data: profile
                 });
             })
-            .catch(err => res.status(404).json(err));
+            .catch(err => res.status(404).json(err.message));
 
     },
 

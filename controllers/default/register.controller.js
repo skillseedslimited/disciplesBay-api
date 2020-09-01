@@ -71,7 +71,7 @@ module.exports = {
                         console.log(user)
                         res.json({
                             success: true,
-                            message: 'registration successful, a mail have been sent to you to complete your registration',
+                            message: 'registration successful, a mail has been sent to you to complete your registration',
                             data: user
                         });
                     })
@@ -97,7 +97,7 @@ module.exports = {
             await user.save();
             res.json({
                 success: true,
-                message:'your account have been verified successfully you can now login',
+                message:'your account has been verified successfully you can now login',
                 data:user
             })
             console.log('user verification successful!!');

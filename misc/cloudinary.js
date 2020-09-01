@@ -1,5 +1,5 @@
 const {uploader} = require('../config/cloudinary.config');
-const { dataUri} = require('../middlewares/multer');
+const { dataUri} = require('../middleware/multer');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const ErrorResponse = require('../utils/errorResponse');

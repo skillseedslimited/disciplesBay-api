@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Routes config
-require('./routers/api/index')(app);
+require('./routers/index')(app);
 app.use(errorHandler);
 
 // DB config
@@ -24,7 +24,7 @@ const db = require('./config/keys').mongoURL;
 // connect to mongoDB
 mongoose
     .connect(db, {
-        useFindAndModify: true,
+        useFindAndModify: false,
         useUnifiedTopology: true,
         useNewUrlParser: true,
         useCreateIndex: true

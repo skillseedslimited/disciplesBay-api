@@ -1,7 +1,7 @@
-const indexController = require('../../controllers/admin/index');
-const RolesController = require('../../controllers/admin/roles')
+const indexController = require('../controllers/admin/index');
+const RolesController = require('../controllers/admin/roles')
 const express = require('express');
-const { verifyToken, authorize } = require('../../middlewares/authJwt');
+const { verifyToken, authorize } = require('../middlewares/authJwt');
 const router = express.Router();
 
 

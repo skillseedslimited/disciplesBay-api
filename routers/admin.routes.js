@@ -1,9 +1,10 @@
-const indexController = require('../controllers/index.controller');
+const indexController = require('../controllers/default/index.controller');
 const RolesController = require('../controllers/roles.controller');
 const DevotionsController = require('../controllers/devotion.controller')
 const express = require('express');
 const { verifyToken, authorize } = require('../middleware/authJwt');
 const { multerUploads } = require('../middleware/multer');
+const testimonyController = require('../controllers/testimony.controller');
 const router = express.Router();
 
 
@@ -31,6 +32,10 @@ router
 router
 .route('/role/:id')
 .delete( RolesController.deleteRole )
+
+router
+.route('/testimonyActivate/:id')
+.post(testimonyController.testimonyActive); 
 
 
  module.exports = router;

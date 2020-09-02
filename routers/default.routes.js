@@ -1,5 +1,6 @@
 const defaultController = require('../controllers/default/index.controller');
 const registerController = require('../controllers/default/register.controller');
+const testimonyController = require('../controllers/testimony.controller');
 const express = require('express');
 const login = require('../controllers/default/login.controller');
 const router = express.Router();
@@ -38,6 +39,12 @@ router
 router
 .route('/verifyGetByEmail/:secretToken')
 .get(registerController.verifyGetByEmail); 
+
+router
+.route('/testimony')
+.get(testimonyController.testimonyAll);
+
+   
 
 
  module.exports = router;

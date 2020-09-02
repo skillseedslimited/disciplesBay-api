@@ -43,7 +43,7 @@ module.exports = {
                          { $set: profileFields },
                          { new: true }
                          )
-                         .then(profile =>  res.json({
+                         .then(profile =>  res.status(200).json({
                              success:true,
                              message:'user profile updated',
                              data: profile
@@ -52,7 +52,7 @@ module.exports = {
                      // create
                      new Profile(profileFields).save()
                      .then(profile =>{
-                         res.json({
+                         res.status(200).json({
                              success: true,
                              message:'profile created successfully',
                              data: profile

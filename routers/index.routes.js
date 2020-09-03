@@ -10,7 +10,7 @@ module.exports = function(app) {
       
       next();
     });
-      app.use('/api/v1/', require('./default.routes'));
+      app.use('/api/v1', require('./default.routes'));
       app.use('/api/v1/admin', [ verifyToken, authorize('admin') ], require('./admin.routes'));
       app.use('/api/v1/user', [ verifyToken ], require('./user.routes'));
   };

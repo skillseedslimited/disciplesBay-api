@@ -19,19 +19,13 @@ router
 .get(defaultController.index);
 
 
-// @route Get api/users/register
-// @desc register user
+// @route post
+// @desc authenticate user
 // @access Public
 router
-.route('/register')
-.post(registerController.register);
-
-// @route Get api/users/register
-// @desc register user
-// @access Public
-router
-.route('/login')
-.post(login);
+.route('/auth')
+.post('/register', registerController.register)
+.post('/login', login);
 
 // @route Get verifyGetByEmail
 // @desc verify user by email

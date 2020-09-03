@@ -40,7 +40,6 @@ const testimonyPost = async (req, res, next) =>{
 
 }
 
-
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING USER TESTIMOIES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const testimonyGet = (req, res) =>{
 
@@ -112,12 +111,6 @@ const testimonyActive =  (req, res) => {
         .catch(err => res.status(404).json(err))
 
 }
-
-
-
-
-
-
 
 module.exports = {
     testimonyPost,

@@ -23,9 +23,8 @@ router
 // @desc authenticate user
 // @access Public
 router
-.route('/auth')
-.post('/register', registerController.register)
-.post('/login', login);
+.post('/auth/register', registerController.register)
+.post('/auth/login', login);
 
 // @route Get verifyGetByEmail
 // @desc verify user by email

@@ -1,6 +1,7 @@
 const indexController = require('../controllers/default/index.controller');
 const RolesController = require('../controllers/roles.controller');
 const DevotionsController = require('../controllers/devotion.controller')
+const newsController = require('../controllers/news.controller');
 const express = require('express');
 const { verifyToken, authorize } = require('../middleware/authJwt');
 const { multerUploads } = require('../middleware/multer');
@@ -37,5 +38,22 @@ router
 .route('/testimonyActivate/:id')
 .post(testimonyController.testimonyActive); 
 
+router
+.route('/createNews')
+.post(newsController.createNews);
+
+// @route delete /delete
+// @desc deleting a news
+// @access Private
+router
+.route('/deleteNews/:id')
+.delete(newsController.deleteNews);
+
+// @router /deleteTestimony
+// @desc delete testimony
+// @access private
+router
+.route('/deleteTestimony/:id')
+.delete(testimonyController.deleteTestimony);
 
  module.exports = router;

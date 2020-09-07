@@ -2,6 +2,7 @@ const express =  require('express');
 const mongoose =  require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors')
 
 const dotenv = require('dotenv').config();
 const colors = require('colors');
@@ -15,6 +16,7 @@ const app = express();
 // body parser middleware
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('*', cloudinaryConfig)
 

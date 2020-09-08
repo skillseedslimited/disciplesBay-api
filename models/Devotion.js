@@ -20,6 +20,9 @@ const DevotionSchema = new mongoose.Schema({
     publishDate:{
         type: Date
     },
+    time:{
+        type: String
+    },
     createdAt:{
         type: Date,
         default: Date.now

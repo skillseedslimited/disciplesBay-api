@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const keys = require('../../config/keys');
 const mailer = require('../../misc/mailer');
 const ErrorResponse = require('../../utils/errorResponse');
+const path = require('path');
 // config = require('../../config/keys');
 
 
@@ -59,7 +60,7 @@ module.exports = {
                 Please click on the button below to verify your account:
                 <br/>
                 On the following page:
-                <a href="${url}"><h1>VERIFY${url}</h1></a>
+                <a href="${url}"><h4>VERIFY${url}</h4></a>
                 <br><br>
                 <strong>All the best!!!</strong>
                 `
@@ -95,11 +96,12 @@ module.exports = {
             user.active = true;
             user.secretToken = "";
             await user.save();
-            res.json({
-                success: true,
-                message:'your account has been verified successfully you can now login',
-                data:user
-            })
+            // res.json({
+            //     success: true,
+            //     message:'your account has been verified successfully you can now login',
+            //     data:user
+            // })
+            res.sendFile(path.join(__dirname + '/../../templates/confirmationSuccess.html'));
             console.log('user verification successful!!');
         } catch (error) {
             next(error);

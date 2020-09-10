@@ -21,6 +21,8 @@ const verifyToken = asyncHandler( async (req, res, next) => {
   });
 });
 
+
+//Permissioins based on roles
 const authorize = (...roles) => {
     return (req, res, next) => {
       //console.log(req.user)

@@ -11,7 +11,11 @@ module.exports = function(app) {
       next();
     });
       app.use('/api/v1', require('./default.routes'));
-      app.use('/api/v1/admin', [ verifyToken, authorize('admin') ], require('./admin.routes'));
-      app.use('/api/v1/user', [ verifyToken ], require('./user.routes'));
+      app.use('/api/v1/devotion', [ verifyToken ], require('./devotion.routes'));
+      app.use('/api/v1/news', [ verifyToken ], require('./news.routes'));
+      app.use('/api/v1/profile', [ verifyToken ], require('./profile.routes'));
+      app.use('/api/v1/role',[ verifyToken ],  require('./role.routes'));
+      app.use('/api/v1/testimony', [ verifyToken ], require('./testimony.routes'));
+      app.use('/api/v1/event', [ verifyToken ], require('./event.routes'));
   };
   

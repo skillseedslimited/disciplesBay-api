@@ -53,7 +53,7 @@ const getAllNews = asyncHandler( async(req, res, next) =>{
 });
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING A SINGLE NEWS :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const getSingleNews = asyncHandler( async(req, res, nesxt) =>{
+const getSingleNews = asyncHandler( async(req, res, next) =>{
 
     // finding news by id
     News.findById({_id: req.params.id})
@@ -67,7 +67,7 @@ const getSingleNews = asyncHandler( async(req, res, nesxt) =>{
             data: news
         })
     })
-    .catch(err => res.status(404).json(err));
+    .catch(err => next(err));
 });
 
 
@@ -87,7 +87,7 @@ const deleteNews = asyncHandler( async(req, res, next) =>{
             message: 'news successfully deleted'
         })
     })
-    .catch(err => res.status(404).json(err));
+    .catch(err => next(err));
 });
 
 

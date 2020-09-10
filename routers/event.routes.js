@@ -7,7 +7,7 @@ const eventController = require('../controllers/event.controller');
 // @access Private
 router
 .route('/createEvent')
-.post(authorize(admin), eventController.createEVent);
+.post(authorize('admin'), eventController.createEVent);
 
 router
 .route('/getAllEvent')
@@ -19,8 +19,10 @@ router
 
 router
 .route('/deleteEvent/:id')
-.delete(authorize(admin), eventController.deleteEvent);
+.delete(authorize('admin'), eventController.deleteEvent);
 
 router
 .route('/editEvent/:id')
-.put(authorize(admin), eventController.editEvent);
+.put(authorize('admin'), eventController.editEvent);
+
+module.exports = router

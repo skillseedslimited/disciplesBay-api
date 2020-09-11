@@ -14,7 +14,9 @@ module.exports = {
      register: async (req, res, next) =>{
         let { username, email, phoneNumber, password, confirmPassword, role } = req.body;
         //checking if user role is valid
-        const userRole = await Role.findOne({name:role});
+        const defaultRole = role ? role : "subscriber";
+
+        const userRole = await Role.findOne({name:defaultRole});
         if(!userRole){
             return next(new ErrorResponse("Invalid role specified", 400))
         }
@@ -26,7 +28,7 @@ module.exports = {
                return  next(new ErrorResponse("Username already exists", 400))   
             }else{
                  // Comparison of passwords
-                if (password !== confirmPassword) {
+                if ((confirmPassword) && (password !== confirmPassword)) {
                     return next(new ErrorResponse("Passwords do not match", 400))              
                 }
                 // Generation of secret token and saving to the database

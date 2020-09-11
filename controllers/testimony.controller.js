@@ -1,3 +1,5 @@
+const asyncHandler = require("../middleware/async");
+const ErrorResponse = require("../utils/errorResponse.js");
 const Testimony = require('../models/Testimony');
 const User = require('../models/User');
 
@@ -40,7 +42,6 @@ const testimonyPost = async (req, res, next) =>{
 
 }
 
-
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING USER TESTIMOIES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const testimonyGet = (req, res) =>{
 
@@ -80,6 +81,26 @@ const testimonyAll = (req, res) =>{
         .catch(err => res.status(404).json(err));
 }
 
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING SINGLE TESTIMONY::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const testimonySingle = (req, res, next) =>{
+    // find the testimony
+    Testimony.findOne({_id:req.params.id})
+    .then(test =>{
+        if(!test){
+            return next( new ErrorResponse('no testimony with this id', 404))
+        }
+
+        res.status(200).json({
+            success: true,
+            message:'restimony',
+            data: test
+        })
+    })
+    .catch(err => {
+        return next( new ErrorResponse('no testimony with this id', 404))
+    });
+}
+
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::SETTING USER TESTIMONY TO BE ACTIVE:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const testimonyActive =  (req, res) => {
 
@@ -113,15 +134,31 @@ const testimonyActive =  (req, res) => {
 
 }
 
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::DELETING TESTIMONY:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const deleteTestimony = (req, res, next)=>{
+    // find testimony by id
+    Testimony.findById({_id: req.params.id})
+    .then(test =>{
+        if(!test){
+            return next( new ErrorResponse('no testimony with this id', 404))
+        }
+
+        test.remove();
+        console.log('testimony deleted successfully')
+        res.status(200).json({
+            success: true,
+            message: 'testimony deleted successfully'
+        })
+    })
+}
 
 
-
-
-
-
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::EXPORTING ALL FUNCTIONS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 module.exports = {
     testimonyPost,
     testimonyGet,
     testimonyAll,
-    testimonyActive
+    testimonyActive,
+    deleteTestimony,
+    testimonySingle
 }

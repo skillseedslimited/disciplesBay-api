@@ -31,6 +31,4 @@ router
   .route("/testimonyActivate/:id")
   .post(testimonyController.testimonyActive);
 
-router.post("/sermon/create", SermonsController.createSermon);
-
 module.exports = router;

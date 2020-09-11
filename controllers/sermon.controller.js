@@ -201,22 +201,22 @@ module.exports = {
     try {
       var name = req.body.name;
 
-      var sermon_category = await Sermon.findOneAndUpdate(
+      var sermon_category = await SermonCategory.findOneAndUpdate(
         { name },
         { $set: { name } },
-        { new: true, setDefaultsOnInsert: true }
-      );
+        { new: true, upsert: true }
+      ).exec();
       if (!sermon_category) {
         return res.status(400).json({
           success: false,
           message:
-            "Unable to create sermoncategory , please check the data and try again",
+            "Unable to create sermon category , please check the data and try again",
         });
       }
       return res.status(200).json({
         success: true,
         message: "Sermon  category created successfully",
-        data: sermon,
+        data: sermon_category,
       });
     } catch (err) {
       //log error here

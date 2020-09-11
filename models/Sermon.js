@@ -27,6 +27,7 @@ const SermonSchema = new Schema({
     type: String,
     enum: ["save", "publish"],
     required: true,
+    default: "save",
   },
   subscription_type: {
     type: String,

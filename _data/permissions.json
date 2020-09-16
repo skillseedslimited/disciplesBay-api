@@ -8,5 +8,11 @@
     "name": "can-mgt-sermons",
     "description": "User can management sermon",
     "category": "Sermon management"
+  },
+
+  {
+    "name": "can-mgt-devotions",
+    "description": "User can management devotions",
+    "category": "Sermon management"
   }
 ]

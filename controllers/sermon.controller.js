@@ -24,7 +24,7 @@ module.exports = {
           message: "Selected category not found",
         });
       }
-      var sermon = await Sermon({
+      var sermon = Sermon({
         title,
         author,
         category,
@@ -34,8 +34,10 @@ module.exports = {
         subscription_type,
         cover_image,
         price,
+        isDeleted: false,
       });
 
+      await sermon.save();
       if (!sermon) {
         return res.status(400).json({
           success: false,
@@ -65,7 +67,8 @@ module.exports = {
       const sermons = await Sermon.find({ isDeleted: false })
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.sermon_limit)
-        .limit(this.sermon_limit);
+        .limit(this.sermon_limit)
+        .exec();
 
       //prepare pagination of sermon list
       var sermon_counts = await Sermon.find({}).countDocuments();
@@ -88,9 +91,11 @@ module.exports = {
   updateSermon: async function(req, res) {
     try {
       const sermon_id = req.params.sermon;
-      var check_sermon = await Sermon.findOne({
-        _id: sermon_id,
-      }).countDocuments();
+
+      var check_sermon = await Sermon.findById(sermon_id)
+        .countDocuments()
+        .exec();
+
       if (check_sermon <= 0) {
         return res.status(404).json({
           success: false,
@@ -203,7 +208,7 @@ module.exports = {
 
       var sermon_category = await SermonCategory.findOneAndUpdate(
         { name },
-        { $set: { name } },
+        { $set: { name, isDeleted: false } },
         { new: true, upsert: true }
       ).exec();
       if (!sermon_category) {
@@ -231,11 +236,13 @@ module.exports = {
   //list sermon category
   listSermonCategories: async function(req, res) {
     try {
-      const sermon_category = await SermonCategory.find({ isDeleted: false })
+      var sermon_category = await SermonCategory.find({ isDeleted: false })
         .sort({
           name: "asc",
         })
         .exec();
+
+      console.log(sermon_category);
 
       return res.status(200).json({
         succes: true,
@@ -284,7 +291,31 @@ module.exports = {
       });
     }
   },
+  //fetch single sermon category
+  fetchSingleSermonCategory: async function(req, res) {
+    try {
+      const category_id = req.params.category;
+      var sermon_category = await SermonCategory.findById(category_id);
+      if (!sermon_category) {
+        return res.status(404).json({
+          success: false,
+          message: "Sermon Category not found",
+        });
+      }
 
+      return res.status(200).json({
+        success: true,
+        message: "Sermon category fetched successfully",
+        data: sermon_category,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        succes: false,
+        message: "Error while deleting sermon category",
+        data: error,
+      });
+    }
+  },
   //delete sermon category
   deleteSermonCategory: async function(req, res) {
     try {
@@ -304,7 +335,7 @@ module.exports = {
       return res.status(200).json({
         success: true,
         message: "Sermon category deleted successfully",
-        sermon: deleted,
+        sermon: sermon_category,
       });
     } catch (error) {
       return res.status(500).json({

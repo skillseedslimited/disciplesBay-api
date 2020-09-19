@@ -9,13 +9,15 @@ const createNews = asyncHandler(async (req, res, next) =>{
     // getting new  subject and body
     let {
         newsBody,
-        subject
+        subject,
+        newsDate
     } = req.body;
 
     // creating new instance of a news
     let newNews = new News({
         newsBody,
-        subject
+        subject,
+        newsDate
     });
 
     // saving news to database

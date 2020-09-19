@@ -1,0 +1,12 @@
+[
+  {
+    "name": "can-mgt-role",
+    "description": "User can mgt role",
+    "category": "Role management"
+  },
+  {
+    "name": "can-mgt-sermons",
+    "description": "User can management sermon",
+    "category": "Sermon management"
+  }
+]

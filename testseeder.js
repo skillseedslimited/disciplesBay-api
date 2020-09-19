@@ -10,14 +10,6 @@ const User = require("./models/User");
 const RoleAndPermission = require("./models/RoleAndPermission");
 const Permission = require("./models/Permission");
 
-//connect to db
-mongoose.connect(process.env.mongoURL, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-});
-
 //read JSON files
 // const roles = JSON.parse(
 //   fs.readFileSync(`${__dirname}/_data/roles.json`, "utf-8")
@@ -28,7 +20,7 @@ const permissions = JSON.parse(
 );
 
 //Import data
-const importData = async () => {
+module.exports.importData = async () => {
   try {
     const role = await Role.findOneAndUpdate(
       {
@@ -38,7 +30,7 @@ const importData = async () => {
       { upsert: true, setDefaultsOnInsert: true, new: true },
       function(error, doc) {
         if (!error) {
-          console.log("role is created");
+          //   console.log("role is created");
         } else {
           console.log(error);
         }
@@ -63,12 +55,14 @@ const importData = async () => {
       { upsert: true, setDefaultsOnInsert: true, new: true },
       function(error, doc) {
         if (!error) {
-          console.log("Super admin seeded");
+          //   console.log("Super admin seeded");
         } else {
           console.log(error);
         }
       }
     );
+
+    // console.log(super_admin);
 
     //go thru permissions and resync with super admin
     for (permission of permissions) {
@@ -108,16 +102,16 @@ const importData = async () => {
         }
       );
     }
-    console.log("Data imported".green.inverse);
+    // console.log("Data imported".green.inverse);
 
-    process.exit();
+    // process.exit();
   } catch (err) {
     console.log(err);
   }
 };
 
 //Delete imported data
-const deleteData = async () => {
+module.exports.deleteData = async () => {
   try {
     await Role.deleteMany();
     console.log("Data destroyed".red.inverse);

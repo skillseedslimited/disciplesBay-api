@@ -1,5 +1,9 @@
-const { multerUploads } = require('../middleware/multer');
-const { authorize, verifyToken } = require('../middleware/authJwt');
+const { multerUploads } = require("../middleware/multer");
+const {
+  authorize,
+  verifyToken,
+  authorizeUpdated,
+} = require("../middleware/authJwt");
 
 module.exports = function(app) {
     app.use(function(req, res, next) {
@@ -19,5 +23,10 @@ module.exports = function(app) {
       app.use('/api/v1/event', [ verifyToken ], require('./event.routes'));
       app.use('/api/v1/flutterwave', [ verifyToken ], require('./flutterwave.routes'));
       app.use('/api/v1/settings', [ verifyToken ], require('./settings.routes'));
-  };
-  
+      app.use(
+        "/api/v1/role",
+        [verifyToken, authorizeUpdated(["can-mgt-role"])],
+        require("./role.routes")
+      );
+      app.use("/api/v1/sermon", [verifyToken], require("./sermon.routes"));
+};

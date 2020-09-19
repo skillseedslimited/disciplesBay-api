@@ -1,14 +1,36 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const RoleSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        required: true
-    },
-    createdAt:{
-        type: Date,
-        default: Date.now
-    }
-})
+  name: {
+    type: String,
+    required: true,
+  },
+  menu_structure: {
+    type: JSON,
+    default: null,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-module.exports = mongoose.model('Role', RoleSchema);
+// check role has permission
+// RoleSchema.methods.toJSONAsync = async function (permission) {
+//     var role = this;
+//     var lesson_count = await Role.find({ course: course._id })
+//       .countDocuments()
+//       .exec();
+//     course.lesson_count = lesson_count;
+//     course.details = details;
+//     return _.pick(course, [
+//       "_id",
+//       "title",
+//       "schedule",
+//       "cover_image",
+//       "lesson_count",
+//       "details",
+//     ]);
+//   };
+
+module.exports = mongoose.model("Role", RoleSchema);

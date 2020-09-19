@@ -25,7 +25,7 @@ module.exports = {
             // If username is taken  
             if (user) {
                 console.log('username already exists')
-               return  next(new ErrorResponse("Username already exists", 400))   
+               return  next(new ErrorResponse("Email already exists", 400))   
             }else{
                  // Comparison of passwords
                 if ((confirmPassword) && (password !== confirmPassword)) {
@@ -67,7 +67,7 @@ module.exports = {
                 <strong>All the best!!!</strong>
                 `
                 // Sending the mail
-                await mailer.sendEmail('checkycheck@gmail.com', newUser.email, 'Please activate your email', html);
+                mailer.sendEmail('checkycheck@gmail.com', newUser.email, 'Please activate your email', html);
                 // =====================end of sending message=====================================
                 newUser.save()
                     .then(user =>{

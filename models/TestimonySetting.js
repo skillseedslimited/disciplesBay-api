@@ -6,7 +6,8 @@ const TestimonySettingSchema = new mongoose.Schema({
         default: true
     },
     videoLimit: {
-        type: Number
+        type: Number,
+        required: true
     },
     videoLimitUnit: {
         type: String,

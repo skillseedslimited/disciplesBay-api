@@ -5,7 +5,7 @@ const path = require("path");
 
 const dotenv = require("dotenv").config();
 const colors = require("colors");
-
+const compression = require("compression");
 // Global error handlers
 const errorHandler = require("./middleware/error");
 const { cloudinaryConfig } = require("./config/cloudinary.config");
@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("*", cloudinaryConfig);
-
+app.use(compression());
 // Routes config
 require("./routers/index.routes")(app);
 app.use(errorHandler);

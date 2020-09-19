@@ -2,13 +2,16 @@ const mongoose = require('mongoose');
 
 const SermonSettingSchema = new mongoose.Schema({
     branchesCanPostSermon:{
-        type: String,
+        type: Boolean,
+        default: false
     },
     branchesCanCreateCategory: {
-        type: String,
+        type: Boolean,
+        default: false
     },
     allowDownload: {
-        type: String
+        type: Boolean,
+        default: false
     },
     createdAt:{
         type: Date,

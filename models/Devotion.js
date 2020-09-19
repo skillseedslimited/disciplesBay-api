@@ -6,22 +6,27 @@ const DevotionSchema = new mongoose.Schema({
         required: true
     },
     imageUrl:{
-        type: String
+        type: String,
+        required: true
     },
     audioUrl:{
-        type: String
+        type: String,
+        required: true
     },
     videoUrl:{
         type: String
     },
     text:{
-        type: String
+        type: String,
+        required: true
     },
     publishDate:{
-        type: Date
+        type: Date,
+        required: true
     },
     time:{
-        type: String
+        type: String,
+        required: true
     },
     createdAt:{
         type: Date,

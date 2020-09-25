@@ -67,7 +67,7 @@ module.exports = {
                 <strong>All the best!!!</strong>
                 `
                 // Sending the mail
-                await mailer.sendEmail('checkycheck@gmail.com', newUser.email, 'Please activate your email', html);
+                await mailer.sendEmail('checkycheck1256@gmail.com', newUser.email, 'Please activate your email', html);
                 // =====================end of sending message=====================================
                 newUser.save()
                     .then(user =>{

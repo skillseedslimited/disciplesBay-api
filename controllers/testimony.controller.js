@@ -65,8 +65,24 @@ const testimonyGet = (req, res) =>{
     .catch(err => res.status(404).json(err));
 }
 
-// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL USERS TESTIMONIES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL USERS TESTIMONY:::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const testimonyAll = (req, res) =>{
+
+    // FINDING ALL TESTIMONIES
+    Testimony.find()
+        .then(testimonies =>{
+            console.log(testimonies)
+            res.json({
+                success: true,
+                message: 'users testimonies',
+                data: testimonies
+            })
+        })
+        .catch(err => res.status(404).json(err));
+}
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING APPROVE ALL USERS TESTIMONIES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const testimonyApproveAll = (req, res) =>{
 
     // FINDING ALL TESTIMONIES
     Testimony.find({status: true})
@@ -160,5 +176,6 @@ module.exports = {
     testimonyAll,
     testimonyActive,
     deleteTestimony,
-    testimonySingle
+    testimonySingle,
+    testimonyApproveAll
 }

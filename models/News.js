@@ -11,6 +11,9 @@ const NewsSchema = new Schema({
     date:{
         type: Date,
         default: Date.now
+    },
+    newsDate:{
+        type:Date
     }
 })
 

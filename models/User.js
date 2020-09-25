@@ -44,6 +44,59 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+
+  address: [
+    {
+      city: {
+        type: String,
+        default: null,
+      },
+      state: {
+        type: String,
+        default: null,
+      },
+      country: {
+        type: String,
+        default: null,
+      },
+    },
+  ],
+  department: {
+    type: String,
+    default: null,
+  },
+  profilePicture: {
+    type: String,
+    default: null,
+  },
+  maritalStatus: {
+    type: String,
+    default: null,
+  },
+  sex: {
+    type: String,
+    default: null,
+  },
+  occupation: {
+    type: String,
+    default: null,
+  },
+  familyMembers: [
+    {
+      name: {
+        type: String,
+        default: null,
+      },
+      connection: {
+        type: String,
+        default: null,
+      },
+    },
+  ],
+  active: {
+    type: Boolean,
+    default: false,
+  },
   secretToken: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date,

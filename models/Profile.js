@@ -7,6 +7,12 @@ const ProfileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
+    username:{
+        type: String
+    },
+    phoneNumber: {
+        type: String
+    },
     status: {
         type: Boolean
     },

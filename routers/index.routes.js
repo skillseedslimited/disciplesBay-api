@@ -27,4 +27,5 @@ module.exports = function(app) {
   app.use("/api/v1/sermon", [verifyToken], require("./sermon.routes"));
   app.use("/api/v1/testimony", [verifyToken], require("./testimony.routes"));
   app.use("/api/v1/wallet", [verifyToken], require("./wallet.routes"));
+  app.use("/api/v1/store", [verifyToken], require("./store.routes"));
 };

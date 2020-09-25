@@ -14,5 +14,10 @@
     "name": "can-mgt-devotions",
     "description": "User can management devotions",
     "category": "Sermon management"
+  },
+  {
+    "name": "can-mgt-store",
+    "description": "User can manage store",
+    "category": "Store management"
   }
 ]

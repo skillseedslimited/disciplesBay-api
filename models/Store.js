@@ -19,6 +19,11 @@ const StoreSchema = new Schema({
     type: String,
     enum: ["audio", "video", "ebook", "others"],
   },
+  status: {
+    type: String,
+    enum: ["active", "inactive"],
+    default: "active",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

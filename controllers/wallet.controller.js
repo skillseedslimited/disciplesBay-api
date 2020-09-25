@@ -6,7 +6,8 @@ module.exports = {
   fetchUserWallet: async function(req, res) {
     try {
       //check user has wallet
-      let user = req.user();
+      let user = req.user;
+
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       let wallet = await Wallet.findOne({ user: user._id })
         .lean()

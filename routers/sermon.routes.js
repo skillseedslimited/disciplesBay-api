@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const SermonsController = require("../controllers/sermon.controller");
+const UserSermonsController = require("../controllers/user_sermon.controller");
 const { authorize, authorizeUpdated } = require("../middleware/authJwt");
 const sermonPolicies = require("../policies/sermonPolicies");
 
@@ -65,4 +66,7 @@ router.delete(
   [authorizeUpdated(["can-mgt-sermons"])],
   SermonsController.deleteSermonCategory
 );
+
+router.get("/user/sermons", UserSermonsController.fetchUserSermons);
+
 module.exports = router;

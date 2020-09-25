@@ -20,16 +20,23 @@ module.exports = {
         .lean()
         .exec();
 
-      all_contents = this.processStoreContents(all_contents);
+      all_contents = await this.processStoreContents(all_contents);
 
       var store_count = await Store.find({}).countDocuments();
       var number_of_pages = Math.ceil(store_count / page);
       return res.status(200).json({
         succes: true,
         message: "Store contents fetched successfully",
-        list: { sermons, current_page: page, number_of_pages },
+        list: { all_contents, current_page: page, number_of_pages },
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        succes: false,
+        message: "Error! while fetching store content",
+        error,
+      });
+    }
   },
   processStoreContents: async function(all_contents) {
     let contents = [];
@@ -59,7 +66,7 @@ module.exports = {
       }
       let store_content = {};
       if (item.item_type == "sermon") {
-        store_content = await Sermon.findOne({ _id: content.item })
+        store_content = await Sermon.findOne({ _id: item.item._id })
           .select("-content")
           .lean()
           .exec();
@@ -71,6 +78,7 @@ module.exports = {
         data: store_content,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(400)
         .json({ success: false, message: "Unable to fetch Store item", error });
@@ -84,17 +92,17 @@ module.exports = {
   updateStoreContent: async function(req, res) {
     try {
       let item_id = req.params.item;
-      var quantity = req.body.quantity;
+      var { quantity, status } = req.body;
       const item = await Store.findOne({ _id: item_id }).exec();
       if (!item) {
         return res
           .status(400)
-          .json({ success: false, message: "Content not found in store" });
+          .json({ success: false, message: "Item not found in store" });
       }
 
       var updated = await Store.findOneAndUpdate(
         { _id: item_id },
-        { quantity }
+        { quantity, status }
       ).exec();
 
       if (!updated) {

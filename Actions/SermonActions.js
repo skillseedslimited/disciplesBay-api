@@ -67,6 +67,7 @@ module.exports = {
         }
       }
 
+      await sermon.save();
       return res.status(200).json({
         success: true,
         message: "Sermon created successfully",
@@ -373,6 +374,8 @@ module.exports = {
       const content_type = req.query.content_type
         ? req.query.content_type
         : null;
+      const page = req.query.page && req.query.page > 0 ? req.page : 1;
+
       let query = { subscription_type: "free" };
       if (content_type) {
         query["content_type"] = content_type;
@@ -392,8 +395,9 @@ module.exports = {
       });
       //fetch bought sermons
     } catch (error) {
-      return res.status(200).json({
-        success: fail,
+      console.log(error);
+      return res.status(500).json({
+        success: false,
         message: "Unable to fetch user sermons",
         error,
       });

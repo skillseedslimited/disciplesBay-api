@@ -39,6 +39,8 @@ module.exports = {
           length: 5,
           charset: "numeric",
         });
+        // let password = bcrypt.hashSync(password, 10);
+
         let newUser = new User({
           username,
           email,
@@ -49,13 +51,12 @@ module.exports = {
           role: userRole._id,
         });
         // Hash the password and saving new user to database
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            newUser.password = hash;
-          });
-        });
+        let salt = await bcrypt.genSalt(10);
+        let hash = await bcrypt.hash(newUser.password, salt);
+        newUser.password = hash;
         //delete confirm password
         newUser.confirmPassword = undefined;
+
         // ===================sending email message=========================================
         // Create email
         const url = `http://${

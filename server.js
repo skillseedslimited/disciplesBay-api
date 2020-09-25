@@ -1,11 +1,11 @@
-const express =  require('express');
-const mongoose =  require('mongoose');
-const bodyParser = require('body-parser');
-const path = require('path');
-const cors = require('cors')
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const path = require("path");
+const cors = require("cors");
 
-const dotenv = require('dotenv').config();
-const colors = require('colors');
+const dotenv = require("dotenv").config();
+const colors = require("colors");
 const compression = require("compression");
 // Global error handlers
 const errorHandler = require("./middleware/error");
@@ -17,8 +17,8 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('*', cloudinaryConfig)
+app.use(express.static(path.join(__dirname, "public")));
+app.use("*", cloudinaryConfig);
 app.use(compression());
 // Routes config
 require("./routers/index.routes")(app);
@@ -26,7 +26,7 @@ app.use(errorHandler);
 
 // DB config
 const db = require("./config/keys").mongoURL;
-
+// console.log(db);
 // connect to mongoDB
 mongoose
   .connect(db, {

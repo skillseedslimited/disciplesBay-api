@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const commentSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: "User" },
+  comment: { type: String, default: null },
+});
 const SermonSchema = new Schema({
   title: {
     type: String,
@@ -18,6 +21,11 @@ const SermonSchema = new Schema({
   content_type: {
     type: String,
     enum: ["audio", "video", "ebook"],
+  },
+  content: {
+    type: String,
+    required: true,
+    default: null,
   },
   description: {
     type: String,
@@ -55,6 +63,7 @@ const SermonSchema = new Schema({
     type: String,
     default: null,
   },
+  comments: [commentSchema],
 });
 
 module.exports = mongoose.model("Sermon", SermonSchema);

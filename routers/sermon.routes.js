@@ -16,8 +16,16 @@ router.patch(
   SermonsController.updateSermon
 );
 
-router.get("/fetch-all", SermonsController.listSermons);
-router.get("/:sermon/fetch", SermonsController.getSermon);
+router.get(
+  "/fetch-all",
+  [authorizeUpdated(["can-mgt-sermons"])],
+  SermonsController.listSermons
+);
+router.get(
+  "/:sermon/fetch",
+  [authorizeUpdated(["can-mgt-sermons"])],
+  SermonsController.getSermon
+);
 router.delete("/:sermon/delete", SermonsController.deleteSermon);
 
 router.post(
@@ -44,6 +52,12 @@ router.get(
   "/category/:category/fetch",
   [authorizeUpdated(["can-mgt-sermons"])],
   SermonsController.updateSermonCategory
+);
+
+router.delete(
+  "/category/:category/delete",
+  [authorizeUpdated(["can-mgt-sermons"])],
+  SermonsController.deleteSermonCategory
 );
 
 router.delete(

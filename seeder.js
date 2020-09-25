@@ -45,6 +45,21 @@ const importData = async () => {
       }
     );
 
+    const user_role = await Role.findOneAndUpdate(
+      {
+        name: process.env.USER_ROLE_NAME,
+      },
+      { name: process.env.USER_ROLE_NAME },
+      { upsert: true, setDefaultsOnInsert: true, new: true },
+      function(error, doc) {
+        if (!error) {
+          console.log("role is created");
+        } else {
+          console.log(error);
+        }
+      }
+    );
+
     const password = bcrypt.hashSync(process.env.SUPER_ADMIN_PASSWORD, 10);
     let adminObject = {
       username: process.env.SUPER_USERNAME,

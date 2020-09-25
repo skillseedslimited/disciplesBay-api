@@ -47,6 +47,14 @@ module.exports = {
           "string.empty": "The description field cannot be empty",
           "string.min": `The description field cannot be less than {#limit}`,
         }),
+      content: Joi.string()
+        .min(10)
+        .required()
+        .messages({
+          "any.required": "The content field is a required field",
+          "string.empty": "The content field cannot be empty",
+          "string.min": `The content field cannot be less than {#limit}`,
+        }),
       category: Joi.string()
 
         .required()

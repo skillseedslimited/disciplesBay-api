@@ -19,5 +19,10 @@
     "name": "can-mgt-store",
     "description": "User can manage store",
     "category": "Store management"
+  },
+  {
+    "name": "can-mgt-payment-settings",
+    "description": "User can manage payment settings",
+    "category": "Payment management"
   }
 ]

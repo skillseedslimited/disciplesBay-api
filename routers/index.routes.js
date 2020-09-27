@@ -26,11 +26,15 @@ module.exports = function(app) {
   );
   app.use("/api/v1/sermon", [verifyToken], require("./sermon.routes"));
   app.use("/api/v1/testimony", [verifyToken], require("./testimony.routes"));
-  app.use('/api/v1/event', [ verifyToken ], require('./event.routes'));
-  app.use('/api/v1/flutterwave', [ verifyToken ], require('./flutterwave.routes'));
-  app.use('/api/v1/userManagement', require('./userManagement.routes'));
-  app.use('/api/v1/counsellor', [ verifyToken ], require('./counsellor.routes'));
+  app.use("/api/v1/event", [verifyToken], require("./event.routes"));
+  app.use(
+    "/api/v1/flutterwave",
+    [verifyToken],
+    require("./flutterwave.routes")
+  );
+  app.use("/api/v1/userManagement", require("./userManagement.routes"));
+  app.use("/api/v1/counsellor", [verifyToken], require("./counsellor.routes"));
   app.use("/api/v1/wallet", [verifyToken], require("./wallet.routes"));
   app.use("/api/v1/store", [verifyToken], require("./store.routes"));
+  app.use("/api/v1/payment", [verifyToken], require("./payment.routes"));
 };
-  

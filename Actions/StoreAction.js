@@ -2,7 +2,8 @@ const Store = require("../models/Store");
 const Sermon = require("../models/Sermon");
 const _ = require("lodash");
 const conn = require("mongoose").connection;
-
+const Payment = require("../Actions/PaymentActions");
+const UserSermon = require("../models/UserSermon");
 module.exports = {
   store_limit: 40,
   fetchAllStoreContents: async function(req, res) {
@@ -125,6 +126,75 @@ module.exports = {
   },
 
   //buy
-
+  purchaseStoreItem: async function(req, res) {
+    try {
+      let item_id = req.params.item;
+      const item = await Store.findOne({ _id: item_id }).exec();
+      if (!item) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Item not found in store" });
+      }
+      switch (req.body.gateway) {
+        case "paypal":
+          return await this.payWithPaypal(item, payment_id, payer_id);
+          break;
+        default:
+          return res
+            .status(500)
+            .json({ success: false, message: "Invalid gateway selected " });
+      }
+    } catch (error) {}
+  },
   //gift someone
+  payWithPaypal: async function(item, payment_id, payer_id) {
+    //get the price ofthe item
+    try {
+      if (item.item_type == "sermon") {
+        store_content = await Sermon.findOne({ _id: item.item._id }).exec();
+        if (!store_content) {
+          throw Error("Sermon not found");
+        }
+      }
+
+      var amount = store_content.price;
+      //execute paypal
+      var resp = await Payment.executePaypalPayment(
+        payment_id,
+        payer_id,
+        amount
+      );
+
+      if (resp.success == false) {
+        //error occuered
+        return res.status(500).json(resp);
+      }
+      //payment succcessfull
+      if (item.item_type == "sermon") {
+        //add sermon to user sermon collections
+        var user_sermon = new UserSermon({
+          user: req.user._id,
+          sermon_id: store_content._id,
+        });
+
+        await user_sermon.save();
+        if (!user_sermon) {
+          throw Error("Unable to save sermon for this user");
+        }
+      }
+
+      return res.status(200).json({
+        succes: true,
+        message: "Item purchased successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to fetch purchase item",
+        error,
+      });
+    }
+  },
+  payWithFlutterWave: async function(item, transaction_ref) {},
 };

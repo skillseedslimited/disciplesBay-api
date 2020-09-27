@@ -9,6 +9,7 @@ const Role = require("./models/Role");
 const User = require("./models/User");
 const RoleAndPermission = require("./models/RoleAndPermission");
 const Permission = require("./models/Permission");
+const PaymentSetting = require("./models/PaymentSetting");
 
 //connect to db
 mongoose.connect(process.env.mongoURL, {
@@ -26,7 +27,9 @@ mongoose.connect(process.env.mongoURL, {
 const permissions = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/permissions.json`, "utf-8")
 );
-
+const payment = JSON.parse(
+  fs.readFileSync(`${__dirname}/_data/payment.json`, "utf-8")
+);
 //Import data
 const importData = async () => {
   try {
@@ -122,6 +125,15 @@ const importData = async () => {
           }
         }
       );
+    }
+
+    //seed payment
+    var payment_setting = await PaymentSetting.findOne({}).exec();
+    if (!payment_setting) {
+      var payment_setting = new PaymentSetting();
+      payment_setting.paypal = payment.paypal;
+      payment_setting.flutterwave = payment.flutterwave;
+      await payment_setting.save();
     }
     console.log("Data imported".green.inverse);
 

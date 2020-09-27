@@ -3,6 +3,8 @@ const SermonCategory = require("../models/SermonCategory");
 const Store = require("../models/Store");
 const _ = require("lodash");
 const { array } = require("joi");
+const UserSermon = require("../models/UserSermon");
+const { identity } = require("lodash");
 const conn = require("mongoose").connection;
 
 module.exports = {
@@ -381,6 +383,23 @@ module.exports = {
         query["content_type"] = content_type;
       }
 
+      var user_sermons = await UserSermon.find({ user: req.user._id })
+        .select("sermon_id")
+        .exec(function(err, docs) {
+          docs = docs.map(function(doc) {
+            return doc._id;
+          });
+          if (err) {
+            console.log(err);
+            return [];
+          } else {
+            return doc;
+          }
+        });
+
+      if (user_sermons.length > 0) {
+        query["_id"] = { $in: user_sermons };
+      }
       let sermons = await Sermon.find(query)
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.store_limit)

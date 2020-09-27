@@ -1,0 +1,13 @@
+{
+  "paypal": {
+    "client_id": "NO CLIENT ID",
+    "secret": "NO SECRET",
+    "api_url": "NO URL",
+    "redirect_url": "No URL",
+    "cancel_url": "No URL"
+  },
+  "flutterwave": {
+    "client_id": "NO CLIENT ID",
+    "secret": "NO SECRET"
+  }
+}

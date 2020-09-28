@@ -33,24 +33,24 @@ module.exports = {
                 }
                 // Generation of secret token and saving to the database
                 const secretToken = randomString.generate({length:5, charset:'numeric'});
-
+                const pass = bcrypt.hashSync(password, 10);
                 let newUser = new User({ 
                     username,
                     email,
-                    password, 
+                    password: pass, 
                     confirmPassword,
                     secretToken,
                     phoneNumber,
                     role: userRole._id
                 });
                 // Hash the password and saving new user to database
-                bcrypt.genSalt(10, (err, salt) =>{
-                    bcrypt.hash(newUser.password, salt, (err, hash) => {
-                        newUser.password = hash;
+                // bcrypt.genSalt(10, (err, salt) =>{
+                //     bcrypt.hash(newUser.password, salt, (err, hash) => {
+                //         newUser.password = hash;
 
-                    });
-                });
-                //delete confirm password
+                //     });
+                // });
+                // //delete confirm password
                 newUser.confirmPassword = undefined;
                 // ===================sending email message=========================================
                 // Create email

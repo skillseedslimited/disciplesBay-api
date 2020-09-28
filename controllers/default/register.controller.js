@@ -21,7 +21,7 @@ module.exports = {
       role,
     } = req.body;
     //checking if user role is valid
-    const defaultRole = req.body.role ? req.body.role : "subscriber";
+    const defaultRole = req.body.role ? req.body.role : "user";
 
     const userRole = await Role.findOne({ name: defaultRole });
     if (!userRole) {

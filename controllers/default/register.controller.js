@@ -12,9 +12,9 @@ const path = require('path');
 module.exports = {
      // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::REGISTRATION:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
      register: async (req, res, next) =>{
-        let { username, email, phoneNumber, password, confirmPassword, role } = req.body;
+        let { username, email, phoneNumber, password, confirmPassword} = req.body;
         //checking if user role is valid
-        const defaultRole = role ? role : "subscriber";
+        const defaultRole = req.body.role ? req.body.role : "subscriber";
 
         const userRole = await Role.findOne({name:defaultRole});
         if(!userRole){

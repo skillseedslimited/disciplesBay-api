@@ -1,20 +1,20 @@
 const mongoose = require('mongoose');
 
-const SermonSettingSchema = new mongoose.Schema({
+const CommentSettingSchema = new mongoose.Schema({
     approveProductComment:{
-        type: String,
+        type: Boolean,
         default: true
     },
     approveDevotionalComment:{
-        type: String,
+        type: Boolean,
         default: true
     },
     approveCounsellorComment:{
-        type: String,
+        type: Boolean,
         default: true
     },
     approveLiveStreamingComment:{
-        type: String,
+        type: Boolean,
         default: true
     },
     createdAt:{
@@ -23,4 +23,4 @@ const SermonSettingSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('SermonSetting', SermonSettingSchema);
+module.exports = mongoose.model('CommentSetting', CommentSettingSchema);

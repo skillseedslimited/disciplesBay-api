@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 
 const SubscriptionSettingSchema = new mongoose.Schema({
     price:{
-        type: String,
+        type: Number,
         required: true
     },
     duration:{
-        type: Number
+        type: Number,
+        required: true
     },
     createdAt:{
         type: Date,

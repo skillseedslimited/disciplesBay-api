@@ -21,7 +21,9 @@ module.exports = {
       role,
     } = req.body;
     //checking if user role is valid
-    const userRole = await Role.findOne({ name: role });
+    const defaultRole = req.body.role ? req.body.role : "subscriber";
+
+    const userRole = await Role.findOne({ name: defaultRole });
     if (!userRole) {
       return next(new ErrorResponse("Invalid role specified", 400));
     }

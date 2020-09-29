@@ -14,4 +14,6 @@ router
     [authorizeUpdated("can-mgt-store"), storePolicies.validateStoreUpdate],
     storeController.updateStoreContent
   );
+router.route("/:item/purchase").post(storeController.purchaseStoreItem);
+
 module.exports = router;

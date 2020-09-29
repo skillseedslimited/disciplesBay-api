@@ -6,4 +6,7 @@ module.exports = {
   updatePaymentSettings: async function(req, res) {
     return await PaymentActions.updatePaymentSettings(req, res);
   },
+  initiatePayment: async function(req, res) {
+    return await PaymentActions.initiatePayment(req, res);
+  },
 };

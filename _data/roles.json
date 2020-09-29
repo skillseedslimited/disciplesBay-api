@@ -1,26 +1,23 @@
 [
-    {
-        "name":"admin"
-    },
-    {
-        "name":"supportAdmin"
-    },
-    {
-        "name":"branchAdmin"
-    },
-    {
-        "name":"mediaAdmin"
-    },
-    {
-        "name":"accountsAdmin"
-    },
-    {
-        "name":"subscriber"
-    },
-    {
-        "name":"member"
-    },
-    {
-        "name":"counsellor"
-    }
+  {
+    "name": "super_admin"
+  },
+  {
+    "name": "user"
+  },
+  {
+    "name": "media_admin"
+  },
+  {
+    "name": "accounts_admin"
+  },
+  {
+    "name": "subscriber"
+  },
+  {
+    "name": "member"
+  },
+  {
+    "name": "counsellor"
+  }
 ]

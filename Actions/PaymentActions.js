@@ -1,23 +1,24 @@
 const PaymentSetting = require("../models/PaymentSetting");
+const PaypalSetting = require("../models/PaypalSetting");
+const FlutterwaveSettings = require("../models/FlutterwaveSettings");
 const fetch = require("node-fetch");
+const Transaction = require("../models/Transaction");
 module.exports = {
   fetchPaymentSettings: async function(req, res) {
-    var payment_settings = await PaymentSetting.findOne({}).exec();
-    if (!payment_settings) {
-      payment_settings = {
-        paypal: {
-          client_id: null,
-          secret: null,
-          api_url: null,
-          redirect_url: null,
-          cancel_url: null,
-        },
-      };
-    }
+    var payment_settings = [];
+    var paypal_settings = await PaypalSetting.find({}).exec();
+    var flutterwave_settings = await FlutterwaveSettings.find({}).exec();
+    // console.log(payment_settings);
+    payment_settings.push({
+      paypal: paypal_settings,
+      flutterwave: flutterwave_settings,
+    });
+    console.log(payment_settings);
+
     return res.status(200).json({
       success: true,
       message: "Payment settings fetched successfully",
-      payment_settings,
+      settings: payment_settings,
     });
   },
   updatePaymentSettings: async function(req, res) {
@@ -28,6 +29,7 @@ module.exports = {
         return await this.updatePaypalSettings(req, res);
         break;
       case "flutterwave":
+        return await this.updateFlutterwaveSettings(req, res);
         break;
       case "stripe":
         break;
@@ -42,11 +44,13 @@ module.exports = {
   updatePaypalSettings: async function(req, res) {
     //check  has neccessary requirements
     try {
-      var payment_settings = await PaymentSetting.findOne({}).exec();
-      if (!payment_settings) {
+      var paypal_setting = await PaypalSetting.findOne({
+        name: req.body.name,
+      }).exec();
+      if (!paypal_setting) {
         return res.status(404).json({
           success: false,
-          message: "No payment gateway configured yet",
+          message: "No payment gateway configured for paypal yet",
         });
       }
       if (
@@ -57,19 +61,29 @@ module.exports = {
         "api_url" in req.body
       ) {
         var { client_id, secret, api_url, redirect_url, cancel_url } = req.body;
-        console.log({ client_id, secret, api_url, redirect_url, cancel_url });
-        payment_settings.paypal[0] = {
-          client_id,
-          secret,
-          api_url,
-          redirect_url,
-          cancel_url,
-        };
-        await payment_settings.save();
+        // console.log({ client_id, secret, api_url, redirect_url, cancel_url });
+        var updated = await PaypalSetting.findOneAndUpdate(
+          { name: req.body.name },
+          {
+            client_id,
+            secret,
+            api_url,
+            redirect_url,
+            cancel_url,
+          },
+          { new: true }
+        ).exec();
+
+        if (!updated) {
+          return res.status(500).json({
+            success: false,
+            message: "Unable to update paypal setting",
+          });
+        }
         return res.status(200).json({
           success: true,
           message: "Paypal updated successfully",
-          data: payment_settings,
+          data: updated,
         });
       } else {
         return res.status(400).json({
@@ -86,23 +100,48 @@ module.exports = {
       });
     }
   },
+  initiatePayment: async function(req, res) {
+    try {
+      console.log(req.query);
+      switch (req.query.gateway) {
+        case "paypal":
+          return await this.initiatePaypal(req, res);
+          break;
+        case "flutterwave":
+          return await this.initiateFlutterwave(req, res);
+          break;
+        default:
+          throw Error("No gateway is specified");
+          break;
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to initiate payment",
+        error,
+      });
+    }
+  },
   initiatePaypal: async function(req, res) {
     //get the setings
     try {
-      var payment_settings = await PaymentSetting.findOne({}).exec();
-      if (!payment_settings) {
+      var paypal_setting = await PaypalSetting.findOne({
+        name: req.query.name,
+      }).exec();
+      if (!paypal_setting) {
         return res.status(404).json({
           success: false,
           message: "No payment gateway configured yet",
         });
       }
       fetch(
-        payment_settings.paypal[0].api_url + "/v1/payments/payment",
+        paypal_setting.api_url + "/v1/payments/payment",
         {
           method: "POST",
           auth: {
-            user: payment_settings.paypal[0].client_id,
-            pass: payment_settings.paypal[0].secret,
+            user: paypal_setting.client_id,
+            pass: paypal_setting.secret,
           },
           body: {
             intent: "sale",
@@ -112,14 +151,14 @@ module.exports = {
             transactions: [
               {
                 amount: {
-                  total: req.body.amount,
-                  currency: "USD",
+                  total: req.query.amount,
+                  currency: "NGN",
                 },
               },
             ],
             redirect_urls: {
-              return_url: payment_settings.paypal[0].redirect_url,
-              cancel_url: payment_settings.paypal[0].cancel_url,
+              return_url: paypal_setting.redirect_url,
+              cancel_url: paypal_setting.cancel_url,
             },
             json: true,
           },
@@ -148,10 +187,17 @@ module.exports = {
     }
   },
 
-  executePaypalPayment: async function(payment_id, payer_id, amount) {
+  executePaypalPayment: async function(
+    name,
+    payment_id,
+    payer_id,
+    amount,
+    user,
+    narrative
+  ) {
     try {
-      var payment_settings = await PaymentSetting.findOne({}).exec();
-      if (!payment_settings) {
+      var paypal_setting = await PaypalSetting.findOne({ name }).exec();
+      if (!paypal_setting) {
         return {
           success: false,
           message: "No payment gateway configured yet",
@@ -159,15 +205,15 @@ module.exports = {
       }
 
       fetch(
-        payment_settings.paypal[0].api_url +
+        paypal_setting.api_url +
           "/v1/payments/payment/" +
           payment_id +
           "/execute",
         {
           method: "POST",
           auth: {
-            user: payment_settings.paypal[0].client_id,
-            pass: payment_settings.paypal[0].secret,
+            user: paypal_setting.client_id,
+            pass: paypal_setting.secret,
           },
           body: {
             payer_id: payer_id,
@@ -175,7 +221,7 @@ module.exports = {
               {
                 amount: {
                   total: amount,
-                  currency: "USD",
+                  currency: "NGN",
                 },
               },
             ],
@@ -190,6 +236,14 @@ module.exports = {
               error: err,
             };
           }
+          var transaction = new Transaction({
+            user: user._id,
+            transaction_id: Math.random * 10,
+            narrative,
+            transaction_type: name,
+            amount,
+          });
+          transaction.save();
           return {
             success: true,
             message: "Payment successful",
@@ -202,6 +256,148 @@ module.exports = {
         message: "Unable to process payment",
         error,
       };
+    }
+  },
+  initiateFlutterwave: async function(req, res) {
+    try {
+      var flutterwave_settings = await FlutterwaveSettings.findOne({
+        name: req.query.name,
+      }).exec();
+      if (!flutterwave_settings) {
+        return res.status(404).json({
+          success: false,
+          message: "No payment gateway configured yet",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Flutterwave settings fetched successfully",
+        flutterwave_settings,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Unable to initiate payment",
+        error,
+      });
+    }
+  },
+  verifyFlutterwave: async function(
+    name,
+    transaction_ref,
+    user,
+    narrative,
+    amount
+  ) {
+    var flutterwave_settings = await FlutterwaveSettings.findOne({
+      name,
+    }).exec();
+    if (!flutterwave_settings) {
+      return res.status(404).json({
+        success: false,
+        message: "No payment gateway configured yet",
+      });
+    }
+
+    var url = `https://api.flutterwave.com/v3/transactions/${transaction_ref}/verify`;
+
+    fetch(
+      url,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${flutterwave_settings.sec_key}`,
+        },
+      },
+      function(err, response) {
+        if (err) {
+          return {
+            success: false,
+            message: "Unable to process payment",
+            error: err,
+          };
+        }
+        //log transaction
+        if (response.status == "success") {
+          if (response.data.amount == amount) {
+            var transaction = new Transaction({
+              user: user._id,
+              transaction_id: tranaction_ref,
+              narrative,
+              transaction_type: name,
+              amount,
+            });
+            transaction.save();
+            return {
+              success: true,
+              message: "Payment successful",
+              response: response.json(),
+            };
+          } else {
+            return {
+              succes: false,
+              message: "amount paid not equal to item price",
+            };
+          }
+        } else {
+          return {
+            succes: false,
+            message: "Unable to process payment",
+          };
+        }
+      }
+    );
+  },
+  updateFlutterwaveSettings: async function(req, res) {
+    //check  has neccessary requirements
+    try {
+      var flutterwave_settings = await FlutterwaveSettings.findOne({
+        name: req.body.name,
+      }).exec();
+      if (!flutterwave_settings) {
+        return res.status(404).json({
+          success: false,
+          message: "No payment gateway configured for flutterwave yet",
+        });
+      }
+      if (
+        "public_key" in req.body &&
+        "sec_key" in req.body &&
+        "enc_key" in req.body
+      ) {
+        var { public_key, sec_key, enc_key } = req.body;
+        // console.log({ client_id, secret, api_url, redirect_url, cancel_url });
+        var updated = await PaypalSetting.findOneAndUpdate(
+          { name: req.body.name },
+          { public_key, sec_key, enc_key },
+          { new: true }
+        ).exec();
+
+        if (!updated) {
+          return res.status(500).json({
+            success: false,
+            message: "Unable to update flutterwave setting",
+          });
+        }
+        return res.status(200).json({
+          success: true,
+          message: "Flutterwave updated successfully",
+          data: updated,
+        });
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Some data are missing ,please check and try again",
+        });
+      }
+    } catch (error) {
+      //   console.log(error);
+      return res.status(400).json({
+        success: false,
+        message: "Error while updating flutterwave settings",
+        error,
+      });
     }
   },
 };

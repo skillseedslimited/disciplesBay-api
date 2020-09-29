@@ -7,7 +7,8 @@
     "cancel_url": "No URL"
   },
   "flutterwave": {
-    "client_id": "NO CLIENT ID",
-    "secret": "NO SECRET"
+    "public_key": "NO PUBKEY KEY",
+    "sec_key": "NO SECRET",
+    "enc_key": "NO ENCRYPT"
   }
 }

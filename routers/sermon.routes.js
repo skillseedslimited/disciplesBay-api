@@ -52,13 +52,7 @@ router.patch(
 router.get(
   "/category/:category/fetch",
   [authorizeUpdated(["can-mgt-sermons"])],
-  SermonsController.updateSermonCategory
-);
-
-router.delete(
-  "/category/:category/delete",
-  [authorizeUpdated(["can-mgt-sermons"])],
-  SermonsController.deleteSermonCategory
+  SermonsController.fetchSingleSermonCategory
 );
 
 router.delete(

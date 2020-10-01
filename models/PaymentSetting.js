@@ -4,35 +4,63 @@ const Schema = mongoose.Schema;
 const PaymentSettingSchema = new Schema({
   paypal: [
     {
-      client_id: {
-        type: String,
-        default: null,
+      store: {
+        client_id: {
+          type: String,
+          default: null,
+        },
+        secret: {
+          type: String,
+          default: null,
+        },
+        api_url: {
+          type: String,
+          default: null,
+        },
+        redirect_url: {
+          type: String,
+          default: null,
+        },
+        cancel_url: {
+          type: String,
+          default: null,
+        },
       },
-      secret: {
-        type: String,
-        default: null,
-      },
-      api_url: {
-        type: String,
-        default: null,
-      },
-      redirect_url: {
-        type: String,
-        default: null,
-      },
-      cancel_url: {
-        type: String,
-        default: null,
+      donations: {
+        client_id: {
+          type: String,
+          default: null,
+        },
+        secret: {
+          type: String,
+          default: null,
+        },
+        api_url: {
+          type: String,
+          default: null,
+        },
+        redirect_url: {
+          type: String,
+          default: null,
+        },
+        cancel_url: {
+          type: String,
+          default: null,
+        },
       },
     },
   ],
   flutterwave: [
     {
-      client_id: {
+      pubkey: {
         type: String,
         default: null,
       },
-      secret: {
+      secretkey: {
+        type: String,
+        default: null,
+      },
+      encryptkey: {
         type: String,
         default: null,
       },

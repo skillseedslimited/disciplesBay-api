@@ -14,4 +14,6 @@ router.put(
   [authorizeUpdated("can-mgt-payment-settings")],
   PaymentController.updatePaymentSettings
 );
+
+router.get("/initiate", PaymentController.initiatePayment);
 module.exports = router;

@@ -336,7 +336,7 @@ module.exports = {
     } catch (error) {
       return res.status(500).json({
         succes: false,
-        message: "Error while deleting sermon category",
+        message: "Error while fetching sermon category",
         data: error,
       });
     }
@@ -384,23 +384,20 @@ module.exports = {
       }
 
       var user_sermons = await UserSermon.find({ user: req.user._id })
-        .select("sermon_id")
-        .exec(function(err, docs) {
-          docs = docs.map(function(doc) {
-            return doc._id;
-          });
-          if (err) {
-            console.log(err);
-            return [];
-          } else {
-            return doc;
-          }
-        });
+        .select("sermon_id -_id")
+        .exec();
 
-      if (user_sermons.length > 0) {
-        query["_id"] = { $in: user_sermons };
-      }
-      let sermons = await Sermon.find(query)
+      var user_sermons =
+        user_sermons == undefined
+          ? []
+          : user_sermons.map((sermon) => {
+              return sermon.sermon_id.toString();
+            });
+
+      console.log(query);
+      let sermons = await Sermon.find({
+        $or: [{ subscription_type: "free" }, { _id: { $in: user_sermons } }],
+      })
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.store_limit)
         .limit(this.store_limit)

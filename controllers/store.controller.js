@@ -12,4 +12,8 @@ module.exports = {
   updateStoreContent: async function(req, res) {
     return await storeAction.updateStoreContent(req, res);
   },
+
+  purchaseStoreItem: async function(req, res) {
+    return await storeAction.purchaseStoreItem(req, res);
+  },
 };

@@ -8,7 +8,7 @@ const Transaction = require("../models/Transaction");
 const { response } = require("express");
 module.exports = {
   store_limit: 40,
-  fetchAllStoreContents: async function(req, res) {
+  fetchAllStoreContents: async function (req, res) {
     try {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const content_type = req.query.content_type || null;
@@ -41,7 +41,7 @@ module.exports = {
       });
     }
   },
-  processStoreContents: async function(all_contents) {
+  processStoreContents: async function (all_contents) {
     let contents = [];
     for (let content of all_contents) {
       if (content.item_type == "sermon") {
@@ -57,7 +57,7 @@ module.exports = {
     }
   },
 
-  fetchSingleStoreContent: async function(req, res) {
+  fetchSingleStoreContent: async function (req, res) {
     try {
       let item_id = req.params.item;
       const item = await Store.findOne({ _id: item_id }).exec();
@@ -92,7 +92,7 @@ module.exports = {
 
   //   },
   //update store content quantity
-  updateStoreContent: async function(req, res) {
+  updateStoreContent: async function (req, res) {
     try {
       let item_id = req.params.item;
       var { quantity, status } = req.body;
@@ -128,7 +128,7 @@ module.exports = {
   },
 
   //buy
-  purchaseStoreItem: async function(req, res) {
+  purchaseStoreItem: async function (req, res) {
     try {
       let item_id = req.params.item;
       const item = await Store.findOne({ _id: item_id }).exec();
@@ -166,10 +166,17 @@ module.exports = {
             .status(500)
             .json({ success: false, message: "Invalid gateway selected " });
       }
-    } catch (error) {}
+    } catch (error) {
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: "Unable to complete payment please try again",
+        });
+    }
   },
   //gift someone
-  payWithPaypal: async function(
+  payWithPaypal: async function (
     item,
     payment_id,
     payer_id,
@@ -231,7 +238,7 @@ module.exports = {
       });
     }
   },
-  payWithFlutterWave: async function(
+  payWithFlutterWave: async function (
     item,
     transaction_ref,
     user,

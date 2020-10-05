@@ -42,7 +42,7 @@ mongoose
   )
   .catch((err) => console.log(`Server connection error: ${err.message}`.red));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3100;
 
 if (require.main === module) {
   //   console.log("this is not it");

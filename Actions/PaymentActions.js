@@ -4,7 +4,7 @@ const FlutterwaveSettings = require("../models/FlutterwaveSettings");
 const fetch = require("node-fetch");
 const Transaction = require("../models/Transaction");
 module.exports = {
-  fetchPaymentSettings: async function(req, res) {
+  fetchPaymentSettings: async function (req, res) {
     var payment_settings = [];
     var paypal_settings = await PaypalSetting.find({}).exec();
     var flutterwave_settings = await FlutterwaveSettings.find({}).exec();
@@ -21,7 +21,7 @@ module.exports = {
       settings: payment_settings,
     });
   },
-  updatePaymentSettings: async function(req, res) {
+  updatePaymentSettings: async function (req, res) {
     //possible payment setttings
     // var possible_payments = ["paypal", "flutterwave", "stripe", "cashapp"];
     switch (req.body.gateway) {
@@ -41,7 +41,7 @@ module.exports = {
           .json({ success: false, message: "Invalid gateway selected " });
     }
   },
-  updatePaypalSettings: async function(req, res) {
+  updatePaypalSettings: async function (req, res) {
     //check  has neccessary requirements
     try {
       var paypal_setting = await PaypalSetting.findOne({
@@ -100,7 +100,7 @@ module.exports = {
       });
     }
   },
-  initiatePayment: async function(req, res) {
+  initiatePayment: async function (req, res) {
     try {
       console.log(req.query);
       switch (req.query.gateway) {
@@ -123,7 +123,7 @@ module.exports = {
       });
     }
   },
-  initiatePaypal: async function(req, res) {
+  initiatePaypal: async function (req, res) {
     //get the setings
     try {
       var paypal_setting = await PaypalSetting.findOne({
@@ -163,7 +163,7 @@ module.exports = {
             json: true,
           },
         },
-        function(err, response) {
+        function (err, response) {
           if (err) {
             return res.status(500).json({
               success: false,
@@ -187,7 +187,7 @@ module.exports = {
     }
   },
 
-  executePaypalPayment: async function(
+  executePaypalPayment: async function (
     name,
     payment_id,
     payer_id,
@@ -228,7 +228,7 @@ module.exports = {
           },
           json: true,
         },
-        function(err, response) {
+        function (err, response) {
           if (err) {
             return {
               success: false,
@@ -258,7 +258,7 @@ module.exports = {
       };
     }
   },
-  initiateFlutterwave: async function(req, res) {
+  initiateFlutterwave: async function (req, res) {
     try {
       var flutterwave_settings = await FlutterwaveSettings.findOne({
         name: req.query.name,
@@ -282,7 +282,7 @@ module.exports = {
       });
     }
   },
-  verifyFlutterwave: async function(
+  verifyFlutterwave: async function (
     name,
     transaction_ref,
     user,
@@ -310,7 +310,7 @@ module.exports = {
           Authorization: `Bearer ${flutterwave_settings.sec_key}`,
         },
       },
-      function(err, response) {
+      function (err, response) {
         if (err) {
           return {
             success: false,
@@ -349,7 +349,7 @@ module.exports = {
       }
     );
   },
-  updateFlutterwaveSettings: async function(req, res) {
+  updateFlutterwaveSettings: async function (req, res) {
     //check  has neccessary requirements
     try {
       var flutterwave_settings = await FlutterwaveSettings.findOne({
@@ -368,7 +368,7 @@ module.exports = {
       ) {
         var { public_key, sec_key, enc_key } = req.body;
         // console.log({ client_id, secret, api_url, redirect_url, cancel_url });
-        var updated = await PaypalSetting.findOneAndUpdate(
+        var updated = await FlutterwaveSettings.findOneAndUpdate(
           { name: req.body.name },
           { public_key, sec_key, enc_key },
           { new: true }

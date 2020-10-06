@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const moment = require("moment");
 const RoleSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -11,7 +11,7 @@ const RoleSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: moment().format(),
   },
 });
 

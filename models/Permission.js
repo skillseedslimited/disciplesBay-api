@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const moment = require("moment");
 const PermissionSchema = new Schema({
   name: {
     type: String,
@@ -17,7 +17,7 @@ const PermissionSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: moment().format(),
   },
 });
 

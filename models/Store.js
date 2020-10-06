@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const moment = require("moment");
 
 const StoreSchema = new Schema({
   item: {
@@ -26,7 +27,7 @@ const StoreSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: moment().format(),
   },
   isDeleted: {
     type: Boolean,

@@ -24,5 +24,10 @@
     "name": "can-mgt-payment-settings",
     "description": "User can manage payment settings",
     "category": "Payment management"
+  },
+  {
+    "name": "can-mgt-donations",
+    "description": "User can manage donation settings",
+    "category": "Donation management"
   }
 ]

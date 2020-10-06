@@ -1,12 +1,9 @@
 const fs = require("fs");
 const Permission = require("../models/Permission");
-
+const permissions = require("../_data/permissions.json");
 module.exports = {
-  up: async function() {
+  up: async function () {
     try {
-      const permissions = JSON.parse(
-        fs.readFileSync(`${__dirname}/_data/permissions.json`, "utf-8")
-      );
       for (permission of permissions) {
         var perm = await Permission.findOneAndUpdate(
           {
@@ -18,7 +15,7 @@ module.exports = {
             category: permission.category,
           },
           { upsert: true, setDefaultsOnInsert: true, new: true },
-          function(error, doc) {
+          function (error, doc) {
             if (!error) {
             } else {
               console.log(error);

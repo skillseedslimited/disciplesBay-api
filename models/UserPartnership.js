@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
-const UserPartnership = new Schema({
-  user: {
+const moment = require("moment");
+const UserPartnershipSchema = new Schema({
+  user_id: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  partnership: {
+  partnership_id: {
     type: Schema.Types.ObjectId,
     ref: "Partnership",
   },
@@ -31,11 +31,11 @@ const UserPartnership = new Schema({
   },
   next_charge: {
     type: Date,
-    default: null,
+    default: moment().format("YYYY-MM-DD"),
   },
 });
 
 module.exports = UserPartnership = mongoose.model(
   "user_partnerships",
-  UserPartnership
+  UserPartnershipSchema
 );

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const moment = require("moment");
 const commentSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User" },
   comment: { type: String, default: null },
@@ -57,7 +58,7 @@ const SermonSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: moment().format(),
   },
   updatedAt: {
     type: String,

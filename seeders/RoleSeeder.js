@@ -11,7 +11,7 @@ const { findOneAndUpdate } = require("../models/User");
 const path = require("path");
 const roles = require("../_data/roles.json");
 module.exports = {
-  up: async function() {
+  up: async function () {
     try {
       //   var file_path = path.join(__dirname, "..", "_data", "roles.json");
       //   const roles = fs.readFileSync(file_path, "utf-8");
@@ -29,19 +29,20 @@ module.exports = {
       var super_admin_role = await Role.findOne({ name: "super_admin" }).exec();
       if (super_admin_role) {
         let permissions = await Permission.find({}).exec();
+        // console.log(permissions);
         for (permission of permissions) {
           await RoleAndPermission.findOneAndUpdate(
             {
               permission: permission._id,
-              role: permission._id,
+              role: super_admin_role._id,
             },
             {
               permission: permission._id,
-              role: permission._id,
+              role: super_admin_role._id,
               permission_name: permission.name,
             },
             { upsert: true, setDefaultsOnInsert: true },
-            function(error, doc) {
+            function (error, doc) {
               if (!error) {
               } else {
                 console.log(error);

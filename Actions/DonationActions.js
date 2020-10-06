@@ -3,6 +3,7 @@ const Partnership = require("../models/Partnership");
 const UserPartnership = require("../models/UserPartnership");
 const FlutterwavePartnership = require("../models/FlutterwavePartnership");
 const Payment = require("../Actions/PaymentActions");
+const moment = require("moment");
 module.exports = {
   fetchAllDonations: async function (req, res) {
     try {
@@ -27,6 +28,28 @@ module.exports = {
     }
   },
 
+  fetchUserDonations: async function (req, res) {
+    try {
+      const page = req.query.page ? req.query.page : 1;
+      const donations = await Donation.find({ user: req.user._id })
+        .populate("user", "username email picture")
+        .sort({ createdAt: "desc" })
+        .skip((page - 1) * 20)
+        .limit(20)
+        .exec();
+      return res.status(200).json({
+        success: true,
+        message: "Donations fetched successfully",
+        donations,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "An error occured please try again",
+        error: error,
+      });
+    }
+  },
   //create partnerships
   createPartnership: async function (req, res) {
     try {
@@ -148,7 +171,32 @@ module.exports = {
   fetchActivePartnership: async function (req, res) {
     try {
       const page = req.query.page ? req.query.page : 1;
-      const user_partnerships = await UserPartnership.find({})
+      const user_partnerships = await UserPartnership.find({ status: "active" })
+        .populate("user", "username email picture")
+        .populate("partnership", "name amount frequency")
+        .sort({ createdAt: "desc" })
+        .skip((page - 1) * 20)
+        .limit(20)
+        .exec();
+      return res.status(200).json({
+        success: true,
+        message: "User partnerships fetched successfully",
+        user_partnerships,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "An error occured please try again",
+        error: error,
+      });
+    }
+  },
+  fetchUserActivePartnership: async function (req, res) {
+    try {
+      const page = req.query.page ? req.query.page : 1;
+      const user_partnerships = await UserPartnership.find({
+        user_id: req.user._id,
+      })
         .populate("user", "username email picture")
         .populate("partnership", "name amount frequency")
         .sort({ createdAt: "desc" })
@@ -174,6 +222,16 @@ module.exports = {
     try {
       switch (gateway) {
         case "paypal":
+          if (
+            !("payment_id" in req.body) ||
+            !("payer_id" in req.body) ||
+            !("amount" in req.body)
+          ) {
+            return res.status(400).json({
+              success: false,
+              message: "Some fields are missing try again",
+            });
+          }
           return await this.giveWithPaypal(
             req.body.payment_id,
             req.body.payer_id,
@@ -182,6 +240,12 @@ module.exports = {
           );
           break;
         case "flutterwave":
+          if (!("payment_id" in req.body) || !("amount" in req.body)) {
+            return res.status(400).json({
+              success: false,
+              message: "Some fields are missing try again",
+            });
+          }
           return await this.giveWithFlutterWave(
             req.body.payment_id,
             req.user,
@@ -287,7 +351,7 @@ module.exports = {
       });
     }
   },
-  subscribeToPartnership: async function () {
+  subscribeToPartnership: async function (req, res) {
     var { amount, gateway } = req.body;
     try {
       var partnership_id = req.params.partnership;
@@ -308,6 +372,12 @@ module.exports = {
         //   );
         //   break;
         case "flutterwave":
+          if (!("payment_id" in req.body)) {
+            return res.status(400).json({
+              success: false,
+              message: "Some fields are missing try again",
+            });
+          }
           return await this.subscribeWithFlutterwavePartnership(
             partnership,
             req.body.payment_id,
@@ -365,13 +435,13 @@ module.exports = {
         var flutterwavepartnership = new FlutterwavePartnership({
           user: user._id,
           token: resp.response.data.card.token,
-          user: JSON.stringify(resp.response.data.customer.email),
+          user: JSON.stringify(resp.response.data.customer),
         });
 
         await flutterwavepartnership.save();
         var user_partnership_save = new UserPartnership({
-          user: user._id,
-          partnership: partnership._id,
+          user_id: user._id,
+          partnership_id: partnership._id,
           user_partnership: flutterwavepartnership._id,
           status: "active",
           gateway: "flutterwave",
@@ -401,8 +471,82 @@ module.exports = {
       day = 365;
     }
 
-    return new Date(new Date().getTime() + day * 24 * 60 * 60 * 1000);
+    return moment().add(day, "days").format("YYYY-MM-DD");
   },
-  chargePartnershipSubscription: async function () {},
-  chargeWithFlutterwave() {},
+  chargePartnershipSubscription: async function () {
+    var user_partnerships = await UserPartnership.find({
+      status: "active",
+      next_charge: moment().format("YYYY-MM-DD"),
+    })
+      .populate("user partnership")
+      .exec();
+    for (var prtnerships of user_partnerships) {
+      if (prtnerships.gateway == "flutterwave") {
+        this.chargeWithFlutterwave(prtnerships.user, prtnerships);
+      }
+    }
+  },
+  chargeWithFlutterwave: async function (user, user_partnership) {
+    var partnership = user_partnership.partnership;
+    var amount = partnership.amount;
+    var flutterwavepartnership = await FlutterwavePartnership.findById(
+      user_partnership.user_partnership
+    ).exec();
+
+    if (!flutterwavepartnership) {
+      //return fails
+    }
+    //charge token
+    var narrative = `Donation of ${amount} was successfull`;
+    var resp = await Payment.chargeWithToken(
+      "donation",
+      user,
+      flutterwavepartnership.user,
+      flutterwavepartnership.token,
+      narrative,
+      amount
+    );
+
+    if (resp.success == true) {
+      //update user partnership
+      //store donation
+      var donation = new Donation({
+        user: user._id,
+        amount,
+        narrative,
+        donation_type: "partnership",
+        gateway: "flutterwave",
+      });
+
+      await donation.save();
+
+      var flutterwavepartnership = await FlutterwavePartnership.findOneAndUpdate(
+        { user: user._id },
+        {
+          token: resp.response.data.card.token,
+          user: JSON.stringify(resp.response.data.customer),
+        }
+      ).exec();
+
+      var user_partnership_save = UserPartnership.findOneAndUpdate(
+        {
+          user_id: user._id,
+          gateway: "flutterwave",
+          partnership_id: partnership._id,
+        },
+        {
+          user_partnership: flutterwavepartnership._id,
+          status: "active",
+          gateway: "flutterwave",
+          amount: amount,
+          next_charge: this.resolvePartnershipFrequency(partnership.frequency),
+        }
+      ).exec();
+
+      //   return res.status(200).json({
+      //       success : true,
+      //       message : ""
+      //   })
+    }
+  },
 };

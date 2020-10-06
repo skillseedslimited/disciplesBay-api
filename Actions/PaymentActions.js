@@ -293,10 +293,10 @@ module.exports = {
       name,
     }).exec();
     if (!flutterwave_settings) {
-      return res.status(404).json({
+      return {
         success: false,
         message: "No payment gateway configured yet",
-      });
+      };
     }
 
     var url = `https://api.flutterwave.com/v3/transactions/${transaction_ref}/verify`;
@@ -331,7 +331,7 @@ module.exports = {
             transaction.save();
             return {
               success: true,
-              message: "Payment successful",
+              message: "Payment successfull",
               response: response.json(),
             };
           } else {
@@ -399,5 +399,62 @@ module.exports = {
         error,
       });
     }
+  },
+  chargeWithToken: async function (
+    name,
+    user,
+    user_data,
+    token,
+    narrative,
+    amount
+  ) {
+    var flutterwave_settings = await FlutterwaveSettings.findOne({
+      name,
+    }).exec();
+    if (!flutterwave_settings) {
+      return {
+        success: false,
+        message: "No payment gateway configured yet",
+      };
+    }
+    fetch(
+      "https://api.flutterwave.com/v3/tokenized-charges",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${flutterwave_settings.sec_key}`,
+        },
+        body: {
+          token: token,
+          currency: "NGN",
+          country: "country",
+          amount,
+          tx_ref: Math.random * 10,
+          email: user_data.email,
+        },
+      },
+      function (err, response) {
+        if (err) {
+          return {
+            success: false,
+            message: "Unable to process payment",
+            error: err,
+          };
+        }
+        var transaction = new Transaction({
+          user: user._id,
+          transaction_id: Math.random * 10,
+          narrative,
+          transaction_type: name,
+          amount,
+        });
+        transaction.save();
+        return {
+          success: true,
+          message: "Charge successful",
+        };
+      }
+    );
   },
 };

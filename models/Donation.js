@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const moment = require("moment");
 const DonationSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -27,7 +27,7 @@ const DonationSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: moment().format(),
   },
 });
 

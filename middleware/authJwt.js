@@ -32,9 +32,7 @@ const authorize = (...roles) => {
     if (!roles.includes(req.user.role.name)) {
       return next(
         new ErrorResponse(
-          `User role ${
-            req.user.role.name
-          } is not authorized to access this route`,
+          `User role ${req.user.role.name} is not authorized to access this route`,
           403
         )
       );
@@ -51,12 +49,11 @@ const authorizeUpdated = (permissions) => {
       role: req.user.role,
       permission_name: { $in: permissions },
     });
+
     if (!check_role) {
       return next(
         new ErrorResponse(
-          `User role ${
-            req.user.role.name
-          } is not authorized to access this route`,
+          `User role ${req.user.role.name} is not authorized to access this route`,
           403
         )
       );

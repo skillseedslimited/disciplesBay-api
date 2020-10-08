@@ -85,6 +85,7 @@ const getAllEvent = asyncHandler( (req, res, next) =>{
     .then(event =>{
         res.status(200).json({
             sucess: true,
+            message: 'all events',
             data: event
         })
     })

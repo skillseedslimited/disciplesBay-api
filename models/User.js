@@ -93,6 +93,18 @@ const UserSchema = new Schema({
       },
     },
   ],
+  notificationCounter: {
+    type: Number,
+    default: 0,
+  },
+  deviceToken: {
+    type: String,
+    default: null,
+  },
+  deviceRegistered: {
+    type: Boolean,
+    default: false,
+  },
   active: {
     type: Boolean,
     default: false,

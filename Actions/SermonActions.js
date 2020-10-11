@@ -6,10 +6,10 @@ const { array } = require("joi");
 const UserSermon = require("../models/UserSermon");
 const { identity } = require("lodash");
 const conn = require("mongoose").connection;
-
+const NotificationAction = require("../Actions/NotificationActions");
 module.exports = {
   sermon_limit: 20,
-  createSermon: async function(req, res) {
+  createSermon: async function (req, res) {
     try {
       var {
         title,
@@ -68,6 +68,11 @@ module.exports = {
           });
         }
       }
+      NotificationAction.sendToGeneral(
+        "Hi, we just posted a new sermon",
+        "sermon",
+        "#"
+      );
 
       await sermon.save();
       return res.status(200).json({
@@ -85,7 +90,7 @@ module.exports = {
       });
     }
   },
-  listSermons: async function(req, res) {
+  listSermons: async function (req, res) {
     try {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const sermons = await Sermon.find({ isDeleted: false })
@@ -111,7 +116,7 @@ module.exports = {
       });
     }
   },
-  updateSermon: async function(req, res) {
+  updateSermon: async function (req, res) {
     try {
       const sermon_id = req.params.sermon;
 
@@ -169,7 +174,7 @@ module.exports = {
       });
     }
   },
-  deleteSermon: async function(req, res) {
+  deleteSermon: async function (req, res) {
     try {
       const sermon_id = req.params.sermon;
       var sermon = await Sermon.findById(sermon_id);
@@ -206,7 +211,7 @@ module.exports = {
       });
     }
   },
-  getSermon: async function(req, res) {
+  getSermon: async function (req, res) {
     try {
       const sermon_id = req.params.sermon;
       var sermon = await Sermon.findById(sermon_id)
@@ -231,7 +236,7 @@ module.exports = {
       });
     }
   },
-  createSermonCategory: async function(req, res) {
+  createSermonCategory: async function (req, res) {
     try {
       var name = req.body.name;
 
@@ -261,7 +266,7 @@ module.exports = {
       });
     }
   },
-  listSermonCategories: async function(req, res) {
+  listSermonCategories: async function (req, res) {
     try {
       var sermon_category = await SermonCategory.find({ isDeleted: false })
         .sort({
@@ -285,7 +290,7 @@ module.exports = {
       });
     }
   },
-  updateSermonCategory: async function(req, res) {
+  updateSermonCategory: async function (req, res) {
     try {
       var name = req.body.name;
       var category_id = req.params.category;
@@ -317,7 +322,7 @@ module.exports = {
       });
     }
   },
-  fetchSingleSermonCategory: async function(req, res) {
+  fetchSingleSermonCategory: async function (req, res) {
     try {
       const category_id = req.params.category;
       var sermon_category = await SermonCategory.findById(category_id);
@@ -341,7 +346,7 @@ module.exports = {
       });
     }
   },
-  deleteSermonCategory: async function(req, res) {
+  deleteSermonCategory: async function (req, res) {
     try {
       const category_id = req.params.category;
       var sermon_category = await SermonCategory.findById(category_id);
@@ -371,7 +376,7 @@ module.exports = {
   },
 
   //fetch user sermons
-  fetchUserSermons: async function(req, res) {
+  fetchUserSermons: async function (req, res) {
     try {
       const content_type = req.query.content_type
         ? req.query.content_type

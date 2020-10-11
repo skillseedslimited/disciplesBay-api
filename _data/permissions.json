@@ -29,5 +29,10 @@
     "name": "can-mgt-donations",
     "description": "User can manage donation settings",
     "category": "Donation management"
+  },
+  {
+    "name": "can-mgt-notifications",
+    "description": "User can manage notifications",
+    "category": "Notification management"
   }
 ]

@@ -31,7 +31,7 @@ module.exports = function (app) {
   app.use("/api/v1/devotion", [verifyToken], require("./devotion.routes"));
   app.use("/api/v1/news", [verifyToken], require("./news.routes"));
   app.use("/api/v1/profile", [verifyToken], require("./profile.routes"));
-  //app.use('/api/v1/role',[ verifyToken ],  require('./role.routes'));
+  app.use('/api/v1/role',[ verifyToken ],  require('./role.routes'));
   app.use("/api/v1/testimony", [verifyToken], require("./testimony.routes"));
   app.use("/api/v1/event", [verifyToken], require("./event.routes"));
   app.use(
@@ -42,24 +42,5 @@ module.exports = function (app) {
   app.use("/api/v1/settings", [verifyToken], require("./settings.routes"));
   app.use("/api/v1/donation", [verifyToken], require("./donation.routes"));
 };
-module.exports = function(app) {
-    app.use(function(req, res, next) {
-      res.header(
-        "Access-Control-Allow-Headers",
-        "x-access-token, Origin, Content-Type, Accept"
-      );
-      
-      next();
-    });
-      app.use('/api/v1', require('./default.routes'));
-      app.use('/api/v1/devotion', [ verifyToken ], require('./devotion.routes'));
-      app.use('/api/v1/news', [ verifyToken ], require('./news.routes'));
-      app.use('/api/v1/profile', [ verifyToken ], require('./profile.routes'));
-      app.use('/api/v1/role',[ verifyToken ],  require('./role.routes'));
-      app.use('/api/v1/testimony', [ verifyToken ], require('./testimony.routes'));
-      app.use('/api/v1/event', [ verifyToken ], require('./event.routes'));
-      app.use('/api/v1/flutterwave', [ verifyToken ], require('./flutterwave.routes'));
-      app.use('/api/v1/userManagement', [ verifyToken ], require('./userManagement.routes'));
-      app.use('/api/v1/counsellor', [ verifyToken ], require('./counsellor.routes'));
-  };
+
   

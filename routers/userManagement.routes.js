@@ -37,4 +37,11 @@ router
 .route('/unsuspendUser/:id')
 .post(userMangementController.unsuspendUser);
 
+// @route /assignUser
+// @desc assign user a role
+// @access private
+router
+.route('/assignuser/:roleId/:userId')
+.post(userMangementController.assignUser);
+
 module.exports = router

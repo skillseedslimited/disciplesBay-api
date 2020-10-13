@@ -40,4 +40,9 @@ module.exports = function (app) {
   );
   app.use("/api/v1/settings", [verifyToken], require("./settings.routes"));
   app.use("/api/v1/donation", [verifyToken], require("./donation.routes"));
+  app.use(
+    "/api/v1/notification",
+    [verifyToken],
+    require("./notification.routes")
+  );
 };

@@ -19,7 +19,7 @@ router
 
 router
 .route('/deleteEvent/:id')
-.delete(authorize('admin'), eventController.deleteEvent);
+.delete( eventController.deleteEvent);
 
 router
 .route('/editEvent/:id')

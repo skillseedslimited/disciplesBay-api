@@ -13,6 +13,13 @@ router
 .route('/testimonyApproveAll')
 .get(testimonyController.testimonyApproveAll);
 
+// @router /editTestimony
+// @desc delete testimony, getting a single testimony
+// @access private
+router
+.route('/edittestimony/:id')
+.put(testimonyController.editTestimony);
+
 // @router /deleteTestimony
 // @desc delete testimony, getting a single testimony
 // @access private

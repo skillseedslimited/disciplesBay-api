@@ -56,6 +56,7 @@ const createEVent = asyncHandler(async(req, res, next) =>{
     if(req.body.coverImage) eventFields.coverImage = req.body.coverImage;
     if(req.body.date) eventFields.date = req.body.date;
     if(req.body.time) eventFields.time = req.body.time;
+    if(req.body.venue) eventFields.venue = req.body.venue;
 
      await Event.findByIdAndUpdate(
         { _id: id }, 

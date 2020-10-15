@@ -7,6 +7,7 @@ router
 .route('/:id')
 .get(DevotionsController.getDevotionSingle)
 .delete(authorize('admin'), DevotionsController.deleteDevotion)
+.put(DevotionsController.editDevotion)
 
 router
 .route('/')

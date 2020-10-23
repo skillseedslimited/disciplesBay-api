@@ -33,6 +33,7 @@ module.exports = function (app) {
   app.use("/api/v1/role", [verifyToken], require("./role.routes"));
   app.use("/api/v1/testimony", [verifyToken], require("./testimony.routes"));
   app.use("/api/v1/event", [verifyToken], require("./event.routes"));
+  app.use("/api/v1/gallery", [verifyToken], require("./gallery.routers"));
   app.use(
     "/api/v1/flutterwave",
     [verifyToken],

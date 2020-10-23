@@ -43,6 +43,9 @@ router
 .post(testimonyController.testimonyPost)
 .get(testimonyController.testimonyAll);
 
+router
+.route('/deactivate/:id')
+.post(testimonyController.deactivateTestimony);
 
 
 

@@ -179,6 +179,31 @@ const testimonyActive =  (req, res) => {
 
 }
 
+const deactivateTestimony = asyncHandler(async(req, res, next) =>{
+    let id = req.params.id;
+
+    await Testimony.findById(id)
+    .then(test =>{
+        if(!test){
+            return next( new ErrorResponse("Unable to find testimony", 404))
+        }
+
+        test.status = false;
+
+                test.save()
+                .then(test =>{
+                    res.status(200).json({
+                        success: true,
+                        message: 'testimony unactivated successfully',
+                        data: test
+                    })
+                })
+    })
+    .catch(err =>{
+        return next( new ErrorResponse("Unable to find testimony", 404))
+    })
+})
+
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::DELETING TESTIMONY:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const deleteTestimony = (req, res, next)=>{
     // find testimony by id
@@ -207,5 +232,6 @@ module.exports = {
     deleteTestimony,
     testimonySingle,
     testimonyApproveAll,
-    editTestimony
+    editTestimony,
+    deactivateTestimony
 }

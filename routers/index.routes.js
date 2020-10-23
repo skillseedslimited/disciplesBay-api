@@ -46,4 +46,7 @@ module.exports = function (app) {
     [verifyToken],
     require("./notification.routes")
   );
+
+  app.use("/api/v1/file", [verifyToken], require("./file.routes"));
+
 };

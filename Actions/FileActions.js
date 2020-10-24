@@ -21,7 +21,7 @@ module.exports = {
       }
       const returnData = {
         signedRequest: data,
-        url: `https://${bucket_name}.s3.amazonaws.com/${file_type}`
+        url: `https://${bucket_name}.s3.amazonaws.com/${file_name}`
       };
       return res.status(200).json({success : true,message : "File presigned successfully","data" : returnData});
 

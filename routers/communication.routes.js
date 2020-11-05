@@ -21,7 +21,7 @@ router
 .put(communication.receiveCall);
 
 router
-.route('/:log_id/receive-call')
+.route('/:log_id/end-call')
 .put(communication.callEnd);
 module.exports = router;
  

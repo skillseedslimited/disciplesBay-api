@@ -48,5 +48,5 @@ module.exports = function (app) {
   );
 
   app.use("/api/v1/file", [verifyToken], require("./file.routes"));
-
+  app.use("/api/v1/communication", [verifyToken], require("./communication.routes"));
 };

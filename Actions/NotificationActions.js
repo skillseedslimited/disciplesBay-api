@@ -152,4 +152,39 @@ module.exports = {
   //       }
   //     }
   //   },
+
+  sendCommunication: async function (user, themessage, type,channel_name,call_type ,sender) {
+    var registrationToken = user.deviceToken;
+
+    var message = {
+      data: {
+        themessage,
+        channel_name,
+        type,
+        call_type,
+        created_at: moment().format(),
+        sender_name : sender.username
+      },
+      token: registrationToken,
+    };
+
+    firebaseadmin
+      .messaging()
+      .send(message)
+      .then((response) => {})
+      .catch((error) => {
+        console.log("Error sending message:", error);
+      });
+    var notification = new Notification({
+      themessage,
+      resource_link,
+      notification_id: user._id,
+      type: "individual",
+    });
+    await notification.save();
+    await User.findByIdAndUpdate(user._id, {
+      $inc: { notificationCounter: 1 },
+    }).exec();
+    return true;
+  },
 };

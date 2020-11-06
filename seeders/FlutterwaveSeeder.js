@@ -4,7 +4,7 @@ const FlutterwaveSeeder = require("../models/FlutterwaveSettings");
 module.exports = {
   up: async function() {
     try {
-      var payment_types = ["store", "donation"];
+      var payment_types = ["store", "donation","mentor_subscription"];
       for (name of payment_types) {
         var flutterwave_settings = await FlutterwaveSeeder.findOneAndUpdate(
           { name },

@@ -7,12 +7,12 @@ const { authorize, authorizeUpdated } = require('../middleware/authJwt');
 router
 .route('/:id')
 .get(DevotionsController.getDevotionSingle)
-.delete([authorizeUpdated("can-mgt-devotions")], DevotionsController.deleteDevotion)
-.put([authorizeUpdated("can-mgt-devotions")], DevotionsController.editDevotion)
+.delete(DevotionsController.deleteDevotion)
+.put(DevotionsController.editDevotion)
 
 router
 .route('/')
-.post([authorizeUpdated("can-mgt-devotions")], DevotionsController.createDevotion )
+.post(DevotionsController.createDevotion )
 .get(DevotionsController.getDevotions)
 
 module.exports = router

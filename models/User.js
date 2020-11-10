@@ -20,6 +20,12 @@ const UserSchema = new Schema({
     type: String,
     default: "",
   },
+  campus:{
+    type: String
+  },
+  fullName:{
+    type:String
+  },
   phoneNumber: {
     type: String,
   },

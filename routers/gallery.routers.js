@@ -22,12 +22,17 @@ router
 // @desc get single gallery
 // @access Private
 router
-.route('getsinglegallery/:id')
+.route('/single_gallery/:id')
 .get(galleryController.getSingleGallery);
 
-// @route post /getsinglegallery
+// @route post /delete_gallery
 // @desc get single gallery
 // @access Private
+router
+.route('/delete_gallery/:id')
+.delete(galleryController.deletegallery);
+
+
 
 
 module.exports = router

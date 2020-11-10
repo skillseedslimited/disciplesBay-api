@@ -6,14 +6,14 @@ const { deleteTestimony } = require('./testimony.controller');
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::CREATE GALLERY:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const createGallery = asyncHandler(async(req, res, next)=> {
     let {
-        image,
+        images,
         coverImage,
         title
     } = req.body;
 
     let newGallery = new Gallery({
         title,
-        image,
+        images,
         coverImage
     })
 
@@ -106,7 +106,7 @@ const deletegallery = asyncHandler(async(req, res, next) =>{
 
     let id  = req.params.id;
 
-    await gallery.findById(id)
+    await Gallery.findById(id)
     .then(gallery =>{
         if(!gallery){
             return next( new ErrorResponse("Unable to find gallery", 404))

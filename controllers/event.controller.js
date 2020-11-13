@@ -34,7 +34,7 @@ const createEVent = asyncHandler(async(req, res, next) =>{
         })
     })
     .catch((err) =>{
-        return next( new ErrorResponse(`Unable to update event`, 404))
+        return next( new ErrorResponse(`Unable to create event`, 404))
     })
 
 

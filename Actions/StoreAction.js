@@ -184,7 +184,7 @@ module.exports = {
     gift,
     receiver
   ) {
-    //get the price ofthe item
+    //get the price of the item
     try {
       if (item.item_type == "sermon") {
         store_content = await Sermon.findOne({ _id: item.item._id }).exec();

@@ -4,7 +4,7 @@ const PaypalSetting = require("../models/PaypalSetting");
 module.exports = {
   up: async function() {
     try {
-      var payment_types = ["store", "donation"];
+      var payment_types = ["store", "donation","mentor_subscription"];
       for (name of payment_types) {
         var paypal_setting = await PaypalSetting.findOneAndUpdate(
           { name },

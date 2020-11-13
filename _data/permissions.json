@@ -34,5 +34,15 @@
     "name": "can-mgt-notifications",
     "description": "User can manage notifications",
     "category": "Notification management"
+  },
+  {
+    "name": "can-mgt-communications",
+    "description": "User can manage communications",
+    "category": "Communication management"
+  },
+  {
+    "name": "can-mgt-mentorship",
+    "description": "User can manage mentorships",
+    "category": "Mentorship management"
   }
 ]

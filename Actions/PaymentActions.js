@@ -299,21 +299,24 @@ module.exports = {
         message: "No payment gateway configured yet",
       };
     }
-
-    var url = `https://api.flutterwave.com/v3/transactions/${transaction_ref}/verify`;
+console.log(transaction_ref)
+    var url = `https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify`;
    let response =  await  fetch(
       url,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${flutterwave_settings.sec_key}`,
         },
+        body : JSON.stringify({
+          "txref": transaction_ref,
+          "SECKEY" : flutterwave_settings.sec_key
+        })
       });
 
      response = (await response.json())
       //log transaction
-     console.log(response)
+    //  console.log(response)
       if (response.status == "success") {
         if (response.data.amount == amount) {
           var transaction = new Transaction({

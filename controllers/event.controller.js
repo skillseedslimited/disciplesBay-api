@@ -12,7 +12,9 @@ const createEVent = asyncHandler(async(req, res, next) =>{
         venue,
         date,
         time,
-        eventType
+        eventType,
+        eventURL,
+        isLive
     } =  req.body;
 
     const newEvent = new Event({
@@ -22,7 +24,9 @@ const createEVent = asyncHandler(async(req, res, next) =>{
         venue,
         date,
         time,
-        eventType
+        eventType,
+        eventURL,
+        isLive
     });
 
     newEvent.save()
@@ -57,6 +61,9 @@ const createEVent = asyncHandler(async(req, res, next) =>{
     if(req.body.date) eventFields.date = req.body.date;
     if(req.body.time) eventFields.time = req.body.time;
     if(req.body.venue) eventFields.venue = req.body.venue;
+    if(req.body.eventURL) eventFields.eventURL = req.body.eventURL;
+    if(req.body.isLive) eventFields.isLive = req.body.isLive;
+
 
      await Event.findByIdAndUpdate(
         { _id: id }, 

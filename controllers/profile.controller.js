@@ -9,6 +9,11 @@ module.exports = {
 
         
         User.findOne({_id:req.user._id})
+            .populate({
+                path: 'role',
+                match: {name: {$gte: 'counsellor'}},
+                select: 'name'
+            })
             .then(profile => {
                 if(!profile){
                     return next( new ErrorResponse("Unable profile profile", 404))
@@ -31,6 +36,11 @@ module.exports = {
 
         console.log(req.user._id)
         User.findOne({_id:req.user._id})
+        .populate({
+            path: 'role',
+            match: {name: {$gte: 'counsellor'}},
+            select: 'name'
+        })
         .then(async user =>{
             if(!user){
                 return next( new ErrorResponse("Unable find user", 404))

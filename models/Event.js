@@ -22,6 +22,12 @@ const EventSchema = new Schema({
     },
     description:{
         type: String
+    },
+    eventURL:{
+        type:String
+    },
+    isLive:{
+        type: Boolean
     }
 
 })

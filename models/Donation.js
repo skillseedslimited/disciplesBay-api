@@ -22,7 +22,7 @@ const DonationSchema = new Schema({
   },
   gateway: {
     type: String,
-    enum: ["paypal", "flutterave"],
+    enum: ["paypal", "flutterwave"],
     default: null,
   },
   createdAt: {

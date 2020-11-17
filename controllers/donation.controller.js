@@ -22,7 +22,8 @@ module.exports = {
     return await DonationAction.fetchUserActivePartnership(req, res);
   },
   giveDonation: async function (req, res) {
-    return await DonationAction.giveDonation(req, res);
+    const resp = await DonationAction.giveDonation(req, res);
+    return resp;
   },
   subscribeToPartnership: async function (req, res) {
     return await DonationAction.subscribeToPartnership(req, res);

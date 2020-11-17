@@ -292,6 +292,7 @@ module.exports = {
     var flutterwave_settings = await FlutterwaveSettings.findOne({
       name,
     }).exec();
+  
     if (!flutterwave_settings) {
       return {
         success: false,
@@ -300,8 +301,7 @@ module.exports = {
     }
 
     var url = `https://api.flutterwave.com/v3/transactions/${transaction_ref}/verify`;
-
-    fetch(
+   let response =  await  fetch(
       url,
       {
         method: "GET",
@@ -309,45 +309,40 @@ module.exports = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${flutterwave_settings.sec_key}`,
         },
-      },
-      function (err, response) {
-        if (err) {
+      });
+
+     response = (await response.json())
+      //log transaction
+     console.log(response)
+      if (response.status == "success") {
+        if (response.data.amount == amount) {
+          var transaction = new Transaction({
+            user: user._id,
+            transaction_id: tranaction_ref,
+            narrative,
+            transaction_type: name,
+            amount,
+          });
+          transaction.save();
           return {
-            success: false,
-            message: "Unable to process payment",
-            error: err,
+            success: true,
+            message: "Payment successfull",
+            response: response.json(),
           };
-        }
-        //log transaction
-        if (response.status == "success") {
-          if (response.data.amount == amount) {
-            var transaction = new Transaction({
-              user: user._id,
-              transaction_id: tranaction_ref,
-              narrative,
-              transaction_type: name,
-              amount,
-            });
-            transaction.save();
-            return {
-              success: true,
-              message: "Payment successfull",
-              response: response.json(),
-            };
-          } else {
-            return {
-              succes: false,
-              message: "amount paid not equal to item price",
-            };
-          }
         } else {
           return {
-            succes: false,
-            message: "Unable to process payment",
+            success: false,
+            message: "amount paid not equal to item price",
           };
         }
+      } else {
+        return {
+          success: false,
+          message: "Unable to process payment",
+        };
       }
-    );
+      
+   
   },
   updateFlutterwaveSettings: async function (req, res) {
     //check  has neccessary requirements

@@ -17,11 +17,11 @@ router
 .post(communication.initiateCall);
 
 router
-.route('/:log_id/receive-call')
+.route('/receive-call')
 .put(communication.receiveCall);
 
 router
-.route('/:log_id/end-call')
+.route('/end-call')
 .put(communication.callEnd);
 module.exports = router;
  

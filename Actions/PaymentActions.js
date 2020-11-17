@@ -330,7 +330,7 @@ console.log(transaction_ref)
           return {
             success: true,
             message: "Payment successfull",
-            response: response.json(),
+            response: response,
           };
         } else {
           return {

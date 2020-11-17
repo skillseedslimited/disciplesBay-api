@@ -16,13 +16,18 @@ const CallLogsSchema = new Schema({
     call_type : {
         type : String
     },
-    estimated_time_to_end : {
+    ring_time : {
         type : Date,
-        default : moment.now()
+        default : moment()
+    },
+
+    call_start_time : {
+        type : Date,
+        default : moment()
     },
     time_ended : {
         type : Date,
-        default : moment.now(),
+        default : moment(),
         default : null
     },
     amount_used : {

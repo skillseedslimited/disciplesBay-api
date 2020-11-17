@@ -45,6 +45,11 @@ module.exports = {
         //get the receiver username or id, and also the generated channel name
         const { receiver,channel_name,call_type} = req.body;
         //check receiver exists
+        if(receiver.length == 0 || channel_name.length == 0 || call_type.length == 0)
+        {
+            return res.status(400).json({success : false,message : "Compulsory fields arent sent"});
+
+        }
         var check_receiver_exists = await User.findById(receiver).exec();
         if(!check_receiver_exists)
         {
@@ -56,19 +61,21 @@ module.exports = {
         // --> to be done here
         //check this user balance can initiate a call atall
         var sender = req.user;
-        var user_has_enough = this.checkUserHaveEnoughToCall(sender,call_type);
+        var user_has_enough = await this.checkUserHaveEnoughToCall(sender,call_type);
+
         if(user_has_enough)
         {
             //calculate number of minutes is wallet balance can take
-            var number_of_secs = this.calculateNumberOfMinutesforWalletBalance(sender,call_type);
+            var number_of_secs = await  this.calculateNumberOfMinutesforWalletBalance(sender,call_type);
+            // console.log(number_of_secs);
             //check receivr can receive call now
-            if(!this.checkReceiverIsOnCall(receiver))
+            if(! await this.checkReceiverIsOnCall(receiver))
             {   
                 //send receiver a ring notification and channel name
-                this.sendRingNotification(
+              var logId =      await  this.sendRingNotification(
                 sender,receiver_user,channel_name,call_type);
-                //
-                return res.status(200).json({success : true,message : "Call initiated successfully",estimated_call_time : number_of_secs, time_unit : "seconds"});
+                
+                return res.status(200).json({success : true,message : "Call initiated successfully",estimated_call_time : number_of_secs, time_unit : "seconds",logId});
 
             }else{
                 //return a response that caller is busy
@@ -85,12 +92,13 @@ module.exports = {
     checkUserHaveEnoughToCall : async function (sender,call_type) {
 
         var user_wallet = await Wallet.findOne({user : sender._id}).exec();
+       
         var the_call_type = await CommunicationSetting.findOne({communication_type : call_type}).exec();
-
+        
         if(user_wallet && the_call_type)
         {
            //check  wallet has enough for call type
-             return wallet.balance > the_call_type.amount;
+             return user_wallet.balance > the_call_type.amount;
         }
         return false;
     },
@@ -115,19 +123,17 @@ module.exports = {
         {
             //check now is greater than estimated time 
             var current_time = moment(Date.now());
-            var last_call_est = moment(call_log.estimated_time_to_end);
+            var last_call_est = moment(call_log.ring_time);
             var duration = moment.duration(current_time.diff(last_call_est));
             var minutes = duration.asMinutes();
-            if(minutes >= 0)
-            {
-                return false;
-            }else if(call_log.status == "active" || call_log.status == "end" )
+            if((minutes >= 0) && (call_log.status == "active" || call_log.status == "end" ))
             {
                 return false;
             }else{
                 return true;
             }
         }else{
+           
             return false;
         }
     },
@@ -135,10 +141,12 @@ module.exports = {
     sendRingNotification : async function(sender,receiver,channel_name,call_type)
     {
 
-        const call_log = new CallLog({sender:sender._id,receiver : receiver._id,channel_name,estimated_time_to_end :moment(Date.now()).add(30,"seconds"),status : "ring",time_ended : moment(Date.now()).add(30,"seconds"),call_type});
+        const call_log = new CallLog({sender:sender._id,receiver : receiver._id,channel_name,ring_time :moment(Date.now()).add(30,"seconds"),status : "ring",time_ended : moment(Date.now()).add(30,"seconds"),call_type});
 
         await call_log.save();
-        NotificationAction.sendCommunication(receiver,"New Incoming Call","ring",channel_name,call_type,sender,call_log._id);
+
+        return call_log._id;
+        // NotificationAction.sendCommunication(receiver,"New Incoming Call","ring",channel_name,call_type,sender,call_log._id);
 
        
     },
@@ -147,15 +155,16 @@ module.exports = {
     {
         const {channel_name,receiver,log_id} = req.body;
 
-        const log = await CallLog.findOne({ _id : log_id,time_ended : {$lt : moment(Date.now())}}).exec();
+        const log = await CallLog.findOne({ _id : log_id,time_ended : {$lte : moment(Date.now())}}).exec();
 
         if(log)
         {
-           await CallLog.findOneAndUpdate({_id : log_id},{status : "busy"}).exec();
+            console.log(log_id)
+           await CallLog.findOneAndUpdate({_id : log_id},{status : "busy",call_start_time : moment.now()}).exec();
             const notification_receiver = await User.findById(log.sender).exec();
             const notification_sender = await User.findById(log.receiver).exec();
         //send notification and return call connected successfully
-            NotificationAction.sendCommunication(notification_receiver,"Call connected","connected",channel_name,log.call_type,notification_sender,log._id);
+            // NotificationAction.sendCommunication(notification_receiver,"Call connected","connected",channel_name,log.call_type,notification_sender,log._id);
 
             return res.status(200).json({success : true,message : "Call connected successfully"});
         }else {
@@ -179,21 +188,21 @@ module.exports = {
               await CallLog.findOneAndUpdate({_id : log_id},{status : "end"}).exec();
               //calculate balance and enter estimated time_end
 
-            const receiver = await User.findById(log.sender).exec();
-            const sender = await User.findById(log.receiver).exec();
+            const sender = await User.findById(log.sender).exec();
+            const receiver = await User.findById(log.receiver).exec();
 
             const callTime = moment(time_call_end);
             //update sender wallet balance based on time on this log
-            let charge =  this.chargeCallOffWallet(sender,callTime);
+            let charge = await this.chargeCallOffWallet(sender,callTime,log);
             var user_wallet = await Wallet.findOne({user : sender._id}).exec();
             if(user_wallet)
             {
                 await Wallet.findByIdAndUpdate(user_wallet._id,{balance : user_wallet.balance - charge,amount_used :charge }).exec();
             }
             //send notification and return call connected successfully
-            NotificationAction.sendCommunication(sender,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
+            // NotificationAction.sendCommunication(sender,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
 
-            NotificationAction.sendCommunication(receiver,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
+            // NotificationAction.sendCommunication(receiver,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
 
             return res.status(200).json({success : true,message : "Call ended successfully"});
         }else {
@@ -207,11 +216,12 @@ module.exports = {
 
   chargeCallOffWallet : async function(sender,callTime,callLog)
   {
-     let estimated_time_to_end = moment.now(callLog.estimated_time_to_end);
-
-     var duration = moment.duration(estimated_time_to_end.diff(callTime));
+     let call_start_time = moment(callLog.call_start_time).subtract(1,"hour");
+    console.log(callTime);
+    console.log(call_start_time);
+     var duration = moment.duration(callTime.diff(call_start_time));
      var seconds = duration.asSeconds();
-
+    console.log("call start time " + call_start_time + " call tie " + callTime + " durtion "+ seconds);
      if(seconds <= 0)
      {
          //update wallet to zero
@@ -225,7 +235,10 @@ module.exports = {
          {
             return 0;
          }else{
+
              var amount_used = (seconds * call_type.amount);
+             console.log(amount_used);
+             console.log(seconds);
              return amount_used;
          }   
      }

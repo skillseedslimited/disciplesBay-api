@@ -5,6 +5,7 @@ const FlutterwavePartnership = require("../models/FlutterwavePartnership");
 const Payment = require("../Actions/PaymentActions");
 const moment = require("moment");
 module.exports = {
+
   fetchAllDonations: async function (req, res) {
     try {
       const page = req.query.page ? req.query.page : 1;
@@ -216,12 +217,56 @@ module.exports = {
       });
     }
   },
+  giveWithFlutterWave : async function(payment_id,user,amount,req, res) {
+    try {
+
+      var narrative = "Donation of " + amount + "by " + user.username;
+
+      var resp = await Payment.verifyFlutterwave(
+        "donation",
+        payment_id,
+        user,
+        narrative,
+        amount
+      );
+        console.log(resp.success)
+      if (resp.success == false) {
+        //error occuered
+        return res.status(500).json(resp);
+      }
+      //save donation
+      var donation = new Donation({
+        user,
+        amount,
+        narrative,
+        donation_type: "single",
+        gateway: "flutterwave",
+      });
+
+      await donation.save();
+
+      if (!donation) {
+        throw Error("Unable to complete donation, Unknown error");
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Donation sent successfully",
+      });
+    } catch (error) {
+     console.log(error)
+      return res.status(500).json({
+        success: false,
+        message: "Unable to complete payment please try again",
+        error,
+      });
+    }
+  },
   //   give donation
   giveDonation: async function (req, res) {
     var { amount, gateway } = req.body;
     try {
-      switch (gateway) {
-        case "paypal":
+     if(gateway == "paypal")
+     {
           if (
             !("payment_id" in req.body) ||
             !("payer_id" in req.body) ||
@@ -238,26 +283,35 @@ module.exports = {
             req.user,
             amount
           );
-          break;
-        case "flutterwave":
+      }
+      if(gateway == "flutterwave")
+      {
+    
           if (!("payment_id" in req.body) || !("amount" in req.body)) {
             return res.status(400).json({
               success: false,
               message: "Some fields are missing try again",
             });
           }
-          return await this.giveWithFlutterWave(
+          // console.log(await this.giveWithFlutterWave)
+          // console.log(this.giveWithFlutterWave)
+           let resp = await this.giveWithFlutterWave(
             req.body.payment_id,
             req.user,
-            amount
+            amount,
+            req,
+            res
           );
-          break;
-        default:
-          return res
+          return resp;
+          
+        }
+      
+      return res
             .status(500)
             .json({ success: false, message: "Invalid gateway selected " });
-      }
+      
     } catch (error) {
+      console.log(error)
       return res.status(500).json({
         success: false,
         message: "Unable to complete payment please try again",
@@ -309,48 +363,7 @@ module.exports = {
       });
     }
   },
-  giveWithFlutterwave: async function (payment_id, user, amount) {
-    try {
-      var narrative = "Donation of " + amount + "by " + user.username;
-
-      var resp = await Payment.verifyFlutterwave(
-        "donation",
-        payment_id,
-        user,
-        narrative,
-        amount
-      );
-
-      if (resp.success == false) {
-        //error occuered
-        return res.status(500).json(resp);
-      }
-      //save donation
-      var donation = new Donation({
-        user,
-        amount,
-        narrative,
-        donation_type: "single",
-        gateway: "flutterwave",
-      });
-
-      await donation.save();
-
-      if (!donation) {
-        throw Error("Unable to complete donation, Unknown error");
-      }
-      return res.status(200).json({
-        success: true,
-        message: "Donation sent successfully",
-      });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: "Unable to complete payment please try again",
-        error,
-      });
-    }
-  },
+ 
   subscribeToPartnership: async function (req, res) {
     var { amount, gateway } = req.body;
     try {
@@ -549,4 +562,4 @@ module.exports = {
       //   })
     }
   },
-};
+}

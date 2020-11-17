@@ -7,6 +7,11 @@ const { isObject } = require("lodash");
 module.exports = {
   sendToGeneral: function (themessage, type, resource_link) {
     var message = {
+      notification: {
+        title: 'New Notification Alert',
+        body:  themessage,
+       
+      },
       data: {
         themessage,
         resource_link,
@@ -20,7 +25,7 @@ module.exports = {
       .messaging()
       .send(message)
       .then((response) => {
-        console.log("success " + response);
+        console.log(response);
       })
       .catch((error) => {
         console.log(error);
@@ -57,6 +62,11 @@ module.exports = {
     var registrationToken = user.deviceToken;
 
     var message = {
+      notification: {
+        title: 'New Notification Alert',
+        body:  themessage,
+       
+        },
       data: {
         themessage,
         resource_link,
@@ -65,16 +75,17 @@ module.exports = {
       },
       token: registrationToken,
     };
+    // console.log(registrationToken);
 
     firebaseadmin
       .messaging()
       .send(message)
-      .then((response) => {})
+      .then((response) => { console.log(response)})
       .catch((error) => {
         console.log("Error sending message:", error);
       });
     var notification = new Notification({
-      themessage,
+      message : themessage,
       resource_link,
       notification_id: user._id,
       type: "individual",
@@ -155,36 +166,44 @@ module.exports = {
 
   sendCommunication: async function (user, themessage, type,channel_name,call_type ,sender) {
     var registrationToken = user.deviceToken;
-
-    var message = {
-      data: {
-        themessage,
-        channel_name,
-        type,
-        call_type,
-        created_at: moment().format(),
-        sender_name : sender.username
-      },
-      token: registrationToken,
-    };
-
-    firebaseadmin
-      .messaging()
-      .send(message)
-      .then((response) => {})
-      .catch((error) => {
-        console.log("Error sending message:", error);
-      });
-    var notification = new Notification({
-      themessage,
-      resource_link,
-      notification_id: user._id,
-      type: "individual",
-    });
-    await notification.save();
-    await User.findByIdAndUpdate(user._id, {
-      $inc: { notificationCounter: 1 },
-    }).exec();
+    if(registrationToken)
+    {
+      var message = {
+        notification: {
+          title: 'New Notification Alert',
+          body:  themessage,
+         
+          },
+        data: {
+          themessage,
+          channel_name,
+          type,
+          call_type,
+          created_at: moment().format(),
+          sender_name : sender.username
+        },
+        token: registrationToken,
+      };
+  
+      firebaseadmin
+        .messaging()
+        .send(message)
+        .then((response) => {})
+        .catch((error) => {
+          console.log("Error sending message:", error);
+        });
+    }
+   
+    // var notification = new Notification({
+    //   themessage,
+    //   resource_link,
+    //   notification_id: user._id,
+    //   type: "individual",
+    // });
+    // await notification.save();
+    // await User.findByIdAndUpdate(user._id, {
+    //   $inc: { notificationCounter: 1 },
+    // }).exec();
     return true;
   },
 };

@@ -310,6 +310,7 @@ module.exports = {
                 //check payment reference is sent
                 if(!("payment_id" in req.body))
                 {
+                    
                     return res.status(400).json({success :false,message : "Payment reference is needed for flutterwave"});
                 }
                 var resp =  await this.payWithFlutterWave(

@@ -321,7 +321,7 @@ console.log(transaction_ref)
         if (response.data.amount == amount) {
           var transaction = new Transaction({
             user: user._id,
-            transaction_id: tranaction_ref,
+            transaction_id: transaction_ref,
             narrative,
             transaction_type: name,
             amount,

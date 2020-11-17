@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { authorize } = require('../middleware/authJwt');
+const { authorize, authorizeUpdated  } = require('../middleware/authJwt');
 const eventController = require('../controllers/event.controller');
+
 // @route post /createEvent
 // @desc creating events
 // @access Private
 router
 .route('/createEvent')
-.post(authorize('admin'), eventController.createEVent);
+.post( eventController.createEVent);
 
 router
 .route('/getAllEvent')
@@ -19,10 +20,10 @@ router
 
 router
 .route('/deleteEvent/:id')
-.delete(authorize('admin'), eventController.deleteEvent);
+.delete( eventController.deleteEvent);
 
 router
 .route('/editEvent/:id')
-.put(authorize('admin'), eventController.editEvent);
+.put( eventController.editEvent);
 
 module.exports = router

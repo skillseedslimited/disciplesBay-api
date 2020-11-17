@@ -33,8 +33,8 @@ const createEVent = asyncHandler(async(req, res, next) =>{
             data: event
         })
     })
-    .catch(() =>{
-        return next( new ErrorResponse("Unable to update event", 404))
+    .catch((err) =>{
+        return next( new ErrorResponse(`Unable to create event`, 404))
     })
 
 
@@ -56,6 +56,7 @@ const createEVent = asyncHandler(async(req, res, next) =>{
     if(req.body.coverImage) eventFields.coverImage = req.body.coverImage;
     if(req.body.date) eventFields.date = req.body.date;
     if(req.body.time) eventFields.time = req.body.time;
+    if(req.body.venue) eventFields.venue = req.body.venue;
 
      await Event.findByIdAndUpdate(
         { _id: id }, 
@@ -85,6 +86,7 @@ const getAllEvent = asyncHandler( (req, res, next) =>{
     .then(event =>{
         res.status(200).json({
             sucess: true,
+            message: 'all events',
             data: event
         })
     })

@@ -11,7 +11,7 @@ router
 
 // @route /
 // @desc getting all counsellors
-// @access private
+// @access private.
 router
 .route('/:id')
 .get(counsellorController.counsellorSingle);

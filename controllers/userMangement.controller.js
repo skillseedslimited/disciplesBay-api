@@ -1,4 +1,5 @@
 const User  =  require('../models/User');
+const Role = require('../models/Role');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
 
@@ -8,6 +9,11 @@ const getAllUsers = asyncHandler(async (req, res, next) =>{
 
     // finding all user
     await User.find()
+    .populate({
+        path: 'role',
+        match: {name: {$gte: 'counsellor'}},
+        select: 'name'
+    })
     .then(users =>{
         if(!users){
             return next( new ErrorResponse('No users at the moment', 404))
@@ -155,10 +161,49 @@ const unsuspendUser = asyncHandler(async (req, res, next) =>{
     }))
 })
 
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::ASIGN USER AS COUNSELLOR::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const assignUser = asyncHandler(async(req, res, next) =>{
+    
+    // find role id
+    let roleId = req.params.roleId;
+
+    let userId = req.params.userId;
+
+    // finding role
+    let role = await Role.findById(roleId);
+
+    if(!role){
+        return next( new ErrorResponse('No role with this id ohh', 404))
+    }
+
+    await User.findById(userId)
+    .then(user =>{
+        if(!user){
+            return next( new ErrorResponse('No user with this id', 404))
+        }
+
+        user.role = role;
+
+        user.save()
+        .then(user =>{
+            res.status(200).json({
+                success: true,
+                message:'User successfully assign',
+                data: user
+            })
+        })
+    }) 
+
+
+
+    
+})
+
 module.exports = {
     getAllUsers,
     getSingleUser,
     deleteUser,
     suspendUser,
-    unsuspendUser
+    unsuspendUser,
+    assignUser
 }

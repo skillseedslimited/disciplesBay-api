@@ -1,20 +1,26 @@
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
 const User = require("../models/User");
+const Role = require('../models/Role');
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL COUNSELLORS::::::::::::::::::::::::::::::::::::::::::::::::::
 const counsellorAll = asyncHandler(async (req,res, next) =>{
-    console.log("this is role=======>",req.user.role.name)
-    User.find({"role.name": 'counsellor'})
-    .then(counsellors =>{
-        console.log("this is counsellor oh====>>>>", counsellors)
-        if(!counsellors){
-            return next( new ErrorResponse("Unable to get counsellors", 404))
-        }
+    // finding counsellor role and saving in a veriable
+    let counsel  = await Role.findOne({name: 'counsellor'});
 
+
+    // finding all users with role of counsellor
+    User.find({role: counsel})
+    .populate({
+        path: 'role',
+        match: {name: {$gte: 'counsellor'}},
+        select: 'name'
+    })
+    .then(counsellors =>{
+        
         res.status(200).json({
             success: true,
-            message: 'ALl counsellors',
+            message: 'All counsellors',
             data: counsellors
         })
     })

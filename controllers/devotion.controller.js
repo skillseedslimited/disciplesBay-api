@@ -57,10 +57,47 @@ const deleteDevotion = asyncHandler( async(req, res, next) =>{
     })
 });
 
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::EDITTING DEVOTION::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const editDevotion = asyncHandler(async(req, res, next) =>{
+    // const update = req.body;
+    const id = req.params.id;
+    const options = { new: true };
+    // updated = {};
+
+    const devotionFields = {};
+    if(req.body.title) devotionFields.title = req.body.title;
+    if(req.body.imageUrl) devotionFields.imageUrl = req.body.imageUrl;
+    if(req.body.audioUrl) devotionFields.audioUrl = req.body.audioUrl;
+    if(req.body.videoUrl) devotionFields.videoUrl = req.body.videoUrl;
+    if(req.body.text) devotionFields.text = req.body.text;
+    if(req.body.time) devotionFields.time = req.body.time;
+    if(req.body.publishDate) devotionFields.publishDate = req.body.publishDate;
+
+     await Devotion.findByIdAndUpdate(
+        { _id: id }, 
+        { $set: devotionFields },
+        { new: true }
+     )
+     .then(devotion =>{
+         if(!devotion){
+            return next( new ErrorResponse("Unable to update devotion", 404))
+         }
+        res.status(200).json({
+            success: true,
+            message: 'updated successfully',
+            data: devotion
+        })
+     })
+     .catch(() =>{
+        return next( new ErrorResponse("Unable to update devotion", 404))
+     })
+ })
+
 
 module.exports = {
     createDevotion,
     getDevotions,
     getDevotionSingle,
-    deleteDevotion
+    deleteDevotion,
+    editDevotion
 }

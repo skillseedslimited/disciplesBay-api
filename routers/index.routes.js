@@ -26,14 +26,14 @@ module.exports = function (app) {
   app.use("/api/v1/wallet", [verifyToken], require("./wallet.routes"));
   app.use("/api/v1/store", [verifyToken], require("./store.routes"));
   app.use("/api/v1/payment", [verifyToken], require("./payment.routes"));
-
   app.use("/api/v1", require("./default.routes"));
   app.use("/api/v1/devotion", [verifyToken], require("./devotion.routes"));
   app.use("/api/v1/news", [verifyToken], require("./news.routes"));
   app.use("/api/v1/profile", [verifyToken], require("./profile.routes"));
-  //app.use('/api/v1/role',[ verifyToken ],  require('./role.routes'));
+  app.use("/api/v1/role", [verifyToken], require("./role.routes"));
   app.use("/api/v1/testimony", [verifyToken], require("./testimony.routes"));
   app.use("/api/v1/event", [verifyToken], require("./event.routes"));
+  app.use("/api/v1/gallery", [verifyToken], require("./gallery.routers"));
   app.use(
     "/api/v1/flutterwave",
     [verifyToken],

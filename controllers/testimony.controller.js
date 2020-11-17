@@ -15,7 +15,7 @@ const testimonyPost = async (req, res, next) =>{
     } = req.body;
 
     // GETTING USER PICTURE, USERNAME AND ID FROM LOGIN USER
-    let picture = req.user.picture;
+    let picture = req.user.profilePicture;
     let username = req.user.username;
     let user = req.user._id;
 
@@ -41,6 +41,35 @@ const testimonyPost = async (req, res, next) =>{
     .catch(err => res.status(400).json(err));
 
 }
+
+// :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::EDIT TESTIMONIES::::::::::::::::::::::::::::::::::::::::::::::::::::
+const editTestimony = asyncHandler(async(req, res) =>{
+    const id = req.params.id;
+    const options = { new: true };
+    // updated = {};
+    const testimonyFields = {};
+    if(req.body.testimonyBody) testimonyFields.testimonyBody = req.body.testimonyBody;
+    
+
+     await Testimony.findByIdAndUpdate(
+        { _id: id }, 
+        { $set: testimonyFields },
+        { new: true }
+     )
+     .then(testimony =>{
+         if(!testimony){
+            return next( new ErrorResponse("Unable to update testimony", 404))
+         }
+        res.status(200).json({
+            success: true,
+            message: 'updated successfully',
+            data: testimony
+        })
+     })
+     .catch(() =>{
+        return next( new ErrorResponse("Unable to update testimony", 404))
+     })
+})
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING USER TESTIMOIES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const testimonyGet = (req, res) =>{
@@ -150,6 +179,31 @@ const testimonyActive =  (req, res) => {
 
 }
 
+const deactivateTestimony = asyncHandler(async(req, res, next) =>{
+    let id = req.params.id;
+
+    await Testimony.findById(id)
+    .then(test =>{
+        if(!test){
+            return next( new ErrorResponse("Unable to find testimony", 404))
+        }
+
+        test.status = false;
+
+                test.save()
+                .then(test =>{
+                    res.status(200).json({
+                        success: true,
+                        message: 'testimony unactivated successfully',
+                        data: test
+                    })
+                })
+    })
+    .catch(err =>{
+        return next( new ErrorResponse("Unable to find testimony", 404))
+    })
+})
+
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::DELETING TESTIMONY:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const deleteTestimony = (req, res, next)=>{
     // find testimony by id
@@ -177,5 +231,7 @@ module.exports = {
     testimonyActive,
     deleteTestimony,
     testimonySingle,
-    testimonyApproveAll
+    testimonyApproveAll,
+    editTestimony,
+    deactivateTestimony
 }

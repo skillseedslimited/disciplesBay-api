@@ -11,15 +11,7 @@ const counsellorAll = asyncHandler(async (req, res, next) => {
   let status = Boolean;
   if (req.params.status == "true"){
     status = true;
-  }else if (req.params.status == "false"){
-    status = false;
-  }
-
-  // role: counsel
-  // $and:[{ role: counsel  },{ isOnline: status }]
-  // finding all users with role of counsellor
-  console.log("value:", status);
-  User.find({$and:[{ role: counsel  },{ isOnline: status }]})
+    User.find({$and:[{ role: counsel  },{ isOnline: status }]})
     .populate({
         path: 'role',
         match: {name: {$gte: 'counsellor'}},
@@ -35,6 +27,63 @@ const counsellorAll = asyncHandler(async (req, res, next) => {
     .catch((err) => {
       return next(new ErrorResponse("Unable to get counsellors..", 404));
     });
+  }else if (req.params.status == "false"){
+    status = false;
+    User.find({$and:[{ role: counsel  },{ isOnline: status }]})
+    .populate({
+        path: 'role',
+        match: {name: {$gte: 'counsellor'}},
+        select: 'name'
+    })
+    .then((counsellors) => {
+      res.status(200).json({
+        success: true,
+        message: "All counsellors",
+        data: counsellors,
+      });
+    })
+    .catch((err) => {
+      return next(new ErrorResponse("Unable to get counsellors..", 404));
+    });
+  }else{
+    User.find({role: counsel})
+    .populate({
+        path: 'role',
+        match: {name: {$gte: 'counsellor'}},
+        select: 'name'
+    })
+    .then((counsellors) => {
+      res.status(200).json({
+        success: true,
+        message: "All counsellors",
+        data: counsellors,
+      });
+    })
+    .catch((err) => {
+      return next(new ErrorResponse("Unable to get counsellors..", 404));
+    });
+  }
+
+  // role: counsel
+  // $and:[{ role: counsel  },{ isOnline: status }]
+  // finding all users with role of counsellor
+  // console.log("value:", status);
+  // User.find({$and:[{ role: counsel  },{ isOnline: status }]})
+  //   .populate({
+  //       path: 'role',
+  //       match: {name: {$gte: 'counsellor'}},
+  //       select: 'name'
+  //   })
+  //   .then((counsellors) => {
+  //     res.status(200).json({
+  //       success: true,
+  //       message: "All counsellors",
+  //       data: counsellors,
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     return next(new ErrorResponse("Unable to get counsellors..", 404));
+  //   });
 });
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING A SINGLE COUNSELLOR:::::::::::::::::::::::::::::::::::::::::::::::::::::

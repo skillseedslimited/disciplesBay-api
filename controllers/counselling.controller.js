@@ -8,10 +8,10 @@ const counsellorAll = asyncHandler(async (req, res, next) => {
   // finding counsellor role and saving in a veriable
   let counsel = await Role.findOne({ name: "counsellor" });
   console.log(counsel);
-  let status 
-  if (req.params.status == "true") {
+  let status = Boolean;
+  if (req.params.status == "true"){
     status = true;
-  } else if (req.params.status == "false") {
+  }else if (req.params.status == "false"){
     status = false;
   }
 
@@ -19,7 +19,7 @@ const counsellorAll = asyncHandler(async (req, res, next) => {
   // $and:[{ role: counsel  },{ isOnline: status }]
   // finding all users with role of counsellor
   console.log("value:", status);
-  User.find({ role: counsel })
+  User.find({$and:[{ role: counsel  },{ isOnline: status }]})
     .populate({
         path: 'role',
         match: {name: {$gte: 'counsellor'}},

@@ -15,7 +15,7 @@ router
 // @desc getting all counsellors
 // @access private
 router
-.route('/')
+.route('/:status')
 .get(counsellorController.counsellorAll);
 
 // @route /

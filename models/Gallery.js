@@ -7,7 +7,7 @@ const GallerySchema = new Schema({
         type: String
     },
     date:{
-        type: String
+        type: Date
     },
     title:{
         type:String

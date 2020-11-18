@@ -2,6 +2,8 @@ const User  =  require('../models/User');
 const Role = require('../models/Role');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
+const randomString = require('randomstring');
+const bcrypt = require('bcryptjs');
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL USER::::::::::::::::::::::::::::::::::::::::::::::::::::::::

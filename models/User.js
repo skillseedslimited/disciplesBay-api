@@ -16,10 +16,6 @@ const UserSchema = new Schema({
       "Please add a valid email",
     ],
   },
-  picture: {
-    type: String,
-    default: "",
-  },
   campus:{
     type: String
   },

@@ -44,4 +44,11 @@ router
 .route('/assignuser/:roleId/:userId')
 .post(userMangementController.assignUser);
 
+// @route /creat_user
+// @desc assign user a role
+// @access private
+router
+.route('/create-user')
+.post(userMangementController.createUser);
+
 module.exports = router

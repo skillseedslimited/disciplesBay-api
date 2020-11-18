@@ -16,10 +16,6 @@ const UserSchema = new Schema({
       "Please add a valid email",
     ],
   },
-  picture: {
-    type: String,
-    default: "",
-  },
   campus:{
     type: String
   },
@@ -114,6 +110,16 @@ const UserSchema = new Schema({
   active: {
     type: Boolean,
     default: false,
+  },
+  counselorCat:{
+    type:String
+  },
+  description:{
+    type: String
+  },
+  isOnline:{
+    type:Boolean,
+    default: true
   },
   secretToken: String,
   resetPasswordToken: String,

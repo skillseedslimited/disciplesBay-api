@@ -8,13 +8,15 @@ const createGallery = asyncHandler(async(req, res, next)=> {
     let {
         images,
         coverImage,
-        title
+        title,
+        date
     } = req.body;
 
     let newGallery = new Gallery({
         title,
         images,
-        coverImage
+        coverImage,
+        date
     })
 
     newGallery.save()

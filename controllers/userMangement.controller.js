@@ -2,6 +2,8 @@ const User  =  require('../models/User');
 const Role = require('../models/Role');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
+const randomString = require('randomstring');
+const bcrypt = require('bcryptjs');
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL USER::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -168,7 +170,8 @@ const assignUser = asyncHandler(async(req, res, next) =>{
     let roleId = req.params.roleId;
 
     let userId = req.params.userId;
-
+    let CounselorCat  = req.body.counselorCat;
+    let description = req.body.description;
     // finding role
     let role = await Role.findById(roleId);
 
@@ -183,6 +186,8 @@ const assignUser = asyncHandler(async(req, res, next) =>{
         }
 
         user.role = role;
+        user.counselorCat = CounselorCat;
+        user.description = description;
 
         user.save()
         .then(user =>{
@@ -199,11 +204,71 @@ const assignUser = asyncHandler(async(req, res, next) =>{
     
 })
 
+// :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::CREATE USER:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const createUser = asyncHandler( async(req, res, next) =>{
+    let { username, email, phoneNumber, password, confirmPassword, role, fullName, campus } = req.body;
+        //checking if user role is valid
+        const defaultRole = role ? role : "subscriber";
+
+        const userRole = await Role.findOne({name:defaultRole});
+        if(!userRole){
+            return next(new ErrorResponse("Invalid role specified", 400))
+        }
+        // Checking the database if username is taken
+        await User.findOne({ email }, async(err, user) => {
+            // If username is taken  
+            if (user) {
+                console.log('username already exists')
+               return  next(new ErrorResponse("Email already exists", 400))   
+            }else{
+                 // Comparison of passwords
+                if ((confirmPassword) && (password !== confirmPassword)) {
+                    return next(new ErrorResponse("Passwords do not match", 400))              
+                }
+                // Generation of secret token and saving to the database
+                const secretToken = randomString.generate({length:5, charset:'numeric'});
+                const pass = bcrypt.hashSync(password, 10);
+                let newUser = new User({ 
+                    username,
+                    email,
+                    password: pass, 
+                    confirmPassword,
+                    secretToken,
+                    phoneNumber,
+                    campus,
+                    fullName,
+                    role: userRole._id
+                });
+                // Hash the password and saving new user to database
+                // bcrypt.genSalt(10, (err, salt) =>{
+                //     bcrypt.hash(newUser.password, salt, (err, hash) => {
+                //         newUser.password = hash;
+
+                //     });
+                // });
+                // //delete confirm password
+                newUser.confirmPassword = undefined;
+                
+                newUser.save()
+                    .then(user =>{
+                        console.log(user)
+                        res.json({
+                            success: true,
+                            message: 'registration successful, a mail has been sent to you to complete your registration',
+                            data: user
+                        });
+                    })
+                    .catch(err =>  next(err));
+            }
+        });
+})
+
 module.exports = {
     getAllUsers,
     getSingleUser,
     deleteUser,
     suspendUser,
     unsuspendUser,
-    assignUser
+    assignUser,
+    createUser
 }

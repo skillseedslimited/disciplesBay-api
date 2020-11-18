@@ -54,8 +54,8 @@ module.exports = {
   //create partnerships
   createPartnership: async function (req, res) {
     try {
-      var { name, amount, frequency } = req.body;
-      var donation = new Partnership({ name, amount, frequency });
+      var { name, start_amount,end_amount, frequency } = req.body;
+      var donation = new Partnership({ name, start_amount,end_amount ,frequency });
       await donation.save();
       if (!donation) {
         return res.status(400).send({
@@ -98,7 +98,7 @@ module.exports = {
   //  update partnerships
   updatePartnership: async function (req, res) {
     try {
-      var { name, amount, frequency } = req.body;
+      var { name, start_amount,end_amount, frequency } = req.body;
       var partnership_id = req.params.partnership;
       var partnership = await Partnership.findById(partnership_id).exec();
       if (!partnership) {
@@ -109,7 +109,7 @@ module.exports = {
       }
       var updated = await Partnership.findByIdAndUpdate(
         partnership_id,
-        { name, amount, frequency },
+        { name, start_amount,end_amount, frequency },
         { new: true }
       ).exec();
       if (!updated) {
@@ -373,6 +373,22 @@ module.exports = {
         return res.status(404).json({
           success: false,
           message: "Partnership not found",
+        });
+      }
+
+      if(partnership.start_amount <= amount)
+      {
+        return res.status(400).json({
+          success: false,
+          message: "Amount is lower than expcted partnership amount",
+        });
+      }
+
+      if(partnership.end_amount >= amount)
+      {
+        return res.status(400).json({
+          success: false,
+          message: "Amount paid is more than expcted partnership amount",
         });
       }
       switch (gateway) {

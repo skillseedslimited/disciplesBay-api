@@ -45,4 +45,12 @@
     "description": "User can manage mentorships",
     "category": "Mentorship management"
   }
+,
+  {
+    "name": "can-mgt-counsellor-requests",
+    "description": "User can manage counselor requests",
+    "category": "Counsellor management"
+  }
+
+  
 ]

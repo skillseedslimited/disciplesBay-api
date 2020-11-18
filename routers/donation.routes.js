@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const donationController = require("../controllers/donation.controller");
 const authorizeUpdated = require("../middleware/authJwt").authorizeUpdated;
+const DonationPolicy = require("../policies/donationPolicies");
 router
   .route("/all")
   .get(
@@ -12,7 +13,7 @@ router
 router
   .route("/create-partnership")
   .post(
-    [authorizeUpdated("can-mgt-donations")],
+    [DonationPolicy.validatePartnershipCreation,authorizeUpdated("can-mgt-donations")],
     donationController.createPartnership
   );
 

@@ -321,7 +321,7 @@ console.log(transaction_ref)
         if (response.data.amount == amount) {
           var transaction = new Transaction({
             user: user._id,
-            transaction_id: tranaction_ref,
+            transaction_id: transaction_ref,
             narrative,
             transaction_type: name,
             amount,
@@ -330,7 +330,7 @@ console.log(transaction_ref)
           return {
             success: true,
             message: "Payment successfull",
-            response: response.json(),
+            response: response,
           };
         } else {
           return {

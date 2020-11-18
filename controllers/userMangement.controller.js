@@ -170,7 +170,8 @@ const assignUser = asyncHandler(async(req, res, next) =>{
     let roleId = req.params.roleId;
 
     let userId = req.params.userId;
-
+    let CounselorCat  = req.body.counselorCat;
+    let description = req.body.description;
     // finding role
     let role = await Role.findById(roleId);
 
@@ -185,6 +186,8 @@ const assignUser = asyncHandler(async(req, res, next) =>{
         }
 
         user.role = role;
+        user.counselorCat = CounselorCat;
+        user.description = description;
 
         user.save()
         .then(user =>{

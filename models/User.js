@@ -115,6 +115,16 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  counselorCat:{
+    type:String
+  },
+  description:{
+    type: String
+  },
+  isOnline:{
+    type:Boolean,
+    default: true
+  },
   secretToken: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date,

@@ -60,41 +60,44 @@ module.exports = {
 
   sendToUser: async function (user, themessage, type, resource_link) {
     var registrationToken = user.deviceToken;
-
-    var message = {
-      notification: {
-        title: 'New Notification Alert',
-        body:  themessage,
-       
-        },
-      data: {
-        themessage,
-        resource_link,
-        type,
-        created_at: moment().format(),
+if(registrationToken)
+{
+  var message = {
+    notification: {
+      title: 'New Notification Alert',
+      body:  themessage,
+     
       },
-      token: registrationToken,
-    };
-    // console.log(registrationToken);
-
-    firebaseadmin
-      .messaging()
-      .send(message)
-      .then((response) => { console.log(response)})
-      .catch((error) => {
-        console.log("Error sending message:", error);
-      });
-    var notification = new Notification({
-      message : themessage,
+    data: {
+      themessage,
       resource_link,
-      notification_id: user._id,
-      type: "individual",
+      type,
+      created_at: moment().format(),
+    },
+    token: registrationToken,
+  };
+  // console.log(registrationToken);
+
+  firebaseadmin
+    .messaging()
+    .send(message)
+    .then((response) => { console.log(response)})
+    .catch((error) => {
+      console.log("Error sending message:", error);
     });
-    await notification.save();
-    await User.findByIdAndUpdate(user._id, {
-      $inc: { notificationCounter: 1 },
-    }).exec();
-    return true;
+  var notification = new Notification({
+    message : themessage,
+    resource_link,
+    notification_id: user._id,
+    type: "individual",
+  });
+  await notification.save();
+  await User.findByIdAndUpdate(user._id, {
+    $inc: { notificationCounter: 1 },
+  }).exec();
+  return true;
+}
+   
   },
   //   storeUsersNotiication: async function (
   //     group_users,

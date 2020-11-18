@@ -21,5 +21,19 @@ module.exports = {
     callEnd : async function(req,res)
     {
         return CommunicationAction.callEnd(req,res);
-    }
+    },
+    requestCounsellor : async function(req,res)
+    {
+        return CommunicationAction.requestCounsellor(req,res);
+    },
+
+    getAllRequest : async function(req,res)
+    {
+        return CommunicationAction.getAllRequest(req,res);
+    },
+
+    manageRequest : async function(req,res)
+    {
+        return CommunicationAction.manageRequest(req,res);
+    },
 }

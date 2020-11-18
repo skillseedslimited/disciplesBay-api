@@ -6,7 +6,11 @@ const PartnershipSchema = new Schema({
     type: String,
     default: null,
   },
-  amount: {
+  start_amount: {
+    type: Number,
+    default: 0,
+  },
+  end_amount: {
     type: Number,
     default: 0,
   },

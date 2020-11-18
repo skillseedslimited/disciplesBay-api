@@ -23,5 +23,22 @@ router
 router
 .route('/end-call')
 .put(communication.callEnd);
+
+ 
+router
+.route('/request-counsellor')
+.post(communication.requestCounsellor);
+
+router
+.route('/fetch-requests')
+.get(communication.getAllRequest);
+
+
+router
+.route('/:counsellor_request/update-requests')
+.put([authorizeUpdated('can-mgt-counsellor-requests')],communication.manageRequest);
+
+
+
 module.exports = router;
  

@@ -3,6 +3,7 @@ const User = require("../models/User");
 const Wallet = require("../models/Wallet");
 const CallLog = require("../models/CallLogs");
 const moment = require("moment");
+const CounsellorRequest = require("../models/CounsellorRequest");
 const NotificationAction = require("../Actions/NotificationActions");
 module.exports = {
     fetchCommuncationSettings : async function(req,res)
@@ -55,8 +56,30 @@ module.exports = {
         {
             return res.status(404).json({success : false,message : "Receiver not found"});
         }
+
+        //check user alrady send request to same person
+ 
         //get receiver user 
         var receiver_user = check_receiver_exists;
+        let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : receiver_user._id}).sort({createdAt : -1}).exec();
+        
+        if(!checkPendingRequest)
+        { 
+             return res.status(400).json({success : false,message : "You need to send a request before placing "+call_type});
+
+        }
+        if(checkPendingRequest.status == "pending")
+        {
+            //return message that u can place request again
+            return res.status(400).json({success : false,message : "Counsellor has not accepted a request from you"});
+        }else{
+            if(checkPendingRequest.used)
+            {
+                //u can make call again as well
+                return res.status(400).json({success : false,message : "Please resend a request to counsellor"});
+            }
+        }
+        
         //check receiver is a counsellor
         // --> to be done here
         //check this user balance can initiate a call atall
@@ -159,10 +182,19 @@ module.exports = {
 
         if(log)
         {
-            console.log(log_id)
+           
            await CallLog.findOneAndUpdate({_id : log_id},{status : "busy",call_start_time : moment.now()}).exec();
             const notification_receiver = await User.findById(log.sender).exec();
             const notification_sender = await User.findById(log.receiver).exec();
+
+            let checkPendingRequest = await CounsellorRequest.findOne({sender : log.sender,counsellor :  log.receiver}).sort({createdAt : -1}).exec();
+
+            if(checkPendingRequest)
+            {
+                await CounsellorRequest.findByIdAndUpdate(checkPendingRequest._id,{
+                    used : true
+                }).exec();
+            }
         //send notification and return call connected successfully
             // NotificationAction.sendCommunication(notification_receiver,"Call connected","connected",channel_name,log.call_type,notification_sender,log._id);
 
@@ -244,7 +276,99 @@ module.exports = {
      }
 
      
-  }
+  },
+//request counsellor
+requestCounsellor : async function(req,res)
+{
+    const {counsellor_id, call_type} = req.body;
+    
+    let counsellor = await User.findOne({_id : counsellor_id}).populate({
+        path: 'role',
+        match: { name : "counsellor" },
+        select: 'name'
+      }).exec();
 
+      if(!counsellor)
+      {
+          return res.status(404).json({
+              success  :false,
+              message : "Can not find user counsellor"
+          })
+      }
+
+      //check maybe he has a pending request
+      let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : counsellor._id}).sort({createdAt : -1}).exec();
+
+      if(checkPendingRequest)
+      {
+          //check it pending
+          if(checkPendingRequest.status == "pending")
+          {
+              return res.status(400).json({
+                  success : false,
+                  message : "You have pending request, please wait till counsellor act on it. thanks"
+              })
+          }
+      }
+      
+      let counsellor_request =  CounsellorRequest({
+          sender : req.user._id,
+          counsellor : counsellor._id,
+          call_type,
+          status : "pending"
+      })
+
+      await counsellor_request.save();
+      //snd notification to councillor
+      NotificationAction.sendToUser(counsellor,"Call request","request","no link");
+
+      return res.status(200).json({
+          success : true,
+          message : "Request sent successfully to counsellor"
+      })
+
+
+},
+//counsellor see requests
+ getAllRequest : async function(req,res)
+ {
+     //paginate this later
+     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}]}).exec();
+     return res.status(200).json({
+         success : true,message : "All counsellor request fetched successfully",
+         counsellor_requests
+     })
+ },
+//counsellor accept requests
+manageRequest : async function(req,res)
+{
+    //paginate this later
+    const counsellor_request_id = req.params.counsellor_request;
+    const counsellor_requests = await CounsellorRequest.findById(counsellor_request_id).exec();
+    if(!counsellor_requests)
+    {
+        return res.status(404).json({
+            success : false,
+            message : "resource not found"
+        });
+    }
+    let statuses = ["accepted","rejected"];
+    const status = req.body.status;
+
+    if(statuses.includes(status))
+    {
+        await CounsellorRequest.findByIdAndUpdate(counsellor_request_id,{
+            status
+        }).exec();
+        return res.status(200).json({
+            success : true,message : "Request updated succesfully"
+        })
+    }
+    return res.status(400).json({
+        success : false,
+        message : "Not a valid status"
+    });
+   
+}
     
 }

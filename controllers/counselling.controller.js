@@ -139,9 +139,25 @@ const status = asyncHandler(async(req, res, next) =>{
     return next(new ErrorResponse("Unable to change login status", 404));
   })
 })
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::COUNSELOR CATEGORY::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const category = asyncHandler(async(req, res, next) =>{
+  let cat = req.params.cat;
+  await User.find({counselorCat:cat})
+  .then(user =>{
+    res.status(200).json({
+      success:true,
+      message:`${cat} category`,
+      data: user
+    })
+  })
+  .then(err =>{
+    return next(new ErrorResponse("Unable to get counselor under this category", 404));
+  })
+})
 
 module.exports = {
   counsellorAll,
   counsellorSingle,
-  status
+  status,
+  category
 };

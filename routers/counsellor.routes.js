@@ -7,6 +7,13 @@ const counsellorController = require('../controllers/counselling.controller');
 // @desc getting all counsellors
 // @access private.
 router
+.route('/category/:cat')
+.get(counsellorController.category);
+
+// @route /
+// @desc getting all counsellors
+// @access private.
+router
 .route('/change-status')
 .get(counsellorController.status)
 

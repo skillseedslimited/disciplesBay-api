@@ -4,65 +4,65 @@ const User = require("../models/User");
 const Role = require("../models/Role");
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL COUNSELLORS::::::::::::::::::::::::::::::::::::::::::::::::::
-const counsellorAll = asyncHandler(async (req, res, next) => {
-  // finding counsellor role and saving in a veriable
-  let counsel = await Role.findOne({ name: "counsellor" });
-  console.log(counsel);
-  let status = Boolean;
-  if (req.params.status == "true"){
-    status = true;
-    User.find({$and:[{ role: counsel  },{ isOnline: status }]})
-    .populate({
-        path: 'role',
-        match: {name: {$gte: 'counsellor'}},
-        select: 'name'
-    })
-    .then((counsellors) => {
-      res.status(200).json({
-        success: true,
-        message: "All counsellors",
-        data: counsellors,
-      });
-    })
-    .catch((err) => {
-      return next(new ErrorResponse("Unable to get counsellors..", 404));
-    });
-  }else if (req.params.status == "false"){
-    status = false;
-    User.find({$and:[{ role: counsel  },{ isOnline: status }]})
-    .populate({
-        path: 'role',
-        match: {name: {$gte: 'counsellor'}},
-        select: 'name'
-    })
-    .then((counsellors) => {
-      res.status(200).json({
-        success: true,
-        message: "All counsellors",
-        data: counsellors,
-      });
-    })
-    .catch((err) => {
-      return next(new ErrorResponse("Unable to get counsellors..", 404));
-    });
-  }else{
-    User.find({role: counsel})
-    .populate({
-        path: 'role',
-        match: {name: {$gte: 'counsellor'}},
-        select: 'name'
-    })
-    .then((counsellors) => {
-      res.status(200).json({
-        success: true,
-        message: "All counsellors",
-        data: counsellors,
-      });
-    })
-    .catch((err) => {
-      return next(new ErrorResponse("Unable to get counsellors..", 404));
-    });
-  }
+// const counsellorAll = asyncHandler(async (req, res, next) => {
+//   // finding counsellor role and saving in a veriable
+//   let counsel = await Role.findOne({ name: "counsellor" });
+//   console.log(counsel);
+//   let status = Boolean;
+//   if (req.params.status == "true"){
+//     status = true;
+//     User.find({$and:[{ role: counsel  },{ isOnline: status }]})
+//     .populate({
+//         path: 'role',
+//         match: {name: {$gte: 'counsellor'}},
+//         select: 'name'
+//     })
+//     .then((counsellors) => {
+//       res.status(200).json({
+//         success: true,
+//         message: "All counsellors",
+//         data: counsellors,
+//       });
+//     })
+//     .catch((err) => {
+//       return next(new ErrorResponse("Unable to get counsellors..", 404));
+//     });
+//   }else if (req.params.status == "false"){
+//     status = false;
+//     User.find({$and:[{ role: counsel  },{ isOnline: status }]})
+//     .populate({
+//         path: 'role',
+//         match: {name: {$gte: 'counsellor'}},
+//         select: 'name'
+//     })
+//     .then((counsellors) => {
+//       res.status(200).json({
+//         success: true,
+//         message: "All counsellors",
+//         data: counsellors,
+//       });
+//     })
+//     .catch((err) => {
+//       return next(new ErrorResponse("Unable to get counsellors..", 404));
+//     });
+//   }else{
+//     User.find({role: counsel})
+//     .populate({
+//         path: 'role',
+//         match: {name: {$gte: 'counsellor'}},
+//         select: 'name'
+//     })
+//     .then((counsellors) => {
+//       res.status(200).json({
+//         success: true,
+//         message: "All counsellors",
+//         data: counsellors,
+//       });
+//     })
+//     .catch((err) => {
+//       return next(new ErrorResponse("Unable to get counsellors..", 404));
+//     });
+//   }
 
   // role: counsel
   // $and:[{ role: counsel  },{ isOnline: status }]
@@ -84,7 +84,7 @@ const counsellorAll = asyncHandler(async (req, res, next) => {
   //   .catch((err) => {
   //     return next(new ErrorResponse("Unable to get counsellors..", 404));
   //   });
-});
+// });
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING A SINGLE COUNSELLOR:::::::::::::::::::::::::::::::::::::::::::::::::::::
 const counsellorSingle = asyncHandler(async (req, res, next) => {
@@ -154,10 +154,135 @@ const category = asyncHandler(async(req, res, next) =>{
     return next(new ErrorResponse("Unable to get counselor under this category", 404));
   })
 })
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const getCounselor = asyncHandler(async(req, res, next) =>{
+  let counsel = await Role.findOne({ name: "counsellor" });
+
+  let status = req.query.status;
+  let category = req.query.cat;
+  
+  console.log(category)
+  console.log(status)
+
+  if(!status && !category){
+    await User.find({role: counsel})
+    .populate({
+      path: 'role',
+      match: {name: {$gte: 'counsellor'}},
+      select: 'name'
+    })
+    .then(counsellor =>{
+      res.status(200).json({
+        success: true,
+        message:"Counselor",
+        data:counsellor
+      })
+    })
+    .catch(err =>{
+      return next(new ErrorResponse("Unable to get counselor", 404));
+    })
+  }else if(status && !category){
+    if (status == "true"){
+          let stat = true;
+          User.find({$and:[{ role: counsel  },{ isOnline: stat }]})
+          .populate({
+              path: 'role',
+              match: {name: {$gte: 'counsellor'}},
+              select: 'name'
+          })
+          .then((counsellors) => {
+            res.status(200).json({
+              success: true,
+              message: "All counsellors online",
+              data: counsellors,
+            });
+          })
+          .catch((err) => {
+            return next(new ErrorResponse("Unable to get counsellors..", 404));
+          });
+        }else if (status == "false"){
+          let stat = false;
+          User.find({$and:[{ role: counsel  },{ isOnline: stat }]})
+          .populate({
+              path: 'role',
+              match: {name: {$gte: 'counsellor'}},
+              select: 'name'
+          })
+          .then((counsellors) => {
+            res.status(200).json({
+              success: true,
+              message: "All counsellors offline",
+              data: counsellors,
+            });
+          })
+          .catch((err) => {
+            return next(new ErrorResponse("Unable to get counsellors..", 404));
+          });
+        }else{
+          return next()
+        }
+  }else if(category && !status){
+    await User.find({counselorCat:category})
+  .then(user =>{
+    res.status(200).json({
+      success:true,
+      message:`${category} category`,
+      data: user
+    })
+  })
+  .then(err =>{
+    return next(new ErrorResponse("Unable to get counselor under this category", 404));
+  })
+  }else if(category && status){
+    // await User.find({$and:[{role: counsel}, {counselorCat:cat}, {isOnline: status}]})
+    if (status == "true"){
+      let stat = true;
+      User.find({$and:[{ role: counsel  },{ isOnline: stat }, {counselorCat:category}]})
+      .populate({
+          path: 'role',
+          match: {name: {$gte: 'counsellor'}},
+          select: 'name'
+      })
+      .then((counsellors) => {
+        res.status(200).json({
+          success: true,
+          message: "All counsellors online",
+          data: counsellors,
+        });
+      })
+      .catch((err) => {
+        return next(new ErrorResponse("Unable to get counsellors..", 404));
+      });
+    }else if (status == "false"){
+      let stat = false;
+      User.find({$and:[{ role: counsel  },{ isOnline: stat }, {counselorCat:category}]})
+      .populate({
+          path: 'role',
+          match: {name: {$gte: 'counsellor'}},
+          select: 'name'
+      })
+      .then((counsellors) => {
+        res.status(200).json({
+          success: true,
+          message: "All counsellors offline",
+          data: counsellors,
+        });
+      })
+      .catch((err) => {
+        return next(new ErrorResponse("Unable to get counsellors..", 404));
+      });
+    }else{
+      return next()
+    }
+    
+  }
+  // await User.find({$and:[{role: counsel}, {counselorCat:cat}, {isOnline: status}]})
+})
 
 module.exports = {
-  counsellorAll,
+  // counsellorAll,
   counsellorSingle,
   status,
-  category
+  category,
+  getCounselor
 };

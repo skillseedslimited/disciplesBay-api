@@ -403,12 +403,12 @@ module.exports = {
       let sermons = await Sermon.find({
         $or: [{ subscription_type: "free" }, { _id: { $in: user_sermons } }],
       })
+        .populate("category")
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.store_limit)
         .limit(this.store_limit)
         .lean()
         .exec();
-
       return res.status(200).json({
         success: true,
         message: "User sermons fetched successfully",

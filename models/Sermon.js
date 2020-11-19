@@ -49,7 +49,6 @@ const SermonSchema = new Schema({
   },
   price: {
     type: Number,
-    required: true,
     default: 0,
   },
   isDeleted: {

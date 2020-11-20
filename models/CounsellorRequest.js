@@ -31,4 +31,4 @@ const CounsellorRequestSchema = new Schema({
       { timestamps : true}
 );
 
-module.export = CounsellorRequest = mongoose.model("CounsellorRequest",CounsellorRequestSchema)
+module.exports = CounsellorRequest = mongoose.model("CounsellorRequest",CounsellorRequestSchema)

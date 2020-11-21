@@ -13,27 +13,22 @@ router
 // .route('/category/:cat')
 // .get(counsellorController.category);
 
-// @route /
-// @desc getting all counsellors
-// @access private.
-// router
-// .route('/change-status')
-// .get(counsellorController.status)
-
-
-// @route /
-// @desc getting all counsellors
-// @access private
-// router
-// .route('/counselor/:status/:cat')
-// .get(counsellorController.counsellorAll);
 
 // @route /
 // @desc getting all counsellors
 // @access private.
-// router
-// .route('/:id')
-// .get(counsellorController.counsellorSingle);
+router
+.route('/change-status')
+.get(counsellorController.status)
+
+
+
+// @route /
+// @desc getting all counsellors
+// @access private.
+router
+.route('/:id')
+.get(counsellorController.counsellorSingle);
 
 
 

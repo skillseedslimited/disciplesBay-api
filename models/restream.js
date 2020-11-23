@@ -13,6 +13,9 @@ const RestreamSchema = new Schema({
     },
     state:{
         type:String
+    },
+    code:{
+        type: String
     }
 })
 

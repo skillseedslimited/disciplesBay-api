@@ -94,6 +94,7 @@ module.exports = {
     try {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const sermons = await Sermon.find({ isDeleted: false })
+        .populate("category")
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.sermon_limit)
         .limit(this.sermon_limit)
@@ -212,6 +213,7 @@ module.exports = {
     }
   },
   getSermon: async function (req, res) {
+    
     try {
       const sermon_id = req.params.sermon;
       var sermon = await Sermon.findById(sermon_id)

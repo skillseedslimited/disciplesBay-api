@@ -7,12 +7,10 @@ const commentSchema = new Schema({
 });
 const SermonSchema = new Schema({
   title: {
-    type: String,
-    required: true,
+    type: String
   },
   author: {
-    type: String,
-    required: true,
+    type: String
   },
   category: {
     type: Schema.Types.ObjectId,
@@ -25,27 +23,22 @@ const SermonSchema = new Schema({
   },
   content: {
     type: String,
-    required: true,
     default: null,
   },
   description: {
-    type: String,
-    required: true,
+    type: String
   },
   status: {
     type: String,
     enum: ["save", "publish"],
-    required: true,
     default: "save",
   },
   subscription_type: {
     type: String,
-    enum: ["free", "paid", "subscription"],
-    required: true,
+    enum: ["free", "paid", "subscription"]
   },
   cover_image: {
-    type: String,
-    required: true,
+    type: String
   },
   price: {
     type: Number,

@@ -217,7 +217,7 @@ module.exports = {
     try {
       const sermon_id = req.params.sermon;
       var sermon = await Sermon.findById(sermon_id)
-        .populate("SermonCategory")
+        .populate("category")
         .exec();
       if (!sermon) {
         return res.status(404).json({

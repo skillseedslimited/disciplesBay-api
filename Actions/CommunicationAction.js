@@ -122,6 +122,8 @@ module.exports = {
         {
            //check  wallet has enough for call type
              return user_wallet.balance > the_call_type.amount;
+        }else if(the_call_type.amout == 0){
+            return true;
         }
         return false;
     },
@@ -333,7 +335,7 @@ requestCounsellor : async function(req,res)
  getAllRequest : async function(req,res)
  {
      //paginate this later
-     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}]}).exec();
+     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}]}).populate({path:'counsellor', select: ['username', 'profilePicture']}).exec();
      return res.status(200).json({
          success : true,message : "All counsellor request fetched successfully",
          counsellor_requests

@@ -10,7 +10,7 @@ const CounsellorRequestSchema = new Schema({
       },
       counsellor: {
         type: mongoose.Schema.Types.ObjectId,
-        rel : "User",
+        ref : "users",
         required: true,
       },
       call_type : {

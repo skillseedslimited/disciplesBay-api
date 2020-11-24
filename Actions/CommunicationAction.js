@@ -117,13 +117,14 @@ module.exports = {
         var user_wallet = await Wallet.findOne({user : sender._id}).exec();
        
         var the_call_type = await CommunicationSetting.findOne({communication_type : call_type}).exec();
-        
+
+        if(the_call_type.amount == 0){
+            return true;
+        }
         if(user_wallet && the_call_type)
         {
            //check  wallet has enough for call type
              return user_wallet.balance > the_call_type.amount;
-        }else if(the_call_type.amout == 0){
-            return true;
         }
         return false;
     },

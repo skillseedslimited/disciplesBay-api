@@ -426,4 +426,39 @@ module.exports = {
       });
     }
   },
+  featuredSermon:async(req, res, next) =>{
+    let id = req.query.id;
+    await Sermon.findById(id)
+    .then(sermon =>{
+      sermon.featured = true;
+      sermon.save();
+      res.status(200).json({
+        success: true,
+        message:'Sermon featured successfully',
+        data: sermon
+      })
+    })
+    .catch(err =>{
+      res.status(404).json({
+        success: false,
+        message: 'Unable to make sermon featured',
+        data:null
+      })
+    })
+  },
+  getFeaturedSermon:async(req, res, next) =>{
+    await Sermon.find({featured: true})
+    .then(sermon =>{
+      res.status(200).json({
+        success: true,
+        message:'All featured sermons',
+        data:sermon
+      })
+    })
+    .catch(err =>res.status(404).json({
+      success: false,
+      message:'Unable to get featured sermons',
+      data:null
+    }))
+  }
 };

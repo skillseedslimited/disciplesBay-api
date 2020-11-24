@@ -63,6 +63,10 @@ const SermonSchema = new Schema({
     type: String,
     default: null,
   },
+  featured:{
+    type:Boolean,
+    default: false
+  },
   comments: [commentSchema],
 });
 

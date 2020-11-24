@@ -42,4 +42,10 @@ module.exports = {
   deleteSermonCategory: async function(req, res) {
     return await sermonActions.deleteSermonCategory(req, res);
   },
+  featuredSermons: async function(req, res) {
+    return await sermonActions.featuredSermon(req, res);
+  },
+  getFeaturedSermon: async function(req, res) {
+    return await sermonActions.getFeaturedSermon(req, res);
+  }
 };

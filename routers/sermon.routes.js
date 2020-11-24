@@ -19,7 +19,6 @@ router.patch(
 
 router.get(
   "/fetch-all",
-  [authorizeUpdated(["can-mgt-sermons"])],
   SermonsController.listSermons
 );
 router.get(
@@ -62,5 +61,9 @@ router.delete(
 );
 
 router.get("/user/sermons", UserSermonsController.fetchUserSermons);
+
+router.get("/featured-sermon",SermonsController.featuredSermons);
+
+router.get("/get-featured-sermon", SermonsController.getFeaturedSermon);
 
 module.exports = router;

@@ -36,7 +36,10 @@ router
 
 router
 .route('/:counsellor_request/update-requests')
-.put([authorizeUpdated('can-mgt-counsellor-requests')],communication.manageRequest);
+.put(communication.manageRequest);
+
+// [authorizeUpdated('can-mgt-counsellor-requests')],
+
 
 
 

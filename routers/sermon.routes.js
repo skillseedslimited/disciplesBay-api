@@ -13,7 +13,7 @@ router.post(
 
 router.patch(
   "/:sermon/update",
-  [authorizeUpdated(["can-mgt-sermons"]), sermonPolicies.validateSermon],
+  [authorizeUpdated(["can-mgt-sermons"])],
   SermonsController.updateSermon
 );
 

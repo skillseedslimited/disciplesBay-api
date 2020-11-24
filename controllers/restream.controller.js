@@ -37,7 +37,8 @@ module.exports = {
     }),
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::STREAM CALLBACK:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     callback1: asyncHandler(async(req, res, next) =>{
-        // console.log('i got here', req.query)
+        console.log('i got here', req.query)
+        console.log('work');
         let {
             code,
             scope,

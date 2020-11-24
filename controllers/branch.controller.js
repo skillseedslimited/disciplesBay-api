@@ -22,7 +22,7 @@ module.exports = {
             branchPhone,
             admin
         })
-
+        console.log('')
         newBranch.save()
         .then(branch =>{
             res.status(200).json({

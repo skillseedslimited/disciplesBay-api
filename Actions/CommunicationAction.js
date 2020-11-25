@@ -89,6 +89,7 @@ module.exports = {
         if(user_has_enough)
         {
             //calculate number of minutes is wallet balance can take
+            return 0;
             var number_of_secs = await  this.calculateNumberOfMinutesforWalletBalance(sender,call_type);
             // console.log(number_of_secs);
             //check receivr can receive call now

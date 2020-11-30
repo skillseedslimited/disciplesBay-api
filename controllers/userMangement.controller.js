@@ -266,6 +266,21 @@ const createUser = asyncHandler( async(req, res, next) =>{
         });
 })
 
+const getUserByRole = asyncHandler(async(req, res, next) =>{
+    let id = req.query.id;
+    await User.find({role: id})
+    .then(user =>{
+        res.status(200).json({
+            success: true,
+            message: 'Users under this role',
+            data:user
+        })
+    })
+    .catch(err =>{
+        return next(new ErrorResponse("Unable to get user", 400))
+    })
+})
+
 module.exports = {
     getAllUsers,
     getSingleUser,
@@ -273,5 +288,6 @@ module.exports = {
     suspendUser,
     unsuspendUser,
     assignUser,
-    createUser
+    createUser,
+    getUserByRole
 }

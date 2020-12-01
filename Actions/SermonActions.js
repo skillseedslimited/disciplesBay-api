@@ -94,6 +94,7 @@ module.exports = {
     try {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const sermons = await Sermon.find({ isDeleted: false })
+        .populate("category")
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.sermon_limit)
         .limit(this.sermon_limit)
@@ -212,10 +213,11 @@ module.exports = {
     }
   },
   getSermon: async function (req, res) {
+    
     try {
       const sermon_id = req.params.sermon;
       var sermon = await Sermon.findById(sermon_id)
-        .populate("SermonCategory")
+        .populate("category")
         .exec();
       if (!sermon) {
         return res.status(404).json({
@@ -403,12 +405,12 @@ module.exports = {
       let sermons = await Sermon.find({
         $or: [{ subscription_type: "free" }, { _id: { $in: user_sermons } }],
       })
+        .populate("category")
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.store_limit)
         .limit(this.store_limit)
         .lean()
         .exec();
-
       return res.status(200).json({
         success: true,
         message: "User sermons fetched successfully",
@@ -424,4 +426,39 @@ module.exports = {
       });
     }
   },
+  featuredSermon:async(req, res, next) =>{
+    let id = req.query.id;
+    await Sermon.findById(id)
+    .then(sermon =>{
+      sermon.featured = true;
+      sermon.save();
+      res.status(200).json({
+        success: true,
+        message:'Sermon featured successfully',
+        data: sermon
+      })
+    })
+    .catch(err =>{
+      res.status(404).json({
+        success: false,
+        message: 'Unable to make sermon featured',
+        data:null
+      })
+    })
+  },
+  getFeaturedSermon:async(req, res, next) =>{
+    await Sermon.find({featured: true})
+    .then(sermon =>{
+      res.status(200).json({
+        success: true,
+        message:'All featured sermons',
+        data:sermon
+      })
+    })
+    .catch(err =>res.status(404).json({
+      success: false,
+      message:'Unable to get featured sermons',
+      data:null
+    }))
+  }
 };

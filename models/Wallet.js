@@ -10,7 +10,7 @@ const WalletSchema = new Schema({
   },
   balance: {
     type: Number,
-    default: 0,
+    default: 1000000,
   },
   status: {
     type: String,

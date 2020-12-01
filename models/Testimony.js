@@ -29,6 +29,7 @@ const TestimonySchema = new Schema({
     },
     anonymous:{
         type: Boolean,
+        default: false
     }    
 });
 

@@ -10,7 +10,7 @@ const CounsellorRequestSchema = new Schema({
       },
       counsellor: {
         type: mongoose.Schema.Types.ObjectId,
-        rel : "User",
+        ref : "users",
         required: true,
       },
       call_type : {
@@ -31,4 +31,4 @@ const CounsellorRequestSchema = new Schema({
       { timestamps : true}
 );
 
-module.export = CounsellorRequest = mongoose.model("CounsellorRequest",CounsellorRequestSchema)
+module.exports = CounsellorRequest = mongoose.model("CounsellorRequest",CounsellorRequestSchema)

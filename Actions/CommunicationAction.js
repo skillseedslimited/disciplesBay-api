@@ -117,12 +117,19 @@ module.exports = {
         var user_wallet = await Wallet.findOne({user : sender._id}).exec();
        
         var the_call_type = await CommunicationSetting.findOne({communication_type : call_type}).exec();
-        
+        // if(user_wallet == null){
+        //     console.log('i also')
+        //     return true
+        // }
+        console.log('user_wallet', user_wallet)
+        console.log('the_call_type', the_call_type)
         if(user_wallet && the_call_type)
         {
+        
            //check  wallet has enough for call type
-             return user_wallet.balance > the_call_type.amount;
+             return user_wallet.balance == the_call_type.amount;
         }
+        
         return false;
     },
     calculateNumberOfMinutesforWalletBalance : async function(sender,the_call_type){
@@ -333,7 +340,7 @@ requestCounsellor : async function(req,res)
  getAllRequest : async function(req,res)
  {
      //paginate this later
-     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}]}).exec();
+     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}]}).populate({path:'counsellor', select: ['username', 'profilePicture']}).exec();
      return res.status(200).json({
          success : true,message : "All counsellor request fetched successfully",
          counsellor_requests

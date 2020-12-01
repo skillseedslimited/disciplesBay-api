@@ -214,6 +214,8 @@ const createUser = asyncHandler( async(req, res, next) =>{
         if(!userRole){
             return next(new ErrorResponse("Invalid role specified", 400))
         }
+        // setting isonline to be true
+        let isOnline = true;
         // Checking the database if username is taken
         await User.findOne({ email }, async(err, user) => {
             // If username is taken  
@@ -237,7 +239,8 @@ const createUser = asyncHandler( async(req, res, next) =>{
                     phoneNumber,
                     campus,
                     fullName,
-                    role: userRole._id
+                    role: userRole._id,
+                    isOnline
                 });
                 // Hash the password and saving new user to database
                 // bcrypt.genSalt(10, (err, salt) =>{
@@ -263,6 +266,21 @@ const createUser = asyncHandler( async(req, res, next) =>{
         });
 })
 
+const getUserByRole = asyncHandler(async(req, res, next) =>{
+    let id = req.query.id;
+    await User.find({role: id})
+    .then(user =>{
+        res.status(200).json({
+            success: true,
+            message: 'Users under this role',
+            data:user
+        })
+    })
+    .catch(err =>{
+        return next(new ErrorResponse("Unable to get user", 400))
+    })
+})
+
 module.exports = {
     getAllUsers,
     getSingleUser,
@@ -270,5 +288,6 @@ module.exports = {
     suspendUser,
     unsuspendUser,
     assignUser,
-    createUser
+    createUser,
+    getUserByRole
 }

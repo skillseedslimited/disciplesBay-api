@@ -13,6 +13,8 @@ module.exports = {
      // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::REGISTRATION:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
      register: async (req, res, next) =>{
         let { username, email, phoneNumber, password, confirmPassword, role, fullName, campus } = req.body;
+        // setting user isLogin to be true
+        let isOnline = true;
         //checking if user role is valid
         const defaultRole = role ? role : "subscriber";
 
@@ -43,7 +45,8 @@ module.exports = {
                     phoneNumber,
                     campus,
                     fullName,
-                    role: userRole._id
+                    role: userRole._id,
+                    isOnline
                 });
                 // Hash the password and saving new user to database
                 // bcrypt.genSalt(10, (err, salt) =>{

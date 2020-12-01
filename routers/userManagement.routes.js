@@ -51,4 +51,11 @@ router
 .route('/create-user')
 .post(userMangementController.createUser);
 
+// @route /get-user-by-role
+// @desc get users under a give role
+// @access private
+router
+.route('/get-user-by-role')
+.get(userMangementController.getUserByRole)
+
 module.exports = router

@@ -299,7 +299,7 @@ module.exports = {
         message: "No payment gateway configured yet",
       };
     }
-console.log(transaction_ref)
+// console.log(transaction_ref)
     var url = `https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify`;
    let response =  await  fetch(
       url,

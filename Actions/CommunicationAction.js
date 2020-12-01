@@ -61,24 +61,24 @@ module.exports = {
  
         //get receiver user 
         var receiver_user = check_receiver_exists;
-        let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : receiver_user._id}).sort({createdAt : -1}).exec();
+        // let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : receiver_user._id}).sort({createdAt : -1}).exec();
         
-        if(!checkPendingRequest)
-        { 
-             return res.status(400).json({success : false,message : "You need to send a request before placing "+call_type});
+        // if(!checkPendingRequest)
+        // { 
+        //      return res.status(400).json({success : false,message : "You need to send a request before placing "+call_type});
 
-        }
-        if(checkPendingRequest.status == "pending")
-        {
-            //return message that u can place request again
-            return res.status(400).json({success : false,message : "Counsellor has not accepted a request from you"});
-        }else{
-            if(checkPendingRequest.used)
-            {
-                //u can make call again as well
-                return res.status(400).json({success : false,message : "Please resend a request to counsellor"});
-            }
-        }
+        // }
+        // if(checkPendingRequest.status == "pending")
+        // {
+        //     //return message that u can place request again
+        //     return res.status(400).json({success : false,message : "Counsellor has not accepted a request from you"});
+        // }else{
+        //     if(checkPendingRequest.used)
+        //     {
+        //         //u can make call again as well
+        //         return res.status(400).json({success : false,message : "Please resend a request to counsellor"});
+        //     }
+        // }
         
         //check receiver is a counsellor
         // --> to be done here

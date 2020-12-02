@@ -19,6 +19,9 @@ const UserSchema = new Schema({
   campus:{
     type: String
   },
+  stream_key:{
+    type: String
+  },
   fullName:{
     type:String
   },

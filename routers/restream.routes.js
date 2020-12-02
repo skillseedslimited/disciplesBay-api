@@ -3,21 +3,17 @@ const router = express.Router();
 const streamController = require('../controllers/restream.controller');
 
 router
-.route('/stream')
+.route('/get-stream-user')
 .get(streamController.startStream);
 
+router
+.route('/generate-stream-key')
+.get(streamController.generateStreamKey)
 
 router
-.route('/callback1')
-.get(streamController.callback1);
+.route('/get-user-stream-key')
+.get(streamController.getUserStreamKey)
 
-router
-.route('/callback2')
-.get(streamController.callback2);
-
-router
-.route('/stream2')
-.post(streamController.stream2)
 
 
 module.exports = router;

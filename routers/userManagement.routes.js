@@ -58,4 +58,18 @@ router
 .route('/get-user-by-role')
 .get(userMangementController.getUserByRole)
 
+// @route /update-user
+// @desc update a particular user
+// @access private
+router
+.route('/update-user')
+.put(userMangementController.editUser)
+
+
+router
+.route('/counter')
+.get(userMangementController.counter);
+
+
+
 module.exports = router

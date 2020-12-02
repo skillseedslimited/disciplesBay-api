@@ -9,8 +9,13 @@ const compression = require("compression");
 // Global error handlers
 const errorHandler = require("./middleware/error");
 const { cloudinaryConfig } = require("./config/cloudinary.config");
+const node_media_server = require('./media_server')
+const thumbnail_generator = require('./cron/thumbnails');
 
 const app = express();
+
+node_media_server.run();
+thumbnail_generator.start();
 
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));

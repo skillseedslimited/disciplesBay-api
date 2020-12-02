@@ -1,4 +1,7 @@
 const User  =  require('../models/User');
+const Sermon = require('../models/Sermon');
+const Purchased = require('../models/Partnership');
+const Giving  = require('../models/Donation');
 const Role = require('../models/Role');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
@@ -266,6 +269,46 @@ const createUser = asyncHandler( async(req, res, next) =>{
         });
 })
 
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::EDIT USER::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const editUser = asyncHandler(async(req, res, next) =>{
+    // const update = req.body;
+    const id = req.query.id;
+    const options = { new: true };
+    // updated = {};
+    const userFields = {};
+    if(req.body.username) userFields.username = req.body.username;
+    if(req.body.email) userFields.email = req.body.email;
+    if(req.body.campus) userFields.campus = req.body.campus;
+    if(req.body.fullName) userFields.fullName = req.body.fullName;
+    if(req.body.phoneNumber) userFields.phoneNumber = req.body.phoneNumber;
+    if(req.body.role) userFields.role = req.body.role;
+    if(req.body.department) userFields.department = req.body.department;
+    if(req.body.maritalStatus) userFields.maritalStatus = req.body.maritalStatus;
+    if(req.body.sex) userFields.sex = req.body.sex;
+    if(req.body.occupation) userFields.occupation = req.body.occupation;
+
+
+     await User.findByIdAndUpdate(
+        { _id: id }, 
+        { $set: userFields },
+        { new: true }
+     )
+     .then(user =>{
+         if(!user){
+            return next( new ErrorResponse("Unable to update user", 404))
+         }
+        res.status(200).json({
+            success: true,
+            message: 'updated successfully',
+            data: user
+        })
+     })
+     .catch(() =>{
+        return next( new ErrorResponse("Unable to update user", 404))
+     })
+})
+
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GET USERS WITH A PARTICULAR ROLE:::::::::::::::::::::::::::::::::::::::::::
 const getUserByRole = asyncHandler(async(req, res, next) =>{
     let id = req.query.id;
     await User.find({role: id})
@@ -281,6 +324,27 @@ const getUserByRole = asyncHandler(async(req, res, next) =>{
     })
 })
 
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::COUNTER OF SCHEMAS:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const counter = asyncHandler(async(req, res, next) =>{
+
+    let giving  = await Giving.count();
+    let users = await User.count();
+    let sermon = await Sermon.count();
+    let purchased =  await Purchased.count();
+
+    res.status(200).json({
+        success: true,
+        message: "Counters",
+        data: {
+            'giving':giving,
+            'users':users,
+            'sermons': sermon,
+            'purchased':purchased
+        }
+    })
+
+})
+
 module.exports = {
     getAllUsers,
     getSingleUser,
@@ -289,5 +353,7 @@ module.exports = {
     unsuspendUser,
     assignUser,
     createUser,
-    getUserByRole
+    getUserByRole,
+    editUser,
+    counter
 }

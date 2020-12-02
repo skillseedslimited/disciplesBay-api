@@ -5,7 +5,7 @@ const Flutterwave = require("flutterwave-node-v3");
 const open = require("open");
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
-// done another pls plst
+// done another pls plstnsm
 // :::::::::::::::::::::::::::::::::::::::::::::::::::FLUTTERWAVE CARD CHARGES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const chargeCard = asyncHandler(async (req, res, next) => {
   try {

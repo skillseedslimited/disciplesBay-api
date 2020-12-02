@@ -56,6 +56,7 @@ module.exports = {
 
         await User.findById(user)
         .then(user =>{
+            console.log(user)
             res.status(200).json({
                 success:true,
                 message:'Your streaming key',

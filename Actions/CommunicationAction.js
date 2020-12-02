@@ -61,24 +61,24 @@ module.exports = {
  
         //get receiver user 
         var receiver_user = check_receiver_exists;
-        let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : receiver_user._id}).sort({createdAt : -1}).exec();
+        // let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : receiver_user._id}).sort({createdAt : -1}).exec();
         
-        if(!checkPendingRequest)
-        { 
-             return res.status(400).json({success : false,message : "You need to send a request before placing "+call_type});
+        // if(!checkPendingRequest)
+        // { 
+        //      return res.status(400).json({success : false,message : "You need to send a request before placing "+call_type});
 
-        }
-        if(checkPendingRequest.status == "pending")
-        {
-            //return message that u can place request again
-            return res.status(400).json({success : false,message : "Counsellor has not accepted a request from you"});
-        }else{
-            if(checkPendingRequest.used)
-            {
-                //u can make call again as well
-                return res.status(400).json({success : false,message : "Please resend a request to counsellor"});
-            }
-        }
+        // }
+        // if(checkPendingRequest.status == "pending")
+        // {
+        //     //return message that u can place request again
+        //     return res.status(400).json({success : false,message : "Counsellor has not accepted a request from you"});
+        // }else{
+        //     if(checkPendingRequest.used)
+        //     {
+        //         //u can make call again as well
+        //         return res.status(400).json({success : false,message : "Please resend a request to counsellor"});
+        //     }
+        // }
         
         //check receiver is a counsellor
         // --> to be done here
@@ -113,7 +113,7 @@ module.exports = {
 
     },
     checkUserHaveEnoughToCall : async function (sender,call_type) {
-
+        return true;
         var user_wallet = await Wallet.findOne({user : sender._id}).exec();
        
         var the_call_type = await CommunicationSetting.findOne({communication_type : call_type}).exec();
@@ -121,8 +121,6 @@ module.exports = {
         //     console.log('i also')
         //     return true
         // }
-        console.log('user_wallet', user_wallet)
-        console.log('the_call_type', the_call_type)
         if(user_wallet && the_call_type)
         {
         
@@ -133,12 +131,13 @@ module.exports = {
         return false;
     },
     calculateNumberOfMinutesforWalletBalance : async function(sender,the_call_type){
+        return 10000000000000;
         var user_wallet = await Wallet.findOne({user : sender._id}).exec();
         var call_type = await CommunicationSetting.findOne({communication_type : the_call_type}).exec();
 
         if(call_type.amount == 0 )
         {
-            return 2000;
+            return 10000000000000;
         }else{
             var number_of_secs = (user_wallet.balance / call_type.amount);
             return number_of_secs;
@@ -147,6 +146,7 @@ module.exports = {
     },
     checkReceiverIsOnCall : async function(receiver){
         //check this receiver his busy or it more than is last call
+        return false;
         const call_log = await CallLog.findOne({receiver : receiver}).sort({ createdAt : -1}).exec();
 
         if(call_log)
@@ -175,8 +175,10 @@ module.exports = {
 
         await call_log.save();
 
+        NotificationAction.sendCommunication(receiver,"New Incoming Call","ring",channel_name,call_type,sender,call_log._id);  
+         
         return call_log._id;
-        // NotificationAction.sendCommunication(receiver,"New Incoming Call","ring",channel_name,call_type,sender,call_log._id);
+        
 
        
     },
@@ -194,16 +196,16 @@ module.exports = {
             const notification_receiver = await User.findById(log.sender).exec();
             const notification_sender = await User.findById(log.receiver).exec();
 
-            let checkPendingRequest = await CounsellorRequest.findOne({sender : log.sender,counsellor :  log.receiver}).sort({createdAt : -1}).exec();
+            // let checkPendingRequest = await CounsellorRequest.findOne({sender : log.sender,counsellor :  log.receiver}).sort({createdAt : -1}).exec();
 
-            if(checkPendingRequest)
-            {
-                await CounsellorRequest.findByIdAndUpdate(checkPendingRequest._id,{
-                    used : true
-                }).exec();
-            }
+            // if(checkPendingRequest)
+            // {
+            //     await CounsellorRequest.findByIdAndUpdate(checkPendingRequest._id,{
+            //         used : true
+            //     }).exec();
+            // }
         //send notification and return call connected successfully
-            // NotificationAction.sendCommunication(notification_receiver,"Call connected","connected",channel_name,log.call_type,notification_sender,log._id);
+            NotificationAction.sendCommunication(notification_receiver,"Call connected","connected",channel_name,log.call_type,notification_sender,log._id);
 
             return res.status(200).json({success : true,message : "Call connected successfully"});
         }else {
@@ -232,16 +234,16 @@ module.exports = {
 
             const callTime = moment(time_call_end);
             //update sender wallet balance based on time on this log
-            let charge = await this.chargeCallOffWallet(sender,callTime,log);
-            var user_wallet = await Wallet.findOne({user : sender._id}).exec();
-            if(user_wallet)
-            {
-                await Wallet.findByIdAndUpdate(user_wallet._id,{balance : user_wallet.balance - charge,amount_used :charge }).exec();
-            }
+            // let charge = await this.chargeCallOffWallet(sender,callTime,log);
+            // var user_wallet = await Wallet.findOne({user : sender._id}).exec();
+            // if(user_wallet)
+            // {
+            //     await Wallet.findByIdAndUpdate(user_wallet._id,{balance : user_wallet.balance - charge,amount_used :charge }).exec();
+            // }
             //send notification and return call connected successfully
-            // NotificationAction.sendCommunication(sender,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
+            NotificationAction.sendCommunication(sender,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
 
-            // NotificationAction.sendCommunication(receiver,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
+            NotificationAction.sendCommunication(receiver,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
 
             return res.status(200).json({success : true,message : "Call ended successfully"});
         }else {

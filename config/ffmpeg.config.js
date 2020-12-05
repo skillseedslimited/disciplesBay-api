@@ -4,19 +4,19 @@ const ffmpegconfig = {
     },
     rtmp_server: {
         rtmp: {
-            port: 1935,
+            port:process.env.PORT || 1935,
             chunk_size: 60000,
             gop_cache: true,
             ping: 60,
             ping_timeout: 30
         },
         http: {
-            port: 8888,
+            port:process.env.PORT || 8888,
             mediaroot: './server/media',
             allow_origin: '*'
         },
         trans: {
-            ffmpeg: '/usr/local/bin/ffmpeg',
+            ffmpeg: '/vendor/ffmpeg',
             tasks: [
                 {
                     app: 'live',

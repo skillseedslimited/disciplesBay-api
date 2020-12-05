@@ -16,7 +16,7 @@ const ffmpegconfig = {
             allow_origin: '*'
         },
         trans: {
-            ffmpeg: '/vendor/ffmpeg',
+            ffmpeg: '/heroku/ffmpeg',
             tasks: [
                 {
                     app: 'live',

@@ -286,6 +286,9 @@ const editUser = asyncHandler(async(req, res, next) =>{
     if(req.body.maritalStatus) userFields.maritalStatus = req.body.maritalStatus;
     if(req.body.sex) userFields.sex = req.body.sex;
     if(req.body.occupation) userFields.occupation = req.body.occupation;
+    if(req.body.profilePicture) userFields.profilePicture = req.body.profilePicture;
+    if(req.body.address) userFields.address = req.body.address;
+    
 
 
      await User.findByIdAndUpdate(

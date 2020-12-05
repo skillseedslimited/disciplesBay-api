@@ -16,7 +16,7 @@ const ffmpegconfig = {
             allow_origin: '*'
         },
         trans: {
-            ffmpeg: '/bin/detect/ffmpeg',
+            ffmpeg: '/bin/compile/ffmpeg',
             tasks: [
                 {
                     app: 'live',

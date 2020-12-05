@@ -16,7 +16,7 @@ const ffmpegconfig = {
             allow_origin: '*'
         },
         trans: {
-            ffmpeg: '/bin/compile/ffmpeg',
+            ffmpeg: '/app/vendor/mruby_bin/ffmpeg',
             tasks: [
                 {
                     app: 'live',

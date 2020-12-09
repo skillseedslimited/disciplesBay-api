@@ -1,13 +1,18 @@
 const User = require('./models/User');
 const helpers = require('./helpers/helpers')
-const NodeMediaServer = require('node-media-server'),
-    config = require('./config/ffmpeg.config').rtmp_server;
- 
+const NodeMediaServer = require('node-media-server');
+const fs = require('fs');
+const pp = require('pp');
+config = require('./config/ffmpeg.config').rtmp_server;
+// fs.chmod(pp, '777', ()=>{
+
+// })
 nms = new NodeMediaServer(config);
- 
+// fs.chmod(pp, '777', function()
 nms.on('prePublish', async (id, StreamPath, args) => {
     let stream_key = getStreamKeyFromStreamPath(StreamPath);
     console.log('[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
+    
 
     // validating user before stream
     User.findOne({stream_key: stream_key}, (err, user) => {

@@ -17,7 +17,7 @@ const ffmpegconfig = {
         },
         trans: {
             // '/app/vendor/ffmpeg'
-            ffmpeg: process.cwd()+'/ffmpeg',
+            ffmpeg: process.cwd()+'https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git',
             tasks: [
                 {
                     app: 'live',

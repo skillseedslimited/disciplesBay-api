@@ -17,7 +17,7 @@ const ffmpegconfig = {
         },
         trans: {
             // '/app/vendor/ffmpeg'
-            ffmpeg: process.cwd()+'/vendor/ffmpeg',
+            ffmpeg: process.cwd()+'/ffmpeg',
             tasks: [
                 {
                     app: 'live',

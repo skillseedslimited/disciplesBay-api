@@ -4,7 +4,7 @@ let pp =  require('pp');
 const path = require('path');
 // pp = process.cwd()+'/ffmpeg';
 
-// const ffmpegconfig = chmod(process.cwd()+'/ffmpeg',{
+// const ffmpegconfig = fs.chmod(path, '777',{
 //     server: {
 //         secret: 'kjVkuti2xAyF3JGCzSZTk0YWM5JhI9mgQW4rytXc'
 //     },
@@ -57,7 +57,8 @@ const ffmpegconfig = {
         trans: {
             // '/app/vendor/ffmpeg'
             // process.cwd()+'/ffmpeg'
-            ffmpeg: '/app/vendor/ffmpeg/bin',
+            // '/usr/bin/ffmpeg'
+            ffmpeg: '/app/vendor/ffmpeg',
             tasks: [
                 {
                     app: 'live',

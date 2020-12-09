@@ -56,7 +56,8 @@ const ffmpegconfig = {
         },
         trans: {
             // '/app/vendor/ffmpeg'
-            ffmpeg: process.cwd()+'/ffmpeg',
+            // process.cwd()+'/ffmpeg'
+            ffmpeg: '/app/.heroku/vendor/ffmpeg/bin/ffmpeg',
             tasks: [
                 {
                     app: 'live',

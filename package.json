@@ -7,7 +7,8 @@
     "test": "jest --testEnvironment=node",
     "start": "node server.js",
     "start:prod": "NODE_ENV=production node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server",
+    "postinstall": "chmod -R +x node_modules/next/dist/bin/next-* && npm run build"
   },
   "author": "skill seed",
   "license": "ISC",

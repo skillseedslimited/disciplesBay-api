@@ -58,7 +58,7 @@ const ffmpegconfig = {
             // '/app/vendor/ffmpeg'
             // process.cwd()+'/ffmpeg'
             // '/usr/bin/ffmpeg'
-            ffmpeg: '/app/vendor/ffmpeg',
+            ffmpeg: process.cwd()+'/ffmpeg',
             tasks: [
                 {
                     app: 'live',

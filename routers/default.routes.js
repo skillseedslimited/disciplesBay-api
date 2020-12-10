@@ -27,4 +27,25 @@ router
   .route("/verifyGetByEmail/:secretToken")
   .get(registerController.verifyGetByEmail);
 
+// @route Get verifyGetByEmail
+// @desc verify user by email
+// @access Public
+router
+.route('/verify-email')
+.post(defaultController.valEmail);
+
+// @route Get verifyGetByEmail
+// @desc verify user by email
+// @access Public
+router
+.route('/verify-token')
+.post(defaultController.verifyToken);
+
+// @route Get verifyGetByEmail
+// @desc verify user by email
+// @access Public
+router
+.route('/change-password')
+.post(defaultController.changePassword);
+
 module.exports = router;

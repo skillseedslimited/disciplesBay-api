@@ -2,9 +2,11 @@ const chmod = require('chmod');
 const fs = require('fs');
 let pp =  require('pp');
 const path = require('path');
+const ffmpeg = require('ffmpeg')
+// var process = new ffmpeg('/path/to/your_movie.avi');
 // pp = process.cwd()+'/ffmpeg';
 
-// const ffmpegconfig = fs.chmod(path, '777',{
+// const ffmpegconfig = fs.chmod('777',{
 //     server: {
 //         secret: 'kjVkuti2xAyF3JGCzSZTk0YWM5JhI9mgQW4rytXc'
 //     },
@@ -58,7 +60,8 @@ const ffmpegconfig = {
             // '/app/vendor/ffmpeg'
             // process.cwd()+'/ffmpeg'
             // '/usr/bin/ffmpeg'
-            ffmpeg: process.cwd()+'/ffmpeg',
+            // var process = new ffmpeg('/path/to/your_movie.avi');
+            ffmpeg: '/app/vendor/ffmpeg',
             tasks: [
                 {
                     app: 'live',

@@ -5,8 +5,8 @@ const path = require('path');
 const ffmpeg = require('ffmpeg')
 // var process = new ffmpeg('/path/to/your_movie.avi');
 // pp = process.cwd()+'/ffmpeg';
-
-// const ffmpegconfig =  fs.chmod("https://api-dev-disciplesbay.herokuapp.com/", 777, ()=> {
+//  fs.chmod("https://api-dev-disciplesbay.herokuapp.com/", 777, ()=> 
+// const ffmpegconfig =  {
 
 //     server: {
 //         secret: 'kjVkuti2xAyF3JGCzSZTk0YWM5JhI9mgQW4rytXc'
@@ -38,7 +38,7 @@ const ffmpeg = require('ffmpeg')
 //             ]
 //         }
 //     }
-// })
+// }
 // fs.chmod(pp, '0777', function())
 const ffmpegconfig = {
     server: {
@@ -62,7 +62,7 @@ const ffmpegconfig = {
             // process.cwd()+'/ffmpeg'
             // '/usr/bin/ffmpeg'
             // var process = new ffmpeg('/path/to/your_movie.avi');
-            ffmpeg: '/app/vendor/ffmpeg',
+            ffmpeg: '/usr/bin/ffmpeg',
             tasks: [
                 {
                     app: 'live',

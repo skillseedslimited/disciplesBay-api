@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "jest --testEnvironment=node",
-    "start": "node server.js",
-    "start:prod": "NODE_ENV=production node server",
+    "start": "apt install --fix-missing --assume-yes ffmpeg && node app.js",
+    "start:prod": "NODE_ENV=production node server apt install --fix-missing --assume-yes ffmpeg && node app.js",
     "dev": "nodemon server"
   },
   "author": "skill seed",

@@ -6,7 +6,8 @@ const ffmpeg = require('ffmpeg')
 // var process = new ffmpeg('/path/to/your_movie.avi');
 // pp = process.cwd()+'/ffmpeg';
 
-// const ffmpegconfig = fs.chmod('777',{
+// const ffmpegconfig =  fs.chmod("https://api-dev-disciplesbay.herokuapp.com/", 777, ()=> {
+
 //     server: {
 //         secret: 'kjVkuti2xAyF3JGCzSZTk0YWM5JhI9mgQW4rytXc'
 //     },

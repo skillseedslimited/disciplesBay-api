@@ -3,6 +3,7 @@ const fs = require('fs');
 let pp =  require('pp');
 const path = require('path');
 const ffmpeg = require('ffmpeg')
+// rtmp://127.0.0.1:1935/live
 // var process = new ffmpeg('/path/to/your_movie.avi');
 // pp = process.cwd()+'/ffmpeg';
 //  fs.chmod("https://api-dev-disciplesbay.herokuapp.com/", 777, ()=> 
@@ -46,14 +47,14 @@ const ffmpegconfig = {
     },
     rtmp_server: {
         rtmp: {
-            port: 1935,
+            port:process.env.PORT || 1935,
             chunk_size: 60000,
             gop_cache: true,
             ping: 60,
             ping_timeout: 30
         },
         http: {
-            port: 8888,
+            port: process.env.PORT || 8888,
             mediaroot: './server/media',
             allow_origin: '*'
         },

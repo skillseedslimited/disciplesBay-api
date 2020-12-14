@@ -36,4 +36,15 @@ module.exports = {
     {
         return CommunicationAction.manageRequest(req,res);
     },
+
+    fetchUserChatLst : async function(req,res) {
+            return CommunicationAction.fetchUserChatLst(req,res);
+    },
+    fetchChatMessages : async function(req,res) {
+        return CommunicationAction.fetchChatMessages(req,res);
+    },
+    sendChatMessage : async function(req,res) {
+        return CommunicationAction.sendChatMessage(req,res);
+    }  
+
 }

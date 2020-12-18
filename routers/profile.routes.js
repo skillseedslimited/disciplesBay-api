@@ -7,6 +7,6 @@ const indexController = require('../controllers/profile.controller');
 // @access Public
 router.route('/index')
  .get( indexController.index )
- .post( indexController.profile );
+ .put( indexController.profile );
 
  module.exports = router

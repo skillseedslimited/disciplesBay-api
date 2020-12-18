@@ -29,48 +29,43 @@ module.exports = {
             });
 
     }),
-
+// :::::::::::::::::::::::::::::::::::::::::::::::CREATE PROFILE::::::::::::::::::::::::::::::::::::::::::
     profile:asyncHandler( (req, res, next) =>{
-
-        
-
-        console.log(req.user._id)
-        User.findOne({_id:req.user._id})
-        .populate({
-            path: 'role',
-            match: {name: {$gte: 'counsellor'}},
-            select: 'name'
-        })
+        let id = req.user._id;
+        User.findById(id)
         .then(async user =>{
             if(!user){
                 return next( new ErrorResponse("Unable find user", 404))
             }
+            const profileFields = {};
+            if(req.body.address) profileFields.address = req.body.address;
+            if(req.body.department) profileFields.department = req.body.department;
+            if(req.body.maritalStatus) profileFields.maritalStatus = req.body.maritalStatus;
+            if(req.body.sex) profileFields.sex = req.body.sex;
+            if(req.body.occupation) profileFields.occupation = req.body.occupation;
+            if(req.body.familyMembers) profileFields.familyMembers = req.body.familyMembers;
+            if(req.body.campus) profileFields.campus = req.body.campus;
+            if(req.body.profilePicture) profileFields.profilePicture = req.body.profilePicture;
 
-            let  {
-                address,
-                department,
-                maritalStatus,
-                sex,
-                occupation,
-                familyMembers
-            } = req.body;
-
-            user.address = address;
-            user.department = department;
-            user.maritalStatus = maritalStatus;
-            user.sex = sex;
-            user.occupation = occupation;
-            user.familyMembers = familyMembers
-
-            await user.save()
-            .then(profile =>res.status(200).json({
-                success: true,
-                message: 'Profile successfully created',
-                data: profile
-            }))
-            .catch(err =>{
-                return next( new ErrorResponse("Unable create profile", 404))
+            await User.findByIdAndUpdate(
+                { _id: id }, 
+                { $set: profileFields },
+                { new: true }
+            )
+            .then(profile =>{
+                if(!profile){
+                    return next( new ErrorResponse("Unable to update profile", 404))
+                }
+                res.status(200).json({
+                    success: true,
+                    message: 'updated successfully',
+                    data: profile
+                })
             })
+            .catch(() =>{
+                return next( new ErrorResponse("Unable to update profile", 404))
+            })
+            
         })
         .catch(err =>{
             return next( new ErrorResponse("Unable to create profile", 404))

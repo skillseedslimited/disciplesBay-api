@@ -12,7 +12,7 @@ const path = require('path');
 module.exports = {
      // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::REGISTRATION:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
      register: async (req, res, next) =>{
-        let { username, email, phoneNumber, password, confirmPassword, role, fullName, campus } = req.body;
+        let { username, email, phoneNumber, password, confirmPassword, role, fullName } = req.body;
         // setting user isLogin to be true
         let isOnline = true;
         //checking if user role is valid
@@ -43,7 +43,6 @@ module.exports = {
                     confirmPassword,
                     secretToken,
                     phoneNumber,
-                    campus,
                     fullName,
                     role: userRole._id,
                     isOnline

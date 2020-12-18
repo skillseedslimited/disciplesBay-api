@@ -41,8 +41,17 @@ router
 // [authorizeUpdated('can-mgt-counsellor-requests')],
 // anotheone
 
+router
+.route('/user-chat-list')
+.get(communication.fetchUserChatLst);
 
+router
+.route('/:chat/messages')
+.get(communication.fetchChatMessages);
 
+router
+.route('/send-message')
+.post(communication.sendChatMessage);
 
 module.exports = router;
  

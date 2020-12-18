@@ -1,10 +1,15 @@
-const CommunicationSetting = require("../models/CommunicationSetting");
 const User = require("../models/User");
+
+const CommunicationSetting = require("../models/CommunicationSetting");
 const Wallet = require("../models/Wallet");
 const CallLog = require("../models/CallLogs");
 const moment = require("moment");
 const CounsellorRequest = require("../models/CounsellorRequest");
 const NotificationAction = require("../Actions/NotificationActions");
+const ChatList = require("../models/ChatList");
+const ChatMessages = require("../models/ChatMessages");
+
+// const { Mongoose } = require("mongoose");
 module.exports = {
     fetchCommuncationSettings : async function(req,res)
     {
@@ -378,6 +383,236 @@ manageRequest : async function(req,res)
         message : "Not a valid status"
     });
    
-}
+},
+
+    async fetchUserChatLst(req,res)
+    {
+        try{
+            const page = req.query.page ? req.query.page : 1;
+            const chatList = await ChatList.find({$or : [
+                {sender : req.user._id}, {receiver : req.user._id}
+            ]}).populate({ path: 'sender', model: User }).populate({ path: 'receiver', model: User }).skip(( page - 1) * 20).limit(20).exec()
     
+            //process chatllist
+            let chatLists = [];
+            let individualChat = {};
+            let chat_actor = {}
+        
+            for(let chat of chatList)
+            {
+                chat_actor  = await ChatMessages.find({
+                                     chat_id : chat._id
+                   }).populate({ path: 'sender', model: User }).populate({ path: 'receiver', model: User }).sort({"createdAt" :  -1}).limit(1).exec()
+                   if(chat_actor.length <= 0 )
+                   {
+                     continue;
+                   }
+                   
+                 individualChat = {
+                     _id : chat._id,
+                    user : req.user._id == chat.sender ? chat.sender.username : chat.receiver.username,
+                    last_message : chat_actor[0].sender == chat.sender ? {
+                            user : chat_actor[0].sender.username,
+                            message : chat_actor[0].message,
+                            createdAt : chat.createdAt
+                    } : {
+                        user : chat_actor[0].receiver.username,
+                        message : chat_actor[0].message,
+                        createdAt : chat.createdAt
+                     } ,
+                    unread_messages : await ChatMessages.findOne({
+                        chat_id : chat._id,read : false
+                    }).countDocuments().exec()
+                }
+    
+                chatLists.push(individualChat);
+            }
+            //process pagination
+            const total_chatlist = await ChatList.find({$or : [
+                {sender : req.user._id}, {receiver : req.user._id}
+            ]}).countDocuments().exec();
+            let pagination  = {}
+            if(total_chatlist.length > 0)
+            {
+                pagination = {
+                    total_chatlist :total_chatlist,
+                    total_pages : Math.ceil(total_chatlist / 20),
+                    current_page : parseInt(page)
+                }
+            }else{
+                pagination = {
+                    total_chatlist : 0,
+                    total_pages : 0,
+                    current_page : 0,
+                }
+            }
+    
+            return res.status(200).json({
+                success : true,
+                chat_list :  chatLists,
+                // pagination
+            })
+        }catch(error) 
+        {
+            console.log(error)
+            return res.status(500).json({
+                success : false,
+                message : "An error occured"
+            })
+        }
+       
+
+    },
+    async fetchChatMessages(req,res)
+    {
+        try
+        {
+            const chat_id = req.params.chat;
+            const page = req.query.page ? req.query.page : 1;
+            //check the user s either the sender or thre redceiver the chat
+            let isCheck = await ChatList.exists({
+                $or : [
+                    {sender : req.user._id,_id :chat_id }, {receiver : req.user._id,id :chat_id}
+                ]
+            })
+    
+            if(!isCheck)
+            {
+                return res.status(400).json({
+                    success : false,
+                    message : "User dont have access to chat"
+                })
+            }
+            //get chat messages
+            let chat_messages  = await ChatMessages.find({
+                chat_id : chat_id
+            }).populate({ path: 'sender', model: User }).populate({ path: 'receiver', model: User }).exec()
+    
+            let all_messages = [];
+            let individualChat = {};
+            for(let chat of chat_messages)
+            {
+                individualChat = {
+                    message : chat.message,
+                    is_sender: chat.sender._id == req.user._id,
+                    sender : chat.sender.username,
+                    receiver : chat.sender.receiver,
+                    createdAt : chat.createdAt,
+                }
+    
+                all_messages.push(individualChat)
+            }
+    
+            //process pagination
+            const total_chatmessages =  await ChatMessages.find({
+                chat_id : chat_id
+            }).countDocuments().exec();
+            let pagination  = {}
+            if(total_chatmessages.length > 0)
+            {
+                pagination = {
+                    total_chatmessages :total_chatmessages,
+                    total_pages : Math.ceil(total_chatmessages / 20),
+                    current_page : parseInt(page)
+                }
+            }else{
+                pagination = {
+                    total_chatmessages : 0,
+                    total_pages : 0,
+                    current_page : 0,
+                }
+            }
+    
+            return res.status(200).json({
+                success : true,
+                all_messages :  all_messages,
+                pagination
+            })
+        }catch(error)
+        {
+            console.log(error)
+            return res.status(500).json({
+                success : false,
+               message : "An error has occured"
+            })
+
+        }
+      
+
+    }
+    ,
+    async sendChatMessage(req,res)
+    {
+        //check there is a realtionship between sender and reiver
+        const {receiver,message} = req.body
+
+        if(!("receiver") in req.body)
+        {
+            return res.status(400).json({
+                success : false,
+                message : "Receiver is a compulsory field"
+            })
+        }
+        if(!("message") in req.body)
+        {
+            return res.status(400).json({
+                success : false,
+                message : "message is a compulsory field"
+            })
+        }
+        var ObjectId = require('mongoose').Types.ObjectId;
+        if(! ObjectId.isValid(receiver))
+        {
+            return res.status(400).json({
+                success : false,
+                message : "Receiver is not a valid user"
+            })
+        }
+        let receiver_user = User.findOne({_id : receiver}).exec();
+
+        if(!receiver_user)
+        {
+            return res.status(400).json({
+                success : false,
+                message : "Receiver user does not exist"
+            })
+        }
+        let chatList = await ChatList.findOne({
+                    sender : req.user._id,receiver : receiver}).exec()
+    
+        if(!chatList)
+        {
+
+              chatList = await ChatList.findOne({
+                sender : receiver,receiver : req.user._id}).exec()
+
+                if(!chatList)
+                {
+                    chatList  = new ChatList({
+                        sender : req.user._id,
+                        receiver : receiver
+                    })
+                    await chatList.save();
+                }
+          
+        }
+
+       let chatMessage =   ChatMessages({
+            chat_id : chatList._id,
+            sender : req.user._id,
+            receiver : receiver,
+            message ,
+            read : false
+        })
+        await chatMessage.save();
+        //send a notification and the message real time
+       let sender = await User.findOne({_id : req.user._id}).exec();
+        NotificationAction.sendChat(receiver_user,message,"chat",sender)
+
+        return res.status(200).json({
+            success : true,
+            message : "Chat sent succesfully",
+            message : chatMessage
+        })
+    }
 }

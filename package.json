@@ -47,7 +47,6 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "jest": "^26.4.2 --testEnvironment=node",
     "mongodb-memory-server": "^6.6.7",
     "nodemon": "^2.0.4",
     "supertest": "^4.0.2"

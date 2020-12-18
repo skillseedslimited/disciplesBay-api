@@ -25,13 +25,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("*", cloudinaryConfig);
 app.use(compression());
 // Routes config
-require("./routers/index.routes")(app);
-app.use(errorHandler);
-
-// DB config
 const db = require("./config/keys").mongoURL;
-// console.log(db);
-// connect to mongoDB
 mongoose
   .connect(db, {
     useFindAndModify: false,
@@ -46,6 +40,13 @@ mongoose
     )
   )
   .catch((err) => console.log(`Server connection error: ${err.message}`.red));
+
+require("./routers/index.routes")(app);
+app.use(errorHandler);
+
+// DB config
+// console.log(db);
+// connect to mongoDB
 
 const port = process.env.PORT || 3100;
 

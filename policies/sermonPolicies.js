@@ -96,6 +96,7 @@ module.exports = {
           "string.empty": "The cover_image field cannot be empty",
         }),
       price: Joi.number()
+      .min(0)
         .positive()
         .required()
         .messages({

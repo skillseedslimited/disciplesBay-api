@@ -6,7 +6,7 @@ const open = require("open");
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
 // done anoth  
-// "postinstall": "chmod -R +x node_modules/next/dist/bin/next-* && npm run build"
+// "postinstall": "chmod -R +x node_modules/next/dist/bin/next-* && npm run build"fdlll
 // :::::::::::::::::::::::::::::::::::::::::::::::::::FLUTTERWAVE CARD CHARGES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const chargeCard = asyncHandler(async (req, res, next) => {
   try {

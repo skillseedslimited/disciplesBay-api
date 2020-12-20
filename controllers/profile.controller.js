@@ -33,6 +33,7 @@ module.exports = {
     profile:asyncHandler( (req, res, next) =>{
         let id = req.user._id;
         User.findById(id)
+        .populate('role')
         .then(async user =>{
             if(!user){
                 return next( new ErrorResponse("Unable find user", 404))

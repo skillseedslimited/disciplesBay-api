@@ -35,6 +35,7 @@ module.exports = {
         User.findById(id)
         .populate('role')
         .then(async user =>{
+            console.log(user)
             if(!user){
                 return next( new ErrorResponse("Unable find user", 404))
             }
@@ -53,6 +54,7 @@ module.exports = {
                 { $set: profileFields },
                 { new: true }
             )
+            .populate('role')
             .then(profile =>{
                 if(!profile){
                     return next( new ErrorResponse("Unable to update profile", 404))

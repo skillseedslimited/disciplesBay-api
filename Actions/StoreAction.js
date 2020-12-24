@@ -286,7 +286,7 @@ module.exports = {
       //log transaction here
 
       return res.status(200).json({
-        succes: true,
+        success: true,
         message: "Item purchased successfully",
       });
     } catch (error) {

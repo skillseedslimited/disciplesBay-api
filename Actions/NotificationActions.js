@@ -9,8 +9,7 @@ module.exports = {
     var message = {
       notification: {
         title: 'New Notification Alert',
-        body:  themessage,
-        click_action: "FLUTTER_NOTIFICATION_CLICK",
+        body:  themessage
        
       },
       data: {
@@ -18,6 +17,12 @@ module.exports = {
         resource_link,
         type,
         created_at: moment().format(),
+      },
+      android: {
+        notification: {
+          sound: 'default',
+          click_action: 'FLUTTER_NOTIFICATION_CLICK',
+        },
       },
       topic: "general",
     };
@@ -66,15 +71,19 @@ if(registrationToken)
   var message = {
     notification: {
       title: 'New Notification Alert',
-      body:  themessage,
-      click_action: "FLUTTER_NOTIFICATION_CLICK",
-     
+      body:  themessage
       },
     data: {
       themessage,
       resource_link,
       type,
       created_at: moment().format(),
+    },
+    android: {
+      notification: {
+        sound: 'default',
+        click_action: 'FLUTTER_NOTIFICATION_CLICK',
+      },
     },
     token: registrationToken,
   };
@@ -176,9 +185,14 @@ if(registrationToken)
       var message = {
         notification: {
           title: 'New Notification Alert',
-          body:  themessage,
-          click_action: "FLUTTER_NOTIFICATION_CLICK",
+          body:  themessage
          
+          },
+          android: {
+            notification: {
+              sound: 'default',
+              click_action: 'FLUTTER_NOTIFICATION_CLICK',
+            },
           },
         data: {
           themessage,
@@ -220,14 +234,19 @@ if(registrationToken)
       var message = {
         notification: {
           title: 'New chat notification',
-          body:  themessage,
-          click_action: "FLUTTER_NOTIFICATION_CLICK",
+          body:  themessage
           },
         data: {
           themessage,
           type,
           createdAt: moment().format(),
           sender_name : sender.username
+        },
+        android: {
+          notification: {
+            sound: 'default',
+            click_action: 'FLUTTER_NOTIFICATION_CLICK',
+          },
         },
         token: registrationToken,
       };

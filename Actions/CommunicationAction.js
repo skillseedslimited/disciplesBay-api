@@ -49,6 +49,7 @@ module.exports = {
     initiateCall : async function(req,res)
     {
         //get the receiver username or id, and also the generated channel name
+        try{
         const { receiver,channel_name,call_type} = req.body;
         //check receiver exists
         if(receiver.length == 0 || channel_name.length == 0 || call_type.length == 0)
@@ -66,24 +67,24 @@ module.exports = {
  
         //get receiver user 
         var receiver_user = check_receiver_exists;
-        // let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : receiver_user._id}).sort({createdAt : -1}).exec();
+        let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : receiver_user._id}).sort({createdAt : -1}).exec();
         
-        // if(!checkPendingRequest)
-        // { 
-        //      return res.status(400).json({success : false,message : "You need to send a request before placing "+call_type});
+        if(!checkPendingRequest)
+        { 
+             return res.status(400).json({success : false,message : "You need to send a request before placing "+call_type});
 
-        // }
-        // if(checkPendingRequest.status == "pending")
-        // {
-        //     //return message that u can place request again
-        //     return res.status(400).json({success : false,message : "Counsellor has not accepted a request from you"});
-        // }else{
-        //     if(checkPendingRequest.used)
-        //     {
-        //         //u can make call again as well
-        //         return res.status(400).json({success : false,message : "Please resend a request to counsellor"});
-        //     }
-        // }
+        }
+        if(checkPendingRequest.status == "pending")
+        {
+            //return message that u can place request again
+            return res.status(400).json({success : false,message : "Counsellor has not accepted a request from you"});
+        }else{
+            if(checkPendingRequest.used)
+            {
+                //u can make call again as well
+                return res.status(400).json({success : false,message : "Please resend a request to counsellor"});
+            }
+        }
         
         //check receiver is a counsellor
         // --> to be done here
@@ -114,6 +115,14 @@ module.exports = {
             return res.status(400).json({success : false,message : "Not enough balance to initiate call"});
         }
 
+    }catch(error)
+    {
+        console.log(error)
+        return res.status(500).json({
+            success : false,
+            message : "Internal server error"
+        });
+    }
 
 
     },
@@ -176,6 +185,8 @@ module.exports = {
     sendRingNotification : async function(sender,receiver,channel_name,call_type)
     {
 
+        try{
+        console.log(call_type)
         const call_log = new CallLog({sender:sender._id,receiver : receiver._id,channel_name,ring_time :moment(Date.now()).add(30,"seconds"),status : "ring",time_ended : moment(Date.now()).add(30,"seconds"),call_type});
 
         await call_log.save();
@@ -183,13 +194,22 @@ module.exports = {
         NotificationAction.sendCommunication(receiver,"New Incoming Call","ring",channel_name,call_type,sender,call_log._id);  
          
         return call_log._id;
-        
+      }
+        catch(error)
+       {
+        console.log(error)
+        return res.status(500).json({
+            success : false,
+            message : "Internal server error"
+        });
+     }
 
        
     },
 
     receiveCall : async function(req,res) 
     {
+        try{
         const {channel_name,receiver,log_id} = req.body;
 
         const log = await CallLog.findOne({ _id : log_id,time_ended : {$lte : moment(Date.now())}}).exec();
@@ -201,14 +221,14 @@ module.exports = {
             const notification_receiver = await User.findById(log.sender).exec();
             const notification_sender = await User.findById(log.receiver).exec();
 
-            // let checkPendingRequest = await CounsellorRequest.findOne({sender : log.sender,counsellor :  log.receiver}).sort({createdAt : -1}).exec();
+            let checkPendingRequest = await CounsellorRequest.findOne({sender : log.sender,counsellor :  log.receiver}).sort({createdAt : -1}).exec();
 
-            // if(checkPendingRequest)
-            // {
-            //     await CounsellorRequest.findByIdAndUpdate(checkPendingRequest._id,{
-            //         used : true
-            //     }).exec();
-            // }
+            if(checkPendingRequest)
+            {
+                await CounsellorRequest.findByIdAndUpdate(checkPendingRequest._id,{
+                    used : true
+                }).exec();
+            }
         //send notification and return call connected successfully
             NotificationAction.sendCommunication(notification_receiver,"Call connected","connected",channel_name,log.call_type,notification_sender,log._id);
 
@@ -219,11 +239,21 @@ module.exports = {
             return res.status(400).json({success : false,message : "Unable to connect call"});
             //call ended
         }
-
+    }
+        catch(error)
+        {
+            console.log(error)
+            return res.status(500).json({
+                success : false,
+                message : "Internal server error"
+            });
+        }
     },
     //call end
     callEnd : async function(req,res) 
     {
+
+        try{
         const {time_call_end,log_id} = req.body;
 
         const log = await CallLog.findOne({ _id : log_id}).exec();
@@ -258,10 +288,21 @@ module.exports = {
             //call ended
         }
 
+     } catch(error)
+    {
+        console.log(error)
+        return res.status(500).json({
+            success : false,
+            message : "Internal server error"
+        });
+    }
+
     },
 
   chargeCallOffWallet : async function(sender,callTime,callLog)
   {
+
+    try{
      let call_start_time = moment(callLog.call_start_time).subtract(1,"hour");
     console.log(callTime);
     console.log(call_start_time);
@@ -288,100 +329,161 @@ module.exports = {
              return amount_used;
          }   
      }
-
+    }
+     catch(error)
+     {
+         console.log(error)
+         return res.status(500).json({
+             success : false,
+             message : "Internal server error"
+         });
+     }
      
   },
 //request counsellor
 requestCounsellor : async function(req,res)
 {
-    const {counsellor_id, call_type} = req.body;
+    try
+    {
+        const {counsellor_id, call_type} = req.body;
     
-    let counsellor = await User.findOne({_id : counsellor_id}).populate({
-        path: 'role',
-        match: { name : "counsellor" },
-        select: 'name'
-      }).exec();
-
-      if(!counsellor)
-      {
-          return res.status(404).json({
-              success  :false,
-              message : "Can not find user counsellor"
-          })
-      }
-
-      //check maybe he has a pending request
-      let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : counsellor._id}).sort({createdAt : -1}).exec();
-
-      if(checkPendingRequest)
-      {
-          //check it pending
-          if(checkPendingRequest.status == "pending")
+        let counsellor = await User.findOne({_id : counsellor_id}).populate("role").exec();
+    
+          if(!counsellor)
           {
-              return res.status(400).json({
-                  success : false,
-                  message : "You have pending request, please wait till counsellor act on it. thanks"
+              return res.status(404).json({
+                  success  :false,
+                  message : "Can not find user counsellor"
               })
           }
-      }
-      
-      let counsellor_request =  CounsellorRequest({
-          sender : req.user._id,
-          counsellor : counsellor._id,
-          call_type,
-          status : "pending"
-      })
 
-      await counsellor_request.save();
-      //snd notification to councillor
-      NotificationAction.sendToUser(counsellor,"Call request","request","no link");
+          if(counsellor.role)
+          {
+              if(!counsellor.role.name != "counsellor")
+              {
+                return res.status(400).json({
+                    success  :false,
+                    message : "User is not a counsellor"
+                })
+              }
+          }else{
+                return res.status(400).json({
+                    success  :false,
+                    message : "User is not a counsellor"
+                })
+          }
 
-      return res.status(200).json({
-          success : true,
-          message : "Request sent successfully to counsellor"
-      })
-
+          
+    
+          //check maybe he has a pending request
+          let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : counsellor._id}).sort({createdAt : -1}).exec();
+    
+          if(checkPendingRequest)
+          {
+              //check it pending
+              if(checkPendingRequest.status == "pending")
+              {
+                  return res.status(400).json({
+                      success : false,
+                      message : "You have pending request, please wait till counsellor act on it. thanks"
+                  })
+              }
+          }
+          
+          let counsellor_request =  CounsellorRequest({
+              sender : req.user._id,
+              counsellor : counsellor._id,
+              call_type,
+              status : "pending"
+          })
+    
+          await counsellor_request.save();
+          //snd notification to councillor
+          NotificationAction.sendToUser(counsellor,"Call request","request","no link");
+    
+          return res.status(200).json({
+              success : true,
+              message : "Request sent successfully to counsellor"
+          })
+    
+        
+    }catch(error)
+    {
+        console.log(error)
+        return res.status(500).json({
+            success : false,
+            message : "Internal server error"
+        });
+    }
+  
 
 },
 //counsellor see requests
  getAllRequest : async function(req,res)
  {
      //paginate this later
+     try
+     { 
      const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}]}).populate({path:'counsellor', select: ['username', 'profilePicture']}).exec();
      return res.status(200).json({
          success : true,message : "All counsellor request fetched successfully",
          counsellor_requests
      })
+    }catch(error)
+    {
+        console.log(error)
+        return res.status(500).json({
+            success : false,
+            message : "Internal server error"
+        });
+    }
  },
 //counsellor accept requests
 manageRequest : async function(req,res)
 {
     //paginate this later
-    const counsellor_request_id = req.params.counsellor_request;
-    const counsellor_requests = await CounsellorRequest.findById(counsellor_request_id).exec();
-    if(!counsellor_requests)
-    {
-        return res.status(404).json({
+    try
+    { 
+        const counsellor_request_id = req.params.counsellor_request;
+        const counsellor_requests = await CounsellorRequest.findById(counsellor_request_id).exec();
+        if(!counsellor_requests)
+        {
+            return res.status(404).json({
+                success : false,
+                message : "resource not found"
+            });
+        }
+        let statuses = ["accepted","rejected"];
+        const status = req.body.status;
+    
+        if(statuses.includes(status))
+        {
+            await CounsellorRequest.findByIdAndUpdate(counsellor_request_id,{
+                status
+            }).exec();
+    
+            if(status == "rejected")
+            {
+                await CounsellorRequest.findByIdAndDelete(counsellor_request_id).exec();
+            }
+            return res.status(200).json({
+                success : true,message : "Request updated succesfully"
+            })
+        }
+        return res.status(400).json({
             success : false,
-            message : "resource not found"
+            message : "Not a valid status"
+        });
+
+    }catch(error)
+    {
+        console.log(error)
+        return res.status(500).json({
+            success : false,
+            message : "Internal server error"
         });
     }
-    let statuses = ["accepted","rejected"];
-    const status = req.body.status;
-
-    if(statuses.includes(status))
-    {
-        await CounsellorRequest.findByIdAndUpdate(counsellor_request_id,{
-            status
-        }).exec();
-        return res.status(200).json({
-            success : true,message : "Request updated succesfully"
-        })
-    }
-    return res.status(400).json({
-        success : false,
-        message : "Not a valid status"
-    });
+   
    
 },
 
@@ -544,75 +646,86 @@ manageRequest : async function(req,res)
     async sendChatMessage(req,res)
     {
         //check there is a realtionship between sender and reiver
-        const {receiver,message} = req.body
+        try{
 
-        if(!("receiver") in req.body)
-        {
-            return res.status(400).json({
-                success : false,
-                message : "Receiver is a compulsory field"
-            })
-        }
-        if(!("message") in req.body)
-        {
-            return res.status(400).json({
-                success : false,
-                message : "message is a compulsory field"
-            })
-        }
-        var ObjectId = require('mongoose').Types.ObjectId;
-        if(! ObjectId.isValid(receiver))
-        {
-            return res.status(400).json({
-                success : false,
-                message : "Receiver is not a valid user"
-            })
-        }
-        let receiver_user = User.findOne({_id : receiver}).exec();
+            const {receiver,message} = req.body
 
-        if(!receiver_user)
-        {
-            return res.status(400).json({
-                success : false,
-                message : "Receiver user does not exist"
-            })
-        }
-        let chatList = await ChatList.findOne({
-                    sender : req.user._id,receiver : receiver}).exec()
+            if(!("receiver") in req.body)
+            {
+                return res.status(400).json({
+                    success : false,
+                    message : "Receiver is a compulsory field"
+                })
+            }
+            if(!("message") in req.body)
+            {
+                return res.status(400).json({
+                    success : false,
+                    message : "message is a compulsory field"
+                })
+            }
+            var ObjectId = require('mongoose').Types.ObjectId;
+            if(! ObjectId.isValid(receiver))
+            {
+                return res.status(400).json({
+                    success : false,
+                    message : "Receiver is not a valid user"
+                })
+            }
+            let receiver_user = User.findOne({_id : receiver}).exec();
     
-        if(!chatList)
+            if(!receiver_user)
+            {
+                return res.status(400).json({
+                    success : false,
+                    message : "Receiver user does not exist"
+                })
+            }
+            let chatList = await ChatList.findOne({
+                        sender : req.user._id,receiver : receiver}).exec()
+        
+            if(!chatList)
+            {
+    
+                  chatList = await ChatList.findOne({
+                    sender : receiver,receiver : req.user._id}).exec()
+    
+                    if(!chatList)
+                    {
+                        chatList  = new ChatList({
+                            sender : req.user._id,
+                            receiver : receiver
+                        })
+                        await chatList.save();
+                    }
+              
+            }
+    
+           let chatMessage =   ChatMessages({
+                chat_id : chatList._id,
+                sender : req.user._id,
+                receiver : receiver,
+                message ,
+                read : false
+            })
+            await chatMessage.save();
+            //send a notification and the message real time
+           let sender = await User.findOne({_id : req.user._id}).exec();
+            NotificationAction.sendChat(receiver_user,message,"chat",sender)
+    
+            return res.status(200).json({
+                success : true,
+                message : "Chat sent succesfully",
+                message : chatMessage
+            })
+        }catch(error)
         {
-
-              chatList = await ChatList.findOne({
-                sender : receiver,receiver : req.user._id}).exec()
-
-                if(!chatList)
-                {
-                    chatList  = new ChatList({
-                        sender : req.user._id,
-                        receiver : receiver
-                    })
-                    await chatList.save();
-                }
-          
+            console.log(error)
+            return res.status(500).json({
+                success : false,
+                message : "Internal server error"
+            });
         }
-
-       let chatMessage =   ChatMessages({
-            chat_id : chatList._id,
-            sender : req.user._id,
-            receiver : receiver,
-            message ,
-            read : false
-        })
-        await chatMessage.save();
-        //send a notification and the message real time
-       let sender = await User.findOne({_id : req.user._id}).exec();
-        NotificationAction.sendChat(receiver_user,message,"chat",sender)
-
-        return res.status(200).json({
-            success : true,
-            message : "Chat sent succesfully",
-            message : chatMessage
-        })
+       
     }
 }

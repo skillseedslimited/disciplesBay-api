@@ -11,11 +11,14 @@ const errorHandler = require("./middleware/error");
 const { cloudinaryConfig } = require("./config/cloudinary.config");
 const node_media_server = require('./media_server')
 const thumbnail_generator = require('./cron/thumbnails');
+const cron  = require('./cron/event.cron');
 
 const app = express();
 
-node_media_server.run();
-thumbnail_generator.start();
+// node_media_server.run();
+// thumbnail_generator.start();
+cron.start();
+
 
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,6 +27,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("*", cloudinaryConfig);
 app.use(compression());
+// app.use('/live-stream-cron-job', require("./cron/event.cron"));
 // Routes config
 const db = require("./config/keys").mongoURL;
 mongoose
@@ -66,3 +70,24 @@ process.on("unhandledRejection", (err, promise) => {
   //Close server & exit process
   process.exit(1);
 });
+// :::::::::::::::::::::::::::::::::::::::::::::::::::::streaming:::::::::::::::::::::::::::::::::::::::::
+const NodeMediaServer = require('node-media-server')
+
+
+const config = {
+  rtmp: {
+    port: 1935,
+    chunk_size: 60000,
+    gop_cache: true,
+    ping: 30,
+    ping_timeout: 60,
+  },
+  http: {
+    port: 8000,
+    allow_origin: '*',
+  },
+}
+
+
+var nms = new NodeMediaServer(config)
+nms.run()

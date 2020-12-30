@@ -26,4 +26,8 @@ router
 .route('/editEvent/:id')
 .put( eventController.editEvent);
 
+router
+.route('/current-stream')
+.get(eventController.getActiveEvent);
+
 module.exports = router

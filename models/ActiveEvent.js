@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const EventSchema = new Schema({
+const ActiveEventSchema = new Schema({
     eventName:{
         type: String
     },
@@ -28,11 +28,8 @@ const EventSchema = new Schema({
     },
     isLive:{
         type: Boolean
-    },
-    passed:{
-        type: Boolean
     }
 
 })
 
-module.exports = Event = mongoose.model('event', EventSchema);
+module.exports = ActiveEvent = mongoose.model('activeEvent', ActiveEventSchema);

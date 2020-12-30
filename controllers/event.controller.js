@@ -1,6 +1,7 @@
 const Event  = require('../models/Event');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
+const ActiveEvent = require('../models/ActiveEvent');
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::CREATING EVENTS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const createEVent = asyncHandler(async(req, res, next) =>{
@@ -87,7 +88,9 @@ const createEVent = asyncHandler(async(req, res, next) =>{
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL EVENTS:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const getAllEvent = asyncHandler( (req, res, next) =>{
+const getAllEvent = asyncHandler(async (req, res, next) =>{
+    let onlineEvent =  await Event.find({isLive:true});
+    console.log("this are online event", onlineEvent)
     // finding all events
     Event.find()
     .then(event =>{
@@ -142,11 +145,25 @@ const deleteEvent = asyncHandler(async (req, res, next) =>{
     })
 })
 
+// :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GET ALL ACTIVE EVENT ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const getActiveEvent = asyncHandler(async(req, res, next) =>{
+    await ActiveEvent.find()
+    .then(actives =>{
+        let active = actives[0];
+        res.status(200).json({
+            success:true,
+            message:'Active stream url event',
+            data:active
+        })
+    })
+})
+
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::EXPORTING ALL FUNCTIONS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 module.exports = {
     createEVent,
     getAllEvent,
     getSingleEvent,
     editEvent,
-    deleteEvent 
+    deleteEvent,
+    getActiveEvent 
 }

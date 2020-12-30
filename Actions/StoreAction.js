@@ -153,7 +153,7 @@ module.exports = {
           );
           break;
         case "flutterwave":
-          return await this.payWithFlutterWave(
+          return await this.payWithFlutterWave(req,res,
             item,
             req.body.payment_id,
             req.user,
@@ -238,7 +238,7 @@ module.exports = {
       });
     }
   },
-  payWithFlutterWave: async function (
+  payWithFlutterWave: async function (req,res,
     item,
     transaction_ref,
     user,
@@ -286,7 +286,7 @@ module.exports = {
       //log transaction here
 
       return res.status(200).json({
-        succes: true,
+        success: true,
         message: "Item purchased successfully",
       });
     } catch (error) {

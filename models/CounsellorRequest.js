@@ -15,7 +15,7 @@ const CounsellorRequestSchema = new Schema({
       },
       call_type : {
           type : String,
-          enum : ["call","voice_call","chat"],
+          enum : ["call","video_call","chat"],
           default : "call"
       },
       status :{

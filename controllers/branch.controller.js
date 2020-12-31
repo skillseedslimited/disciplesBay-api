@@ -55,6 +55,7 @@ module.exports = {
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::GET ALL BRANCH::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     allBranch: asyncHandler(async(req, res, next) =>{
         await Branch.find()
+        .sort({_id: -1})
         .then(branch =>{
             res.status(200).json({
                 success: true,

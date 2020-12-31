@@ -100,6 +100,7 @@ const testimonyAll = (req, res) =>{
 
     // FINDING ALL TESTIMONIES
     Testimony.find()
+        .sort({_id: -1})
         .then(testimonies =>{
             console.log(testimonies)
             res.json({

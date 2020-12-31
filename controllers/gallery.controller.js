@@ -42,6 +42,7 @@ const createGallery = asyncHandler(async(req, res, next)=> {
 const getAllGallery = asyncHandler(async(req, res, next) =>{
 
     await Gallery.find()
+    .sort({_id: -1})
     .then(gallery =>{
         if(!gallery){
             return next( new ErrorResponse("Unable to find gallery", 404))

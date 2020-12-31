@@ -16,7 +16,7 @@ module.exports = {
             })
             .then(profile => {
                 if(!profile){
-                    return next( new ErrorResponse("Unable profile profile", 404))
+                    return next( new ErrorResponse(`Unable profile profile! ${err}`, 404))
                 }
                 res.status(200).json({
                     success: true,
@@ -25,10 +25,32 @@ module.exports = {
                 });
             })
             .catch(err => {
-                return next( new ErrorResponse("Unable profile profile", 404))
+                return next( new ErrorResponse(`Unable profile profile!! ${err}`, 404))
             });
 
     }),
+ //::::::::::::::::::::::::::::::::::::::::::::::::::::::LOGOUT::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+ logout:asyncHandler(async(req, res, next) =>{
+    let id = req.user._id;
+    await User.findById(id)
+    .then(user =>{
+        user.isOnline = false;
+        user.save()
+        .then(user =>{
+            res.status(200).json({
+                success: true,
+                message:"Logout successfully",
+                data:user
+            })
+        })
+        .catch(err =>{
+            return next( new ErrorResponse(`Unable to logout ${err}`, 404))
+        })
+    })
+    .catch(err =>{
+        return next( new ErrorResponse("Unable to logout", 404))
+    })
+ }),
 // :::::::::::::::::::::::::::::::::::::::::::::::CREATE PROFILE::::::::::::::::::::::::::::::::::::::::::
     profile:asyncHandler( (req, res, next) =>{
         let id = req.user._id;

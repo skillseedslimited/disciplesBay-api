@@ -9,4 +9,9 @@ router.route('/index')
  .get( indexController.index )
  .put( indexController.profile );
 
+ router
+ .route('/logout')
+ .get(indexController.logout);
+
+
  module.exports = router

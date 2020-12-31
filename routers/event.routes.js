@@ -26,4 +26,13 @@ router
 .route('/editEvent/:id')
 .put( eventController.editEvent);
 
+router
+.route('/current-stream')
+.get(eventController.getActiveEvent);
+
+router
+.route('/reset')
+.get(eventController.reset);
+// ec2-18-224-202-52.us-east-2.compute.amazonaws.com
+
 module.exports = router

@@ -40,6 +40,7 @@ const getAllNews = asyncHandler( async(req, res, next) =>{
     
     // finding news
     await News.find()
+    .sort({_id: -1})
     .then(news =>{
         if(!news){
             return next( new ErrorResponse("no news available", 404))

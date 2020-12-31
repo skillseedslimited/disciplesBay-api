@@ -1,6 +1,7 @@
 const Event  = require('../models/Event');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
+const ActiveEvent = require('../models/ActiveEvent');
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::CREATING EVENTS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const createEVent = asyncHandler(async(req, res, next) =>{
@@ -16,7 +17,7 @@ const createEVent = asyncHandler(async(req, res, next) =>{
         eventURL,
         isLive
     } =  req.body;
-
+    let passed = false
     const newEvent = new Event({
         eventName,
         coverImage,
@@ -26,7 +27,8 @@ const createEVent = asyncHandler(async(req, res, next) =>{
         time,
         eventType,
         eventURL,
-        isLive
+        isLive,
+        passed
     });
 
     newEvent.save()
@@ -87,9 +89,12 @@ const createEVent = asyncHandler(async(req, res, next) =>{
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL EVENTS:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const getAllEvent = asyncHandler( (req, res, next) =>{
+const getAllEvent = asyncHandler(async (req, res, next) =>{
+    let onlineEvent =  await Event.find({isLive:true});
+    console.log("this are online event", onlineEvent)
     // finding all events
     Event.find()
+    .sort({_id: -1})
     .then(event =>{
         res.status(200).json({
             sucess: true,
@@ -142,11 +147,98 @@ const deleteEvent = asyncHandler(async (req, res, next) =>{
     })
 })
 
+// :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GET ALL ACTIVE EVENT ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const getActiveEvent = asyncHandler(async(req, res, next) =>{
+    await ActiveEvent.find()
+    .then(actives =>{
+        let active = actives[0];
+        res.status(200).json({
+            success:true,
+            message:'Active stream url event',
+            data:active
+        })
+    })
+})
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::AUTOMATIC LIVE STREAM EVENT RESET:::::::::::::::::::::::::::::::::::::::::::::::::::::
+const reset = asyncHandler(async(req, res, next) =>{
+    await Event.find({$and:[{passed:false}, {isLive:true}]})
+        .then(event =>{
+            // getting all event
+            let currentEvent = (current) =>{
+                let time = new Date();
+                let  t1 = time.getTime();
+                let t2 = current.date.getTime();  
+                return t1 <= t2; 
+            }
+            let indexElement = event.findIndex(currentEvent);
+            currentEventstream = event[indexElement];
+            currentEventstream.passed = true;
+            currentEventstream.save();
+            // event.passed = true;
+            // event.save();
+            
+            // *********************************
+        const activeEventFields = {};
+        let eventURL = currentEventstream.eventURL;
+        let coverImage = currentEventstream.coverImage;
+        if(eventURL) activeEventFields.eventURL = currentEventstream.eventURL;
+        if(coverImage) activeEventFields.coverImage = currentEventstream.coverImage;
+
+        ActiveEvent.find()
+            .then(events =>{
+                let event = events[0]
+                if(event){
+                    console.log(event)
+                    let id = event._id
+                    // update
+                    ActiveEvent.findOneAndUpdate( 
+                        { _id: id },
+                        { $set: activeEventFields },
+                        { new: true }
+                        )
+                        .then(event =>{
+                            console.log("new live stream url updated",event)
+                            res.status(200).json({
+                                success: true,
+                                message:"new live stream url updated",
+                                data:event
+                            })
+                        })
+                        .catch(err =>{
+                            return next( new ErrorResponse("Unable to update live stream url", 404))
+                        });
+                }else{
+                    // create
+                    new ActiveEvent(activeEventFields).save()
+                    .then(event =>{
+                        console.log("new live stream url created", event);
+                    })
+                    .catch(err =>{
+                        return next( new ErrorResponse("Unable to create live stream url", 404))
+                    });
+
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                return next( new ErrorResponse("Unable to create live stream ", 404))
+            });
+
+            // console.log("**************************",currentEventstream)
+            
+        })
+        .catch(err =>{
+            console.log("unable to find any event at the moment")
+            return next( new ErrorResponse("Unable to find any event at the moment ", 404))
+        })
+})
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::EXPORTING ALL FUNCTIONS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 module.exports = {
     createEVent,
     getAllEvent,
     getSingleEvent,
     editEvent,
-    deleteEvent 
+    deleteEvent,
+    getActiveEvent, 
+    reset
 }

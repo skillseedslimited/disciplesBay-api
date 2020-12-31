@@ -19,6 +19,7 @@ const getAllUsers = asyncHandler(async (req, res, next) =>{
         match: {name: {$gte: 'counsellor'}},
         select: 'name'
     })
+    .sort({_id: -1})
     .then(users =>{
         if(!users){
             return next( new ErrorResponse('No users at the moment', 404))

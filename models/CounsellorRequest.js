@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const CounsellorRequestSchema = new Schema({
     sender: {
         type: mongoose.Schema.Types.ObjectId,
-        rel : "User",
+        ref : "User",
         required: true,
       },
       counsellor: {

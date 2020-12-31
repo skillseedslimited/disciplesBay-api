@@ -318,7 +318,7 @@ module.exports = {
       //log transaction
     //  console.log(response)
       if (response.status == "success") {
-        console.log(response.data.amount)
+      
         if (response.data.amount >= amount) {
           var transaction = new Transaction({
             user: user._id,

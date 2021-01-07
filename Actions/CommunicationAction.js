@@ -372,10 +372,7 @@ requestCounsellor : async function(req,res)
                     message : "User is not a counsellor"
                 })
           }
-
-          
-    
-          //check maybe he has a pending request
+     //check maybe he has a pending request
           let checkPendingRequest = await CounsellorRequest.findOne({sender : req.user._id,counsellor : counsellor._id}).sort({createdAt : -1}).exec();
     
           if(checkPendingRequest)
@@ -424,7 +421,10 @@ requestCounsellor : async function(req,res)
      //paginate this later
      try
      { 
-     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}]}).populate({path:'counsellor', select: ['username', 'profilePicture']}).exec();
+
+     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}],used : 0}).populate({path:'counsellor', select: ['username', 'profilePicture']}).populate({path:'sender', select: ['username', 'profilePicture']}).sort(
+         {createdAt : -1}
+     ).exec();
      return res.status(200).json({
          success : true,message : "All counsellor request fetched successfully",
          counsellor_requests

@@ -23,11 +23,11 @@ module.exports = {
             return next(new ErrorResponse("Invalid role specified", 400))
         }
         // Checking the database if username is taken
-        await User.findOne({ email }, async(err, user) => {
+        await User.findOne({ $or: [{ email }, { username }, { phoneNumber }] }, async(err, user) => {
             // If username is taken  
             if (user) {
                 console.log('username already exists')
-               return  next(new ErrorResponse("Email already exists", 400))   
+               return  next(new ErrorResponse("Email, Username or Phone number already exists", 400))   
             }else{
                  // Comparison of passwords
                 if ((confirmPassword) && (password !== confirmPassword)) {

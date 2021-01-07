@@ -87,7 +87,7 @@ if(registrationToken)
     },
     token: registrationToken,
   };
-  // console.log(registrationToken);
+  // console.log(registrationToken);f
 
   firebaseadmin
     .messaging()

@@ -43,7 +43,7 @@ const testimonyPost = async (req, res, next) =>{
 }
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::EDIT TESTIMONIES::::::::::::::::::::::::::::::::::::::::::::::::::::
-const editTestimony = asyncHandler(async(req, res) =>{
+const editTestimony = asyncHandler(async(req, res, next) =>{
     const id = req.params.id;
     const options = { new: true };
     // updated = {};
@@ -116,6 +116,7 @@ const testimonyApproveAll = (req, res) =>{
 
     // FINDING ALL TESTIMONIES
     Testimony.find({status: true})
+        .sort({_id: -1})
         .then(testimonies =>{
             console.log(testimonies)
             res.json({

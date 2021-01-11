@@ -1,6 +1,7 @@
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
 const News = require('../models/News');
+const Broadcast = require('../models/Notification');
 
 
 
@@ -39,7 +40,7 @@ const createNews = asyncHandler(async (req, res, next) =>{
 const getAllNews = asyncHandler( async(req, res, next) =>{
     
     // finding news
-    await News.find()
+    await Broadcast.find({type:'general'})
     .sort({_id: -1})
     .then(news =>{
         if(!news){

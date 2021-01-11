@@ -1,15 +1,12 @@
 const Joi = require("joi");
 module.exports = {
-  validateSermonCategory: async function(req, res, next) {
+  validateSermonCategory: async function (req, res, next) {
     var schema = Joi.object({
-      name: Joi.string()
-        .min(2)
-        .required()
-        .messages({
-          "any.required": "The name field is a required field",
-          "string.empty": "Sermon category name cannot be empty",
-          "string.min": `Sermon category name cannot be less than {#limit}`,
-        }),
+      name: Joi.string().min(2).required().messages({
+        "any.required": "The name field is a required field",
+        "string.empty": "Sermon category name cannot be empty",
+        "string.min": `Sermon category name cannot be less than {#limit}`,
+      }),
     });
 
     try {
@@ -21,40 +18,28 @@ module.exports = {
     }
   },
 
-  validateSermon: async function(req, res, next) {
+  validateSermon: async function (req, res, next) {
     var schema = Joi.object({
-      title: Joi.string()
-        .min(2)
-        .required()
-        .messages({
-          "any.required": "The title field is a required field",
-          "string.empty": "The title field cannot be empty",
-          "string.min": `The title field cannot be less than {#limit}`,
-        }),
-      author: Joi.string()
-        .min(2)
-        .required()
-        .messages({
-          "any.required": "The author field is a required field",
-          "string.empty": "The author field cannot be empty",
-          "string.min": `The author field cannot be less than {#limit}`,
-        }),
-      description: Joi.string()
-        .min(2)
-        .required()
-        .messages({
-          "any.required": "The description field is a required field",
-          "string.empty": "The description field cannot be empty",
-          "string.min": `The description field cannot be less than {#limit}`,
-        }),
-      content: Joi.string()
-        .min(10)
-        .required()
-        .messages({
-          "any.required": "The content field is a required field",
-          "string.empty": "The content field cannot be empty",
-          "string.min": `The content field cannot be less than {#limit}`,
-        }),
+      title: Joi.string().min(2).required().messages({
+        "any.required": "The title field is a required field",
+        "string.empty": "The title field cannot be empty",
+        "string.min": `The title field cannot be less than {#limit}`,
+      }),
+      author: Joi.string().min(2).required().messages({
+        "any.required": "The author field is a required field",
+        "string.empty": "The author field cannot be empty",
+        "string.min": `The author field cannot be less than {#limit}`,
+      }),
+      description: Joi.string().min(2).required().messages({
+        "any.required": "The description field is a required field",
+        "string.empty": "The description field cannot be empty",
+        "string.min": `The description field cannot be less than {#limit}`,
+      }),
+      content: Joi.string().min(10).required().messages({
+        "any.required": "The content field is a required field",
+        "string.empty": "The content field cannot be empty",
+        "string.min": `The content field cannot be less than {#limit}`,
+      }),
       category: Joi.string()
 
         .required()
@@ -71,14 +56,11 @@ module.exports = {
           "any.valid":
             "The content_type field can either be audio, video and ebook",
         }),
-      status: Joi.string()
-        .valid("save", "publish")
-        .required()
-        .messages({
-          "any.required": "The status field is a required field",
-          "string.empty": "The status field cannot be empty",
-          "any.valid": "The status field can either be save, publish",
-        }),
+      status: Joi.string().valid("save", "publish").required().messages({
+        "any.required": "The status field is a required field",
+        "string.empty": "The status field cannot be empty",
+        "any.valid": "The status field can either be save, publish",
+      }),
       subscription_type: Joi.string()
         .valid("free", "paid", "subscription")
         .required()
@@ -96,12 +78,11 @@ module.exports = {
           "string.empty": "The cover_image field cannot be empty",
         }),
       price: Joi.number()
-      .min(0)
-        .positive()
+        .min(0)
+
         .required()
         .messages({
           "any.required": "The price field is a required field",
-          "number.positive": "Te price field can only be positive",
         }),
     });
 

@@ -9,16 +9,15 @@ const compression = require("compression");
 // Global error handlers
 const errorHandler = require("./middleware/error");
 const { cloudinaryConfig } = require("./config/cloudinary.config");
-const node_media_server = require('./media_server')
-const thumbnail_generator = require('./cron/thumbnails');
-const cron  = require('./cron/event.cron');
+const node_media_server = require("./media_server");
+const thumbnail_generator = require("./cron/thumbnails");
+const cron = require("./cron/event.cron");
 
 const app = express();
 
 // node_media_server.run();
 // thumbnail_generator.start();
 cron.start();
-
 
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -71,8 +70,7 @@ process.on("unhandledRejection", (err, promise) => {
   process.exit(1);
 });
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::streaming:::::::::::::::::::::::::::::::::::::::::
-const NodeMediaServer = require('node-media-server')
-
+const NodeMediaServer = require("node-media-server");
 
 // const config = {
 //   rtmp: {
@@ -87,7 +85,6 @@ const NodeMediaServer = require('node-media-server')
 //     allow_origin: '*',
 //   },
 // }
-
 
 // var nms = new NodeMediaServer(config)
 // nms.run()

@@ -31,9 +31,7 @@ module.exports = {
       await User.findByIdAndUpdate(req.user._id, {
         notificationCounter: 0,
       }).exec();
-      const user = await User.findById(req.user._id).exec();
 
-      user;
       res.status(200).send({
         status: "success",
         message: "user notifications fetched successfully",

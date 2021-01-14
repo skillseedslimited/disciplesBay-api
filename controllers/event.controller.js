@@ -94,7 +94,7 @@ const getAllEvent = asyncHandler(async (req, res, next) =>{
     console.log("this are online event", onlineEvent)
     // finding all events
     Event.find()
-    .sort({_id: -1})
+    .sort({date: -1})
     .then(event =>{
         res.status(200).json({
             sucess: true,

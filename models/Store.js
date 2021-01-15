@@ -5,6 +5,7 @@ const moment = require("moment");
 const StoreSchema = new Schema({
   item: {
     type: Schema.Types.ObjectId,
+    ref:"Sermon",
     required: true,
   },
   item_type: {

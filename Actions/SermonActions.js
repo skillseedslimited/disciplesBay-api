@@ -185,15 +185,16 @@ module.exports = {
           message: "Sermon not found",
         });
       }
-
-      const sermon_in_store = await Store.exists({ item: sermon._id }).exec();
+      const sermon_in_store = await Store.findOne({ item: sermon._id }).exec();
       if (sermon_in_store) {
         var sermon_removed_from_store = await Store.findOneAndUpdate(
           { item: sermon_id },
           { $set: { isDeleted: true } },
           { new: true }
         );
+        
       }
+      console.log("@@@@@@@@@@@@@i reached here");
       var deleted = await Sermon.findOneAndUpdate(
         { _id: sermon_id },
         { $set: { isDeleted: true } },

@@ -9,4 +9,10 @@ module.exports = {
   initiatePayment: async function(req, res) {
     return await PaymentActions.initiatePayment(req, res);
   },
+  getAllTransactions: async function(req, res) {
+    return await PaymentActions.getAllTransactions(req, res);
+  },
+  getSingleTransaction: async function(req, res) {
+    return await PaymentActions.getSingleTransaction(req, res)
+  }
 };

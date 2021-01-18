@@ -47,5 +47,8 @@ module.exports = {
   },
   getFeaturedSermon: async function(req, res) {
     return await sermonActions.getFeaturedSermon(req, res);
+  },
+  userSermon: async function(req, res) {
+    return await sermonActions.userSermon(req, res);
   }
 };

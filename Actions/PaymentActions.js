@@ -456,4 +456,32 @@ module.exports = {
       }
     );
   },
+  getAllTransactions:async(req, res, next) =>{
+    await Transaction.find()
+    .then(transaction =>{
+      res.status(200).json({
+        success:true,
+        message:"All Transactions",
+        data:transaction
+      })
+    })
+    .catch(err =>{
+      res.status(400).json({
+        success:false,
+        message:"Unable to get transactions",
+        data:err
+      })
+    })
+  },
+  getSingleTransaction:async(req, res, next) =>{
+    let id  = req.query.id;
+    await Transaction.findById(id)
+    .then(transaction =>{
+      res.status(200).json({
+        success:true,
+        message:"Transaction",
+        data:transaction
+      })
+    })
+  }
 };

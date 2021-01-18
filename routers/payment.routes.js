@@ -15,5 +15,14 @@ router.put(
   PaymentController.updatePaymentSettings
 );
 
+router.get('/get-all-transactions',
+PaymentController.getAllTransactions
+);
+
+router.get('/get-single-transaction',
+PaymentController.getSingleTransaction
+);
+
+
 router.get("/initiate", PaymentController.initiatePayment);
 module.exports = router;

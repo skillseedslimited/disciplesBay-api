@@ -35,6 +35,7 @@ module.exports = {
     await User.findById(id)
     .then(user =>{
         user.isOnline = false;
+        user.deviceToken = null;
         user.save()
         .then(user =>{
             res.status(200).json({

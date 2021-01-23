@@ -461,5 +461,23 @@ module.exports = {
       message:'Unable to get featured sermons',
       data:null
     }))
+  },
+  // get sermon without pagination
+  getSermonWithNoLimit:async(req, res, nesxt) =>{
+    await Sermon.find()
+    .then(sermon =>{
+      res.status(200).json({
+        success:true,
+        message:'All Sermons',
+        data:sermon
+      })
+    })
+    .catch(err =>{
+      res.status(200).json({
+        success:false,
+        message:"Unable to find sermons",
+        data:null
+      })
+    })
   }
 };

@@ -50,5 +50,8 @@ module.exports = {
   },
   userSermon: async function(req, res) {
     return await sermonActions.userSermon(req, res);
+  },
+  getSermonWithNoLimit: async function (req, res) {
+    return await sermonActions.getSermonWithNoLimit(req,res);
   }
 };

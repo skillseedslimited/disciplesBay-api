@@ -301,4 +301,114 @@ module.exports = {
       });
     }
   },
+  // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::web payment module::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+  //buy
+  webPurchaseStoreItem: async function (req, res) {
+    try {
+      let item_id = req.params.item;
+      const item = await Store.findOne({ _id: item_id }).exec();
+      if (!item) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Item not found in store" });
+      }
+      var gift = "gift" in req.body && req.body.gift == true ? true : false;
+      if (gift && !("receiver" in req.body)) {
+        throw Error("Receiver is a compulsory when gifting item");
+      }
+      switch (req.body.gateway) {
+        case "paypal":
+          return await this.payWithPaypal(
+            item,
+            req.body.payment_id,
+            req.body.payer_id,
+            req.user,
+            gift,
+            req.body.receiver
+          );
+          break;
+        case "flutterwave":
+          return await this.webPayWithFlutterWave(req,res,
+            item,
+            req.body.payment_id,
+            req.user,
+            gift,
+            req.body.receiver
+          );
+          break;
+        default:
+          return res
+            .status(500)
+            .json({ success: false, message: "Invalid gateway selected " });
+      }
+    } catch (error) {
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: "Unable to complete payment please try again",
+        });
+    }
+  },
+  webPayWithFlutterWave: async function (req,res,
+    item,
+    transaction_ref,
+    user,
+    gift,
+    receiver
+  ) {
+    try {
+      if (item.item_type == "sermon") {
+        store_content = await Sermon.findOne({ _id: item.item._id }).exec();
+        if (!store_content) {
+          throw Error("Sermon not found");
+        }
+      }
+
+      var amount = store_content.price;
+      //execute paypal
+      var resp = await Payment.verifyFlutterwave(
+        "store",
+        transaction_ref,
+        user,
+        "Purchase of " + store_content.title + " " + item.item_type,
+        amount
+      );
+
+      if (resp.success == false) {
+        //error occuered
+        return res.status(500).json(resp);
+      }
+      //payment succcessfull
+      var receiver_id = gift == true ? receiver._id : req.user._id;
+      if (item.item_type == "sermon") {
+        //add sermon to user sermon collections
+
+        var user_sermon = new UserSermon({
+          user: receiver_id,
+          sermon_id: store_content._id,
+        });
+
+        await user_sermon.save();
+        if (!user_sermon) {
+          throw Error("Unable to save sermon for this user");
+        }
+      }
+
+      //log transaction here
+
+      return res.status(200).json({
+        success: true,
+        message: "Item purchased successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to fetch purchase item",
+        error,
+      });
+    }
+  },
+  
 };

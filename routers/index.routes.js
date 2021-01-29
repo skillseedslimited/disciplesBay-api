@@ -25,7 +25,7 @@ module.exports = function (app) {
   app.use("/api/v1/counsellor", [verifyToken], require("./counsellor.routes"));
   app.use("/api/v1/wallet", [verifyToken], require("./wallet.routes"));
   app.use("/api/v1/store", [verifyToken], require("./store.routes"));
-  app.use("/api/v1/payment", [verifyToken], require("./payment.routes"));
+  app.use("/api/v1/payment",  require("./payment.routes"));
   app.use("/api/v1", require("./default.routes"));
   app.use("/api/v1/devotion", [verifyToken], require("./devotion.routes"));
   app.use("/api/v1/news", [verifyToken], require("./news.routes"));

@@ -156,14 +156,19 @@ module.exports = {
           });
         }
       }
-
+    
+      var updated = await Sermon.findOneAndUpdate(
+        { _id: sermon_id },
+        { $set: sermon_obj },
+        { new: true }
+      );
       //push item to store if it not free
-      if (sermon_obj.subscription_type != "free") {
+      if (updated.subscription_type != "free") {
         let item_to_store = new Store({
-          item: sermon._id,
+          item: updated._id,
           item_type: "sermon",
           quantity: 0,
-          content_type: sermon.content_type,
+          content_type: updated.content_type,
         });
         await item_to_store.save();
         if (!item_to_store) {
@@ -175,11 +180,6 @@ module.exports = {
         }
       }
 
-      var updated = await Sermon.findOneAndUpdate(
-        { _id: sermon_id },
-        { $set: sermon_obj },
-        { new: true }
-      );
       return res.status(200).json({
         success: true,
         message: "Sermon updated successfully",

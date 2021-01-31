@@ -37,6 +37,7 @@ module.exports = function (app) {
   app.use("/api/v1/branch", [verifyToken], require("./branch.routes"));
   app.use("/api/v1/stream", [verifyToken],  require("./restream.routes"));
   app.use("/api/v1/department", [verifyToken],  require("./department.routes"));
+  app.use("/api/v1/webstore", require("./store.web.routes"))
   app.use(
     "/api/v1/flutterwave",
     [verifyToken],

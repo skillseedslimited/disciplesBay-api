@@ -410,5 +410,35 @@ module.exports = {
       });
     }
   },
+  webFetchSingleStoreContent: async function (req, res) {
+    try {
+      let item_id = req.params.item;
+      const item = await Store.findOne({ _id: item_id }).exec();
+
+      if (!item) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Item not found in store" });
+      }
+      let store_content = {};
+      if (item.item_type == "sermon") {
+        store_content = await Sermon.findOne({ _id: item.item._id })
+          .select("-content")
+          .lean()
+          .exec();
+      }
+
+      return res.status(200).json({
+        succes: true,
+        message: "Store content fetched successfully",
+        data: store_content,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(400)
+        .json({ success: false, message: "Unable to fetch Store item", error });
+    }
+  },
   
 };

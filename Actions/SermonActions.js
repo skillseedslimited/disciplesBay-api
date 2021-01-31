@@ -157,6 +157,24 @@ module.exports = {
         }
       }
 
+      //push item to store if it not free
+      if (sermon_obj.subscription_type != "free") {
+        let item_to_store = new Store({
+          item: sermon._id,
+          item_type: "sermon",
+          quantity: 0,
+          content_type: sermon.content_type,
+        });
+        await item_to_store.save();
+        if (!item_to_store) {
+          return res.status(400).json({
+            success: false,
+            message:
+              "Unable to create sermon, please check the data and try again",
+          });
+        }
+      }
+
       var updated = await Sermon.findOneAndUpdate(
         { _id: sermon_id },
         { $set: sermon_obj },

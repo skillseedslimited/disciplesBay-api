@@ -34,7 +34,7 @@ const testimonyPost = async (req, res, next) =>{
         .then(testimony =>{
         res.status(200).json({
             success: true,
-            message: 'Successfully, awaiting approval.',
+            message: 'Testimony submited Successfully, awaiting approval.',
             data: testimony
         })
     })

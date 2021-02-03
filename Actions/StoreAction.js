@@ -5,24 +5,40 @@ const conn = require("mongoose").connection;
 const Payment = require("../Actions/PaymentActions");
 const UserSermon = require("../models/UserSermon");
 const Transaction = require("../models/Transaction");
+const User = require('../models/User');
 const { response } = require("express");
+const { forEach } = require("lodash");
 module.exports = {
   store_limit: 40,
   fetchAllStoreContents: async function (req, res) {
     try {
+      // ::::::::::::::::content of login user:::::::::::::::::::::::::
+      let user = req.user._id;
+      Purchase = await UserSermon.find({user});
+      let user_sermon = [];
+      Purchase.forEach(sermon =>{
+        let sermon1 = sermon.sermon_id
+        user_sermon.push(sermon1);
+      })
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const content_type = req.query.content_type || null;
       let query = {};
       if (content_type) {
         query = { content_type };
       }
-      let all_contents = await Store.find(query)
+      // let all_contents = await Store.find(query)
+      //   .sort({ createdAt: "desc" })
+      //   .skip((page - 1) * this.store_limit)
+      //   .limit(this.store_limit)
+      //   .lean()
+      //   .exec();
+      let all_contents = await Store.find({ item: { $nin: [ ...user_sermon ] } })
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.store_limit)
         .limit(this.store_limit)
         .lean()
         .exec();
-
+      console.log("all content", all_contents)              
       all_contents = await this.processStoreContents(all_contents);
 
       var store_count = await Store.find({}).countDocuments();

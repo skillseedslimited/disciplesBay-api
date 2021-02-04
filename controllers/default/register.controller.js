@@ -56,29 +56,12 @@ module.exports = {
                 // });
                 // //delete confirm password
                 newUser.confirmPassword = undefined;
-                // ===================sending email message=========================================
-                // Create email
-                const url = `http://${req.headers.host}/api/v1/verifyGetByEmail/${secretToken}`
-                const html = `Hello ${newUser.username},
-
-                <br/>
-                <br>
-                Please click on the button below to verify your account:
-                <br/>
-                On the following page:
-                <a href="${url}"><h4>VERIFY${url}</h4></a>
-                <br><br>
-                <strong>All the best!!!</strong>
-                `
-                // Sending the mail
-                mailer.sendEmail('checkycheck@gmail.com', newUser.email, 'Please activate your email', html);
-                // =====================end of sending message=====================================
                 newUser.save()
                     .then(user =>{
                         console.log(user)
                         res.json({
                             success: true,
-                            message: 'registration successful, a mail has been sent to you to complete your registration',
+                            message: 'registration successful!',
                             data: user
                         });
                     })

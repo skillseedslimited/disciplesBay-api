@@ -30,6 +30,10 @@ const NotificationSchema = new Schema({
     type: String,
     default: null,
   },
+  title:{
+    type:String,
+    default:null
+  }
 });
 
 module.exports = Notification = mongoose.model(

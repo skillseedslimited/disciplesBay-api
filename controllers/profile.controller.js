@@ -72,7 +72,8 @@ module.exports = {
             if(req.body.campus) profileFields.campus = req.body.campus;
             if(req.body.profilePicture) profileFields.profilePicture = req.body.profilePicture;
             if(req.body.fullName) profileFields.fullName = req.body.fullName;
-            if(req.body.phoneNumber) profileFields.phoneNumber = req.body.phoneNumber
+            if(req.body.phoneNumber) profileFields.phoneNumber = req.body.phoneNumber;
+            if(req.body.description) profileFields.description = req.body.description;
 
             await User.findByIdAndUpdate(
                 { _id: id }, 

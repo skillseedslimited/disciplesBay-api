@@ -34,6 +34,10 @@ const StoreSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  featured:{
+    type:Boolean,
+    default: false
+  }
 });
 
 module.exports = Store = mongoose.model("stores", StoreSchema);

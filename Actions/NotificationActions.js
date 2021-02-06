@@ -5,7 +5,7 @@ const moment = require("moment");
 const User = require("../models/User");
 const { isObject } = require("lodash");
 module.exports = {
-  sendToGeneral: function (themessage, type, resource_link) {
+  sendToGeneral: function (themessage, type, resource_link, heading) {
     var message = {
       notification: {
         title: 'New Notification Alert',
@@ -43,6 +43,7 @@ module.exports = {
       resource_link,
       notification_id: "general",
       type: "general",
+      heading
     });
     notification.save(function (err) {
       if (err) return null;

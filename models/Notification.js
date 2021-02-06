@@ -30,7 +30,7 @@ const NotificationSchema = new Schema({
     type: String,
     default: null,
   },
-  title:{
+  heading:{
     type:String,
     default:null
   }

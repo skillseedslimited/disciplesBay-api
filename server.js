@@ -11,13 +11,13 @@ const errorHandler = require("./middleware/error");
 const { cloudinaryConfig } = require("./config/cloudinary.config");
 const node_media_server = require("./media_server");
 const thumbnail_generator = require("./cron/thumbnails");
-const cron = require("./cron/event.cron");
+// const cron = require("./cron/event.cron");
 
 const app = express();
 
 // node_media_server.run();
 // thumbnail_generator.start();
-cron.start();
+// cron.start();
 
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -63,6 +63,8 @@ module.exports = {
   processStoreContents: async function (all_contents) {
     let contents = [];
     for (let content of all_contents) {
+      // console.log(all_contents)
+      // console.log("this is a content", content)
       if (content.item_type == "sermon") {
         let sermon = await Sermon.findOne({ _id: content.item })
           .select("-content")
@@ -72,8 +74,9 @@ module.exports = {
         content["item"] = sermon;
         contents.push(content);
       }
-      return contents;
+      
     }
+    return contents;
   },
 
   fetchSingleStoreContent: async function (req, res) {

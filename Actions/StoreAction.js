@@ -43,7 +43,7 @@ module.exports = {
 
       var store_count = await Store.find({}).countDocuments();
       var number_of_pages = Math.ceil(store_count / page);
-      if(! all_contents){
+      if(!all_contents){
         all_contents = []
       }
       return res.status(200).json({

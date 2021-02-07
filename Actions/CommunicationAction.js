@@ -359,7 +359,7 @@ requestCounsellor : async function(req,res)
 
           if(counsellor.role)
           {
-              if(!counsellor.role.name != "counsellor")
+              if(counsellor.role.name != "counsellor")
               {
                 return res.status(400).json({
                     success  :false,

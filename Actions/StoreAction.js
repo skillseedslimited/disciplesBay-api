@@ -39,7 +39,7 @@ module.exports = {
         .lean()
         .exec();
       console.log("all content", all_contents)              
-      // all_contents = await this.processStoreContents(all_contents);
+      all_contents = await this.processStoreContents(all_contents);
 
       var store_count = await Store.find({}).countDocuments();
       var number_of_pages = Math.ceil(store_count / page);

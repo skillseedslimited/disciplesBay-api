@@ -105,7 +105,7 @@ const editGallery = asyncHandler(async(req, res, next) =>{
 })
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::DELETE GALLERY:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const deletegallery = asyncHandler(async(req, res, next) =>{
+const deleteGallery = asyncHandler(async(req, res, next) =>{
 
     let id  = req.params.id;
 
@@ -124,6 +124,54 @@ const deletegallery = asyncHandler(async(req, res, next) =>{
         })
     })
 })
+const deleteSingleImage = asyncHandler(async(req, res, next) =>{
+    let id =  req.query.id;
+    let index = req.query.index;
+    await Gallery.findById(id)
+    .then(gallery =>{
+        console.log(gallery.images)
+        let images = gallery.images;
+        images.splice(index, 1);
+        gallery.save()
+        .then(picture =>{
+            res.status(200).json({
+                success:true,
+                message:"Image removed successfully",
+                data:picture
+            })
+        })
+        .catch(err =>res.status(404).json({
+            success:true,
+            message:"Unable to save gallery",
+            data:err
+        }))
+    })
+    .catch(err =>res.status(404).json({
+        success:true,
+        message:"Unable to find gallery",
+        data:err
+    }))
+})
+
+const addImage = asyncHandler(async(req, res, next) =>{
+    let id = req.query.id;
+    let images = req.body.images;
+    await Gallery.findById(id)
+    .then(gallery =>{
+        let picture = gallery.images
+        images.forEach(image =>{
+            picture.push(image)
+            
+        })
+        console.log(gallery)
+        gallery.save()
+        res.status(200).json({
+            success:true,
+            message:"Images uploaded successfully",
+            data:gallery
+        })
+    })
+})
 
 
 
@@ -133,5 +181,7 @@ module.exports = {
     getAllGallery,
     getSingleGallery,
     editGallery,
-    deletegallery
+    deleteGallery,
+    deleteSingleImage,
+    addImage
 }

@@ -30,8 +30,15 @@ router
 // @access Private
 router
 .route('/delete_gallery/:id')
-.delete(galleryController.deletegallery);
+.delete(galleryController.deleteGallery);
 
+router
+.route('/delete-single-image')
+.get(galleryController.deleteSingleImage);
+
+router
+.route('/add-image')
+.get(galleryController.addImage);
 
 
 

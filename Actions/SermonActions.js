@@ -92,6 +92,7 @@ module.exports = {
   },
   listSermons: async function (req, res) {
     try {
+      console.log("i was here")
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const sermons = await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]}) 
         .populate("category")
@@ -99,7 +100,7 @@ module.exports = {
         .skip((page - 1) * this.sermon_limit)
         .limit(this.sermon_limit)
         .exec();
-
+      
       //prepare pagination of sermon list
       var sermon_counts = await Sermon.find({}).countDocuments();
       var number_of_pages = Math.ceil(sermon_counts / page);
@@ -482,7 +483,7 @@ module.exports = {
   },
   // get sermon without pagination
   getSermonWithNoLimit:async(req, res, nesxt) =>{
-    await Sermon.find()
+    await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
     .then(sermon =>{
       res.status(200).json({
         success:true,

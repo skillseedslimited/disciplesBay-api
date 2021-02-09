@@ -93,7 +93,7 @@ module.exports = {
   listSermons: async function (req, res) {
     try {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
-      const sermons = await Sermon.find({ isDeleted: false })
+      const sermons = await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]}) 
         .populate("category")
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.sermon_limit)

@@ -301,7 +301,7 @@ module.exports = {
     }
     // Test verify URL:  https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify 
 // console.log(transaction_ref)Live verify URL: https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify 
-    var url = `https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/v2/verify`;
+    var url = `https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify`;
    let response =  await  fetch(
       url,
       {

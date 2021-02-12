@@ -315,8 +315,9 @@ module.exports = {
 
      response = (await response.json())
       //log transaction
-    //  console.log(response)
+     console.log(response)
       if (response.status == "success") {
+
       
         if (response.data.amount >= amount) {
           var transaction = new Transaction({

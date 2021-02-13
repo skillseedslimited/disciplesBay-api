@@ -75,12 +75,21 @@ module.exports = {
              return res.status(400).json({success : false,message : "You need to send a request before placing "+call_type});
 
         }
-        if(checkPendingRequest.status == "pending")
+
+        let expire_in = new Date(checkPendingRequest.expires_in).getTime();
+        let today = new Date.getTime();
+        let expired = expire_in < today;
+
+        if(expired){
+            await checkPendingRequest.update({status:"expired"})
+        }
+
+        if(checkPendingRequest.status == "pending" && !expired)
         {
             //return message that u can place request again
             return res.status(400).json({success : false,message : "Counsellor has not accepted a request from you"});
         }else{
-            if(checkPendingRequest.used)
+            if(checkPendingRequest.used || checkPendingRequest.status == "expired")
             {
                 //u can make call again as well
                 return res.status(400).json({success : false,message : "Please resend a request to counsellor"});
@@ -378,21 +387,35 @@ requestCounsellor : async function(req,res)
     
           if(checkPendingRequest)
           {
-              //check it pending
-              if(checkPendingRequest.status == "pending")
+            let expire_in = new Date(checkPendingRequest.expires_in).getTime();
+            let today = new Date.getTime();
+            let expired = expire_in < today;
+              //check if expired
+              if(expired)
+              {
+                  await checkPendingRequest.update({status: "expired"});
+              }
+              //check if pending
+              if(checkPendingRequest.status == "pending" && !expired)
               {
                   return res.status(400).json({
                       success : false,
                       message : "You have pending request, please wait till counsellor act on it. thanks"
                   })
               }
+
+
+
           }
+          //expires in 2 hours
+          let expires_in = moment().add(2, 'hours').format('YYYY-MM-DD hh:mm:ss');
           
           let counsellor_request =  CounsellorRequest({
               sender : req.user._id,
               counsellor : counsellor._id,
               call_type,
-              status : "pending"
+              status : "pending",
+              expires_in
           })
     
           await counsellor_request.save();
@@ -456,7 +479,7 @@ manageRequest : async function(req,res)
                 message : "resource not found"
             });
         }
-        let statuses = ["accepted","rejected"];
+        let statuses = ["accepted","rejected","expired"];
         const status = req.body.status;
     
         if(statuses.includes(status))
@@ -465,7 +488,7 @@ manageRequest : async function(req,res)
                 status
             }).exec();
     
-            if(status == "rejected")
+            if(status == "rejected" || status == "expired")
             {
                 await CounsellorRequest.findByIdAndDelete(counsellor_request_id).exec();
             }

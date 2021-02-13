@@ -400,43 +400,60 @@ module.exports = {
   //fetch user sermons
   fetchUserSermons: async function (req, res) {
     try {
-      const content_type = req.query.content_type
-        ? req.query.content_type
-        : null;
-      const page = req.query.page && req.query.page > 0 ? req.page : 1;
-
-      let query = { subscription_type: "free" };
-      if (content_type) {
-        query["content_type"] = content_type;
-      }
-
-      var user_sermons = await UserSermon.find({ user: req.user._id })
-        .select("sermon_id -_id")
-        .exec();
-
-      var user_sermons =
-        user_sermons == undefined
-          ? []
-          : user_sermons.map((sermon) => {
-              return sermon.sermon_id.toString();
-            });
-
-      console.log(query);
-      let sermons = await Sermon.find({
-        $or: [{ subscription_type: "free" }, { _id: { $in: user_sermons } }],
+      let user = req.user._id;
+      await UserSermon.find({user:user})
+      .populate("sermon_id")
+      .then(sermon =>{
+        res.status(200).json({
+          success:true,
+          message:"Purchase sermons",
+          data:sermon
+        })
       })
-        .populate("category")
-        .sort({ createdAt: "desc" })
-        .skip((page - 1) * this.store_limit)
-        .limit(this.store_limit)
-        .lean()
-        .exec();
-      return res.status(200).json({
-        success: true,
-        message: "User sermons fetched successfully",
-        sermons,
-      });
-      //fetch bought sermons
+      .catch(err =>{
+        res.status(400).json({
+          success:false,
+          message:"Unable to get sermons",
+          data:err
+        })
+      })
+    //   const content_type = req.query.content_type
+    //     ? req.query.content_type
+    //     : null;
+    //   const page = req.query.page && req.query.page > 0 ? req.page : 1;
+
+    //   let query = { subscription_type: "free" };
+    //   if (content_type) {
+    //     query["content_type"] = content_type;
+    //   }
+
+    //   var user_sermons = await UserSermon.find({ user: req.user._id })
+    //     .select("sermon_id -_id")
+    //     .exec();
+
+    //   var user_sermons =
+    //     user_sermons == undefined
+    //       ? []
+    //       : user_sermons.map((sermon) => {
+    //           return sermon.sermon_id.toString();
+    //         });
+
+    //   console.log(query);
+    //   let sermons = await Sermon.find({
+    //     $or: [{ subscription_type: "free" }, { _id: { $in: user_sermons } }],
+    //   })
+    //     .populate("category")
+    //     .sort({ createdAt: "desc" })
+    //     .skip((page - 1) * this.store_limit)
+    //     .limit(this.store_limit)
+    //     .lean()
+    //     .exec();
+    //   return res.status(200).json({
+    //     success: true,
+    //     message: "User sermons fetched successfully",
+    //     sermons,
+    //   });
+    //   //fetch bought sermons
     } catch (error) {
       console.log(error);
       return res.status(500).json({

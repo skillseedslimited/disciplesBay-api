@@ -38,7 +38,7 @@ router
 
 router
 .route('/add-image')
-.get(galleryController.addImage);
+.post(galleryController.addImage);
 
 
 

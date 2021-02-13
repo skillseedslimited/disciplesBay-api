@@ -69,7 +69,7 @@ module.exports = {
         }
       }
       NotificationAction.sendToGeneral(
-        `Hi, we just posted a new sermon. ${title} `,
+        `A new sermon: (${title}) has just been posted in the app `,
         "sermon",
         "#"
       );

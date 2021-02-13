@@ -8,6 +8,7 @@ const CounsellorRequest = require("../models/CounsellorRequest");
 const NotificationAction = require("../Actions/NotificationActions");
 const ChatList = require("../models/ChatList");
 const ChatMessages = require("../models/ChatMessages");
+const { populate } = require("../models/User");
 
 // const { Mongoose } = require("mongoose");
 module.exports = {
@@ -447,6 +448,7 @@ manageRequest : async function(req,res)
         const counsellor_request_id = req.params.counsellor_request;
         const counsellor_requests = await CounsellorRequest.findById(counsellor_request_id).exec();
         // let sender = counsellor_requests.sender;
+        // console.log("this is the sender", sender)
         if(!counsellor_requests)
         {
             return res.status(404).json({

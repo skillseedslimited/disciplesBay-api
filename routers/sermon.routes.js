@@ -68,4 +68,6 @@ router.get("/get-featured-sermon", SermonsController.getFeaturedSermon);
 
 router.get("/get-all", SermonsController.getSermonWithNoLimit);
 
+router.get("/admin-sermon", SermonsController.getAdminSermon);
+
 module.exports = router;

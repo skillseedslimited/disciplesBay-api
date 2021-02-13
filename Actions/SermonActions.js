@@ -498,5 +498,23 @@ module.exports = {
         data:null
       })
     })
+  },
+
+  getAdminSermon:async(req, res, next) =>{
+    await Sermon.find()
+    .then(sermon =>{
+      res.status(200).json({
+        success:true,
+        message:"All Sermon",
+        data:sermon
+      })
+    })
+    .catch(err =>{
+      res.status(404).json({
+        success:false,
+        message:"Unable to get sermon",
+        data:err
+      })
+    })
   }
 };

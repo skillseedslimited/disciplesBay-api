@@ -423,7 +423,7 @@ requestCounsellor : async function(req,res)
      try
      { 
 
-     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}],used : 0}).populate({path:'counsellor', select: ['username', 'profilePicture', 'email']}).populate({path:'sender', select: ['username', 'profilePicture']}).sort(
+     const counsellor_requests = await CounsellorRequest.find({$or : [{sender : req.user._id},{counsellor : req.user._id}],used : 0}).populate({path:'counsellor', select: ['username', 'profilePicture']}).populate({path:'sender', select: ['username', 'profilePicture', 'email']}).sort(
          {createdAt : -1}
      ).exec();
      return res.status(200).json({

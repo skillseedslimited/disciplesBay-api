@@ -8,4 +8,8 @@ module.exports = {
   webPurchaseStoreItem: async function(req, res) {
     return await storeAction.webPurchaseStoreItem;
   },
+
+  getAllStoreWeb: async function (req, res) {
+    return await storeAction.webGetAllStore(req, res);
+  }
 };

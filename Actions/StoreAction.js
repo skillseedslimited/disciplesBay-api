@@ -459,5 +459,23 @@ module.exports = {
         .json({ success: false, message: "Unable to fetch Store item", error });
     }
   },
+  webGetAllStore:async(req, res, next) =>{
+    await Store.find()
+    .populate("item")
+    .then(store =>{
+      res.status(200).json({
+        success:true,
+        message:"All store item",
+        data:store
+      })
+    })
+    .catch(err =>{
+      res.status(400).json({
+        success:true,
+        message:"Unable to get store items",
+        data:err
+      })
+    })
+  }
   
 };

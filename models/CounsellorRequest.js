@@ -20,8 +20,11 @@ const CounsellorRequestSchema = new Schema({
       },
       status :{
         type : String,
-        enum : ["pending","accepted","rejected"],
+        enum : ["pending","accepted","rejected","expired"],
         default : "pending"
+      },
+      expires_in:{
+        type: Date
       },
       used : {
           type : Boolean,

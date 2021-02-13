@@ -516,5 +516,25 @@ module.exports = {
         data:err
       })
     })
-  }
+  },
+  unFeaturedSermon:async(req, res, next) =>{
+    let id = req.query.id;
+    await Sermon.findById(id)
+    .then(sermon =>{
+      sermon.featured = false;
+      sermon.save();
+      res.status(200).json({
+        success: true,
+        message:'Sermon un-featured successfully',
+        data: sermon
+      })
+    })
+    .catch(err =>{
+      res.status(404).json({
+        success: false,
+        message: 'Unable to make sermon featured',
+        data:null
+      })
+    })
+  },
 };

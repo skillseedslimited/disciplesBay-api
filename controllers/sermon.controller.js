@@ -56,5 +56,8 @@ module.exports = {
   },
   getAdminSermon: async function (req, res) {
     return await sermonActions.getAdminSermon(req,res);
-  }
+  },
+  unFeaturedSermons: async function(req, res) {
+    return await sermonActions.unFeaturedSermon(req, res);
+  },
 };

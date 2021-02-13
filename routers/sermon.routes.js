@@ -63,6 +63,7 @@ router.delete(
 router.get("/user/sermons", UserSermonsController.fetchUserSermons);
 
 router.get("/featured-sermon",SermonsController.featuredSermons);
+router.get("/un-featured-sermon",SermonsController.unFeaturedSermons);
 
 router.get("/get-featured-sermon", SermonsController.getFeaturedSermon);
 

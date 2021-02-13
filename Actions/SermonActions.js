@@ -467,7 +467,7 @@ module.exports = {
     })
   },
   getFeaturedSermon:async(req, res, next) =>{
-    await Store.find({featured: true})
+    await Sermon.find({featured: true})
     .then(sermon =>{
       res.status(200).json({
         success: true,

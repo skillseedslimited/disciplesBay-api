@@ -448,7 +448,7 @@ module.exports = {
   },
   featuredSermon:async(req, res, next) =>{
     let id = req.query.id;
-    await Store.findById(id)
+    await Sermon.findById(id)
     .then(sermon =>{
       sermon.featured = true;
       sermon.save();

@@ -14,6 +14,7 @@ router
 .route('/')
 .post(DevotionsController.createDevotion )
 .get(DevotionsController.getDevotions)
+.get(DevotionsController.getAllDevotions)
 
 // fgf?
 module.exports = router

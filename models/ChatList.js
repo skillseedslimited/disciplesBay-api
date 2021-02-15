@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const ChatListSchema = new Schema({
     sender : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "User"
+        ref : "users"
     },
     receiver : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "User"
+        ref : "users"
     },
     active : {
         type : Boolean,

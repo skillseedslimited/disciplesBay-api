@@ -469,9 +469,9 @@ manageRequest : async function(req,res)
     try
     { 
         const counsellor_request_id = req.params.counsellor_request;
-        const counsellor_requests = await CounsellorRequest.findById(counsellor_request_id).exec();
-        // let sender = counsellor_requests.sender;
-        // console.log("this is the sender", sender)
+        const counsellor_requests = await CounsellorRequest.findById(counsellor_request_id).populate("sender").exec();
+        let sender = counsellor_requests.sender;
+        console.log("this is the sender", sender)
         if(!counsellor_requests)
         {
             return res.status(404).json({
@@ -492,7 +492,7 @@ manageRequest : async function(req,res)
             {
                 await CounsellorRequest.findByIdAndDelete(counsellor_request_id).exec();
             }
-            // NotificationAction.sendToUser(sender,"Call Request accepted","request","no link");
+            NotificationAction.sendToUser(sender,"Call Request accepted","request","no link");
             return res.status(200).json({
                 success : true,message : "Request updated succesfully"
             })

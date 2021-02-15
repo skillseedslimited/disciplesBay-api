@@ -1,5 +1,6 @@
 const Devotion = require('../models/Devotion');
 const asyncHandler = require("../middleware/async");
+const moment = require('moment');
 const ErrorResponse = require("../utils/errorResponse.js");
 
 const createDevotion = asyncHandler(async(req, res, next) => {
@@ -12,7 +13,29 @@ const createDevotion = asyncHandler(async(req, res, next) => {
 });
 
 const getDevotions = asyncHandler(async(req, res, next) => {
+    const today = moment().format('YYYY-MM-DD');
+    const devotions = await Devotion.find({
+        publishDate: {
+            lte: today
+        }
+    }).sort({publishDate: -1});
 
+    if(!devotions[0]){
+        return res.status(200).json({
+            success: true,
+            message: "No Devotions have been posted",
+            data: []
+        })
+    }
+
+    return res.status(200).json({
+        success: true,
+        message: "Devtions Found",
+        data: devotions
+    })
+});
+
+const getAllDevotions = asyncHandler(async(req, res, next) => {
     const devotions = await Devotion.find().sort({publishDate: -1});
 
     if(!devotions[0]){
@@ -99,5 +122,6 @@ module.exports = {
     getDevotions,
     getDevotionSingle,
     deleteDevotion,
-    editDevotion
+    editDevotion,
+    getAllDevotions
 }

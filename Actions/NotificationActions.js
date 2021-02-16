@@ -180,7 +180,6 @@ if(registrationToken)
   //   },
 
   sendCommunication: async function (user, themessage, type,channel_name,call_type ,sender) {
-    console.log("this is the sender", user)
     var registrationToken = user.deviceToken;
     if(registrationToken)
     {
@@ -230,6 +229,7 @@ if(registrationToken)
   },
 
   sendChat: async function (user, themessage, type,sender) {
+    console.log("this is the sender", user)
     var registrationToken = user.deviceToken;
     if(registrationToken)
     {

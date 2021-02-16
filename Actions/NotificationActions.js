@@ -180,7 +180,7 @@ if(registrationToken)
   //   },
 
   sendCommunication: async function (user, themessage, type,channel_name,call_type ,sender) {
-    console.log(`sender ${sender}, user ${user}`)
+    console.log("this is the sender", user)
     var registrationToken = user.deviceToken;
     if(registrationToken)
     {

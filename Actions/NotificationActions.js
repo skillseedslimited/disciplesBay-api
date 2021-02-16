@@ -180,7 +180,7 @@ if(registrationToken)
   //   },
 
   sendCommunication: async function (user, themessage, type,channel_name,call_type ,sender) {
-    var registrationToken = user.deviceToken;
+    var registrationToken = sender.deviceToken;
     if(registrationToken)
     {
       var message = {

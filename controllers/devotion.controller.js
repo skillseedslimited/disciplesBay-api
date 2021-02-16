@@ -16,7 +16,7 @@ const getDevotions = asyncHandler(async(req, res, next) => {
     const today = new Date().setHours(23, 59, 59);
     const devotions = await Devotion.find({
         publishDate: {
-            lt: today
+            lte: moment(today).format('YYYY-MM-DD hh:mm:ss')
         }
     }).sort({publishDate: -1});
 

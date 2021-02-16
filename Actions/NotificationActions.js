@@ -228,9 +228,9 @@ if(registrationToken)
     return true;
   },
 
-  sendChat: async function (user, themessage, type,sender) {
-    console.log("this is the sender", sender)
-    var registrationToken = sender.deviceToken;
+  sendChat: async function (receiver_user, themessage, type,sender) {
+    console.log("this is the sender", receiver_user)
+    var registrationToken = receiver_user.deviceToken;
     if(registrationToken)
     {
       var message = {

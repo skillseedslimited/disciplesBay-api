@@ -229,7 +229,7 @@ if(registrationToken)
   },
 
   sendChat: async function (user, themessage, type,sender) {
-    console.log("this is the sender", user.Promise)
+    console.log("this is the sender", sender)
     var registrationToken = user.deviceToken;
     if(registrationToken)
     {

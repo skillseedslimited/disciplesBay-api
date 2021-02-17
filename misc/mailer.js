@@ -4,14 +4,13 @@ const nodemailer = require('nodemailer');
 
 //Creating or building the transport object
 const transport = nodemailer.createTransport({
-    service: 'Gmail',
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // use SSL
     auth: {
         user: config.GMAIL_USER,
         pass: config.GMAIL_PASS
     },
-    tls: {
-        rejectUnauthorized: false
-    }
 });
 
 // Making this whole file available

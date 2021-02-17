@@ -14,11 +14,7 @@ const createDevotion = asyncHandler(async(req, res, next) => {
 
 const getDevotions = asyncHandler(async(req, res, next) => {
     const today = new Date().setHours(23, 59, 59);
-    const devotions = await Devotion.find({
-        publishDate: {
-            lte: new ISODate(today)
-        }
-    }).sort({publishDate: -1});
+    const devotions = await Devotion.find().sort({publishDate: -1});
 
     if(!devotions[0]){
         return res.status(200).json({

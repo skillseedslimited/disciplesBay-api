@@ -1,6 +1,6 @@
 const User  =  require('../models/User');
 const Sermon = require('../models/Sermon');
-const Purchased = require('../models/Partnership');
+const Purchased = require('../models/UserSermon');
 const Giving  = require('../models/Donation');
 const Role = require('../models/Role');
 const asyncHandler = require("../middleware/async");

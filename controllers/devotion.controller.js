@@ -2,14 +2,21 @@ const Devotion = require('../models/Devotion');
 const asyncHandler = require("../middleware/async");
 const moment = require('moment');
 const ErrorResponse = require("../utils/errorResponse.js");
+const NotificationAction = require("../Actions/NotificationActions");
 
 const createDevotion = asyncHandler(async(req, res, next) => {
     const devotion = await Devotion.create(req.body);
-    return res.status(200).json({
+    res.status(200).json({
         success: true,
         message: "Devotion created Successfully",
         data: devotion
     });
+    let title = devotion.title;
+    NotificationAction.sendToGeneral(
+        `A new devotion: (${title}) has just been posted in the app `,
+        "sermon",
+        "#"
+      );
 });
 
 const getDevotions = asyncHandler(async(req, res, next) => {

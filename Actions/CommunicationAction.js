@@ -699,7 +699,7 @@ manageRequest : async function(req,res)
                     message : "Receiver is not a valid user"
                 })
             }
-            let receiver_user = User.findOne({_id : receiver}).exec();
+            let receiver_user = await User.findOne({_id : receiver}).exec();
     
             if(!receiver_user)
             {

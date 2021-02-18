@@ -5,19 +5,20 @@ const { authorize, authorizeUpdated } = require('../middleware/authJwt');
 // const { authorize, authorizeUpdated } = require("../middleware/authJwt");
 
 router
+.get('/all', DevotionsController.getAllDevotions);
+
+router
 .route('/:id')
 .get(DevotionsController.getDevotionSingle)
 .delete(DevotionsController.deleteDevotion)
-.put(DevotionsController.editDevotion)
+.put(DevotionsController.editDevotion);
 
 router
 .route('/')
 .post(DevotionsController.createDevotion )
-.get(DevotionsController.getDevotions)
+.get(DevotionsController.getDevotions);
 
-router
-.route('/all')
-.get(DevotionsController.getAllDevotions)
+
 
 // fgf?
 module.exports = router

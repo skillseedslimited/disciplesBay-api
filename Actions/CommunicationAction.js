@@ -77,7 +77,7 @@ module.exports = {
         }
 
         let expire_in = new Date(checkPendingRequest.expires_in).getTime();
-        let today = new Date.getTime();
+        let today = (new Date).getTime();
         let expired = expire_in < today;
 
         if(expired){

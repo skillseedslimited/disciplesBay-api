@@ -388,7 +388,7 @@ requestCounsellor : async function(req,res)
           if(checkPendingRequest)
           {
             let expire_in = new Date(checkPendingRequest.expires_in).getTime();
-            let today = new Date.getTime();
+            let today = (new Date).getTime();
             let expired = expire_in < today;
               //check if expired
               if(expired)
@@ -699,7 +699,7 @@ manageRequest : async function(req,res)
                     message : "Receiver is not a valid user"
                 })
             }
-            let receiver_user = await User.findOne({_id : receiver}).exec();
+            let receiver_user = await User.findOne({email : receiver}).exec();
     
             if(!receiver_user)
             {

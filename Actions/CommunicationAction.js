@@ -709,19 +709,19 @@ manageRequest : async function(req,res)
                 })
             }
             let chatList = await ChatList.findOne({
-                        sender : req.user._id,receiver : receiver}).exec()
+                        sender : req.user._id,receiver : receiver_user._id}).exec()
         
             if(!chatList)
             {
     
                   chatList = await ChatList.findOne({
-                    sender : receiver,receiver : req.user._id}).exec()
+                    sender : receiver_user._id,receiver : req.user._id}).exec()
     
                     if(!chatList)
                     {
                         chatList  = new ChatList({
                             sender : req.user._id,
-                            receiver : receiver
+                            receiver : receiver_user._id
                         })
                         await chatList.save();
                     }

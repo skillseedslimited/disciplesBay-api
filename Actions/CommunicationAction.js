@@ -691,14 +691,14 @@ manageRequest : async function(req,res)
                     message : "message is a compulsory field"
                 })
             }
-            var ObjectId = require('mongoose').Types.ObjectId;
-            if(! ObjectId.isValid(receiver))
-            {
-                return res.status(400).json({
-                    success : false,
-                    message : "Receiver is not a valid user"
-                })
-            }
+            // var ObjectId = require('mongoose').Types.ObjectId;
+            // if(! ObjectId.isValid(receiver))
+            // {
+            //     return res.status(400).json({
+            //         success : false,
+            //         message : "Receiver is not a valid user"
+            //     })
+            // }
             let receiver_user = await User.findOne({email : receiver}).exec();
     
             if(!receiver_user)
@@ -731,7 +731,7 @@ manageRequest : async function(req,res)
            let chatMessage =   ChatMessages({
                 chat_id : chatList._id,
                 sender : req.user._id,
-                receiver : receiver,
+                receiver : receiver_user._id,
                 message ,
                 read : false
             })

@@ -393,10 +393,10 @@ requestCounsellor : async function(req,res)
               //check if expired
               if(expired)
               {
-                  await checkPendingRequest.update({status: "expired"});
+                 checkPendingRequest.remove();
               }
               //check if pending
-              if(checkPendingRequest.status == "pending" && !expired)
+              if(checkPendingRequest.status == "pending")
               {
                   return res.status(400).json({
                       success : false,
@@ -462,6 +462,30 @@ requestCounsellor : async function(req,res)
         });
     }
  },
+//  get counsellor by parameter 
+getAllRequestByParameter : async function(req,res)
+ {
+     //paginate this later
+     try
+     { 
+        let id = req.params.id;
+     const counsellor_requests = await CounsellorRequest.find({counsellor : id}).populate({path:'counsellor', select: ['username', 'profilePicture']}).populate({path:'sender', select: ['username', 'profilePicture', 'email']}).sort(
+         {createdAt : -1}
+     ).exec();
+     return res.status(200).json({
+         success : true,message : "All counsellor request fetched successfully",
+         counsellor_requests
+     })
+    }catch(error)
+    {
+        console.log(error)
+        return res.status(500).json({
+            success : false,
+            message : "Internal server error"
+        });
+    }
+ },
+
 //counsellor accept requests
 manageRequest : async function(req,res)
 {

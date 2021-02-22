@@ -2,6 +2,7 @@ const Event  = require('../models/Event');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
 const ActiveEvent = require('../models/ActiveEvent');
+const NotificationAction = require("../Actions/NotificationActions");
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::CREATING EVENTS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const createEVent = asyncHandler(async(req, res, next) =>{
@@ -38,6 +39,11 @@ const createEVent = asyncHandler(async(req, res, next) =>{
             message: 'event created successfully',
             data: event
         })
+        NotificationAction.sendToGeneral(
+            `A new event: (${eventName}) has just been posted in the app `,
+            "event",
+            "#"
+          );
     })
     .catch((err) =>{
         return next( new ErrorResponse(`Unable to create event`, 404))

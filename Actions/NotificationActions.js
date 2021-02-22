@@ -242,7 +242,9 @@ if(registrationToken)
           themessage,
           type,
           createdAt: moment().format(),
-          sender_name : sender.username
+          sender_name : sender.username,
+          sender_email: sender.email,
+          sender_image: sender.profilePicture
         },
         android: {
           notification: {

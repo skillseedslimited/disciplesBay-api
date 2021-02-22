@@ -32,6 +32,11 @@ module.exports = {
         return CommunicationAction.getAllRequest(req,res);
     },
 
+    getAllRequestByParameter : async function(req,res)
+    {
+        return CommunicationAction.getAllRequestByParameter(req,res);
+    },
+
     manageRequest : async function(req,res)
     {
         return CommunicationAction.manageRequest(req,res);

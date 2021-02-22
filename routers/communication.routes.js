@@ -33,6 +33,10 @@ router
 .route('/fetch-requests')
 .get(communication.getAllRequest);
 
+router
+.route('/fetch-requests-by-params')
+.get(communication.getAllRequestByParameter);
+
 
 router
 .route('/:counsellor_request/update-requests')

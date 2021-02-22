@@ -469,7 +469,7 @@ getAllRequestByParameter : async function(req,res)
      try
      { 
         let id = req.params.id;
-     const counsellor_requests = await CounsellorRequest.find({counsellor : id}).populate({path:'counsellor', select: ['username', 'profilePicture']}).populate({path:'sender', select: ['username', 'profilePicture', 'email']}).sort(
+     const counsellor_requests = await CounsellorRequest.find({$or : [{counsellor : id}],used : 0}).populate({path:'counsellor', select: ['username', 'profilePicture']}).populate({path:'sender', select: ['username', 'profilePicture', 'email']}).sort(
          {createdAt : -1}
      ).exec();
      return res.status(200).json({

@@ -17,6 +17,7 @@ module.exports = {
         resource_link,
         type,
         created_at: moment().format(),
+        click_action: 'FLUTTER_NOTIFICATION_CLICK',
       },
       android: {
         notification: {
@@ -79,6 +80,7 @@ if(registrationToken)
       resource_link,
       type,
       created_at: moment().format(),
+      click_action: 'FLUTTER_NOTIFICATION_CLICK',
     },
     android: {
       notification: {
@@ -186,7 +188,8 @@ if(registrationToken)
       var message = {
         notification: {
           title: 'New Notification Alert',
-          body:  themessage
+          body:  themessage,
+          click_action: 'FLUTTER_NOTIFICATION_CLICK',
          
           },
           android: {
@@ -244,7 +247,8 @@ if(registrationToken)
           createdAt: moment().format(),
           sender_name : sender.username,
           sender_email: sender.email,
-          sender_image: sender.profilePicture
+          sender_image: sender.profilePicture,
+          click_action: 'FLUTTER_NOTIFICATION_CLICK',
         },
         android: {
           notification: {

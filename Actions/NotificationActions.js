@@ -239,6 +239,7 @@ if(registrationToken)
       var message = {
         notification: {
           title: 'New chat notification',
+          sender_name : sender.username,
           body:  themessage
           },
         data: {

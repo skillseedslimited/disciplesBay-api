@@ -21,6 +21,7 @@ module.exports = function (app) {
     require("./role.routes")
   );
   app.use("/api/v1/sermon", [verifyToken], require("./sermon.routes"));
+  app.use("/api/v1/kids", [verifyToken], require("./kids.routes"));
   app.use("/api/v1/userManagement", require("./userManagement.routes"));
   app.use("/api/v1/counsellor", [verifyToken], require("./counsellor.routes"));
   app.use("/api/v1/wallet", [verifyToken], require("./wallet.routes"));

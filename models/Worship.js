@@ -5,7 +5,7 @@ const commentSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User" },
   comment: { type: String, default: null },
 });
-const KidsSchema = new Schema({
+const WorshipSchema = new Schema({
   title: {
     type: String
   },
@@ -14,7 +14,7 @@ const KidsSchema = new Schema({
   },
   category: {
     type: Schema.Types.ObjectId,
-    ref: "KidsCategory",
+    ref: "WorshipCategory",
     default: null,
   },
   content_type: {
@@ -63,4 +63,4 @@ const KidsSchema = new Schema({
   comments: [commentSchema],
 });
 
-module.exports = mongoose.model("Kids", KidsSchema);
+module.exports = mongoose.model("Worship", WorshipSchema);

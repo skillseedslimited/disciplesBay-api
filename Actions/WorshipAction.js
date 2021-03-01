@@ -1,5 +1,5 @@
-const Kids = require("../models/Kids");
-const KidsCategory = require("../models/KidsCategory");
+const Worship = require("../models/Worship");
+const WorshipCategory = require("../models/WorshipCategory");
 const Store = require("../models/Store");
 const _ = require("lodash");
 const { array } = require("joi");
@@ -9,7 +9,7 @@ const conn = require("mongoose").connection;
 const NotificationAction = require("../Actions/NotificationActions");
 module.exports = {
   sermon_limit: 20,
-  createKids: async function (req, res) {
+  createWorship: async function (req, res) {
     try {
       var {
         title,
@@ -24,14 +24,14 @@ module.exports = {
         price,
       } = req.body;
 
-      var category_obj = await KidsCategory.findOne({ _id: category });
+      var category_obj = await WorshipCategory.findOne({ _id: category });
       if (!category_obj) {
         return res.status(400).json({
           success: false,
           message: "Selected category not found",
         });
       }
-      var kids = Kids({
+      var worship = Worship({
         title,
         author,
         category,
@@ -44,56 +44,56 @@ module.exports = {
         price,
         isDeleted: false,
       });
-      if (!kids) {
+      if (!worship) {
         return res.status(400).json({
           success: false,
           message:
-            "Unable to create Kids content, please check the data and try again",
+            "Unable to create worship content, please check the data and try again",
         });
       }
       //push item to store if it not free
-      if (kids.subscription_type != "free") {
+      if (worship.subscription_type != "free") {
         let item_to_store = new Store({
-          item: kids._id,
+          item: worship._id,
           item_type: "sermon",
           quantity: 0,
-          content_type: kids.content_type,
+          content_type: worship.content_type,
         });
         await item_to_store.save();
         if (!item_to_store) {
           return res.status(400).json({
             success: false,
             message:
-              "Unable to create kids content, please check the data and try again",
+              "Unable to create worship content, please check the data and try again",
           });
         }
       }
     //   NotificationAction.sendToGeneral(
-    //     `A new Kids content: (${title}) has just been posted in the app `,
+    //     `A new worship content: (${title}) has just been posted in the app `,
     //     "sermon",
     //     "#"
     //   );
 
-      await kids.save();
+      await worship.save();
       return res.status(200).json({
         success: true,
-        message: "Kids content created successfully",
-        data: kids,
+        message: "Worship content created successfully",
+        data: worship,
       });
     } catch (err) {
       //log error here
       console.log(err);
       return res.status(500).json({
         succes: false,
-        message: "Error while creating kids content",
+        message: "Error while creating worship content",
         data: err,
       });
     }
   },
-  listKids: async function (req, res) {
+  listWorship: async function (req, res) {
     try {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
-      const kids = await Kids.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]}) 
+      const worship = await Worship.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]}) 
         .populate("category")
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.sermon_limit)
@@ -101,37 +101,37 @@ module.exports = {
         .exec();
       
       //prepare pagination of sermon list
-      var kids_counts = await Kids.find({}).countDocuments();
-      var number_of_pages = Math.ceil(kids_counts / page);
+      var worship_counts = await Worship.find({}).countDocuments();
+      var number_of_pages = Math.ceil(worship_counts / page);
       return res.status(200).json({
         succes: true,
-        message: "Kids content fetched successfully",
-        list: { kids, current_page: page, number_of_pages },
+        message: "Worship content fetched successfully",
+        list: { worship, current_page: page, number_of_pages },
       });
     } catch (error) {
       //log error here
       return res.status(500).json({
         succes: false,
-        message: "Error while creating kids",
+        message: "Error while creating Worship content",
         data: error,
       });
     }
   },
-  updateKids: async function (req, res) {
+  updateWorship: async function (req, res) {
     try {
-      const kids_id = req.params.kidsContent;
+      const worship_id = req.params.worshipContent;
 
-      var check_kids = await Kids.findById(kids_id)
+      var check_worship = await Worship.findById(worship_id)
         .countDocuments()
         .exec();
 
-      if (check_kids <= 0) {
+      if (check_worship <= 0) {
         return res.status(404).json({
           success: false,
-          message: "Kids content not found",
+          message: "Worship content not found",
         });
       }
-      const kids_obj = _.pick(req.body, [
+      const worship_obj = _.pick(req.body, [
         "title",
         "author",
         "category",
@@ -145,9 +145,9 @@ module.exports = {
       ]);
       //check category is sent
 
-      if (kids_obj.category) {
-        var category_obj = await KidsCategory.findOne({
-          _id: kids_obj.category,
+      if (worship_obj.category) {
+        var category_obj = await WorshipCategory.findOne({
+          _id: worship_obj.category,
         });
         if (!category_obj) {
           return res.status(400).json({
@@ -157,9 +157,9 @@ module.exports = {
         }
       }
     
-      var updated = await Kids.findOneAndUpdate(
-        { _id: kids_id },
-        { $set: kids_obj },
+      var updated = await Worship.findOneAndUpdate(
+        { _id: worship_id },
+        { $set: worship_obj },
         { new: true }
       );
       //push item to store if it not free
@@ -175,108 +175,108 @@ module.exports = {
           return res.status(400).json({
             success: false,
             message:
-              "Unable to create kids content, please check the data and try again",
+              "Unable to create worship content, please check the data and try again",
           });
         }
       }
 
       return res.status(200).json({
         success: true,
-        message: "Kids content updated successfully",
+        message: "Worship content updated successfully",
         sermon: updated,
       });
     } catch (error) {
       return res.status(500).json({
         succes: false,
-        message: "Error while updating kids content",
+        message: "Error while updating worship content",
         data: error,
       });
     }
   },
-  deleteKids: async function (req, res) {
+  deleteWorship: async function (req, res) {
     try {
-      const kids_id = req.params.kidsContent;
-      var kids = await Kids.findById(kids_id);
-      if (!kids) {
+      const worship_id = req.params.worshipContent;
+      var worship = await Worship.findById(worship_id);
+      if (!worship) {
         return res.status(404).json({
           success: false,
-          message: "Kids content not found",
+          message: "Worship content not found",
         });
       }
-      const sermon_in_store = await Store.findOne({ item: kids._id }).exec();
+      const sermon_in_store = await Store.findOne({ item: worship._id }).exec();
       if (sermon_in_store) {
         var sermon_removed_from_store = await Store.findOneAndUpdate(
-          { item: kids_id },
+          { item: worship_id },
           { $set: { isDeleted: true } },
           { new: true }
         );
         
       }
       console.log("@@@@@@@@@@@@@i reached here");
-      var deleted = await Kids.findOneAndUpdate(
-        { _id: kids_id },
+      var deleted = await Worship.findOneAndUpdate(
+        { _id: worship_id },
         { $set: { isDeleted: true } },
         { new: true }
       );
       return res.status(200).json({
         success: true,
-        message: "Kids content deleted successfully",
+        message: "Worship content deleted successfully",
         sermon: deleted,
       });
     } catch (error) {
       return res.status(500).json({
         succes: false,
-        message: "Error while deleting kids content",
+        message: "Error while deleting worship content",
         data: error,
       });
     }
   },
-  getKids: async function (req, res) {
+  getWorship: async function (req, res) {
     
     try {
-      const kids_id = req.params.kidsContent;
-      var kids = await Kids.findById(kids_id)
+      const worship_id = req.params.worshipContent;
+      var worship = await Worship.findById(worship_id)
         .populate("category")
         .exec();
-      if (!kids) {
+      if (!worship) {
         return res.status(404).json({
           success: false,
-          message: "Kids not found",
+          message: "Worship not found",
         });
       }
       return res.status(200).json({
         success: true,
-        message: "Kids content fetched successfully",
-        kids,
+        message: "Worship content fetched successfully",
+        worship,
       });
     } catch (error) {
       return res.status(500).json({
         succes: false,
-        message: "Error while fetching kids content",
+        message: "Error while fetching worship content",
         data: error,
       });
     }
   },
-  createKidsCategory: async function (req, res) {
+  createWorshipCategory: async function (req, res) {
     try {
       var name = req.body.name;
 
-      var kids_category = await KidsCategory.findOneAndUpdate(
+      var worship_category = await WorshipCategory.findOneAndUpdate(
         { name },
         { $set: { name, isDeleted: false } },
         { new: true, upsert: true }
       ).exec();
-      if (!kids_category) {
+      if (!worship_category) {
         return res.status(400).json({
           success: false,
           message:
-            "Unable to create kids content category , please check the data and try again",
+            "Unable to create worship content category , please check the data and try again",
         });
       }
       return res.status(200).json({
         success: true,
-        message: "Kids content  category created successfully",
-        data: kids_category,
+        message: "Worship content  category created successfully",
+        data: worship_category,
       });
     } catch (err) {
       //log error here
@@ -287,52 +287,52 @@ module.exports = {
       });
     }
   },
-  listKidsCategories: async function (req, res) {
+  listWorshipCategories: async function (req, res) {
     try {
-      var kids_category = await KidsCategory.find({ isDeleted: false })
+      var worship_category = await WorshipCategory.find({ isDeleted: false })
         .sort({
           name: "asc",
         })
         .exec();
 
-      console.log(kids_category);
+      console.log(worship_category);
 
       return res.status(200).json({
         succes: true,
-        message: "Kids content categories fetched successfully",
-        list: kids_category,
+        message: "Worship content categories fetched successfully",
+        list: worship_category,
       });
     } catch (error) {
       //log error here
       return res.status(500).json({
         succes: false,
-        message: "Error while fetching kids categories",
+        message: "Error while fetching worship categories",
         data: error,
       });
     }
   },
-  updateKidsCategory: async function (req, res) {
+  updateWorshipCategory: async function (req, res) {
     try {
       var name = req.body.name;
       var category_id = req.params.category;
 
-      var kids_category = await KidsCategory.findByIdAndUpdate(
+      var worship_category = await WorshipCategory.findByIdAndUpdate(
         category_id,
         { name },
         { new: true }
       ).exec();
 
-      if (!kids_category) {
+      if (!worship_category) {
         return res.status(400).json({
           success: false,
           message:
-            "Unable to update kids content category , please check the data and try again",
+            "Unable to update worship content category , please check the data and try again",
         });
       }
       return res.status(200).json({
         success: true,
-        message: "Kids content category updated successfully",
-        data: kids_category,
+        message: "Worship content category updated successfully",
+        data: worship_category,
       });
     } catch (err) {
       //log error here
@@ -343,79 +343,79 @@ module.exports = {
       });
     }
   },
-  fetchSingleKidsCategory: async function (req, res) {
+  fetchSingleWorshipCategory: async function (req, res) {
     try {
       const category_id = req.params.category;
-      var kids_category = await KidsCategory.findById(category_id);
-      if (!kids_category) {
+      var worship_category = await WorshipCategory.findById(category_id);
+      if (!worship_category) {
         return res.status(404).json({
           success: false,
-          message: "Kids content Category not found",
+          message: "Worship content Category not found",
         });
       }
 
       return res.status(200).json({
         success: true,
-        message: "Kids content category fetched successfully",
-        data: kids_category,
+        message: "Worship content category fetched successfully",
+        data: worship_category,
       });
     } catch (error) {
       return res.status(500).json({
         succes: false,
-        message: "Error while fetching kids content category",
+        message: "Error while fetching worship content category",
         data: error,
       });
     }
   },
-  deleteKidsCategory: async function (req, res) {
+  deleteWorshipCategory: async function (req, res) {
     try {
       const category_id = req.params.category;
-      var kids_category = await KidsCategory.findById(category_id);
-      if (!kids_category) {
+      var worship_category = await WorshipCategory.findById(category_id);
+      if (!worship_category) {
         return res.status(404).json({
           success: false,
-          message: "Kids content Category not found",
+          message: "Worship content Category not found",
         });
       }
-      var kids_category = await KidsCategory.findByIdAndUpdate(
+      var worship_category = await WorshipCategory.findByIdAndUpdate(
         category_id,
         { isDeleted: true },
         { new: true }
       ).exec();
       return res.status(200).json({
         success: true,
-        message: "Kids content category deleted successfully",
-        sermon: kids_category,
+        message: "Worship content category deleted successfully",
+        sermon: worship_category,
       });
     } catch (error) {
       return res.status(500).json({
         succes: false,
-        message: "Error while deleting kids content category",
+        message: "Error while deleting worship content category",
         data: error,
       });
     }
   },
 
   //fetch user sermons
-  fetchUserSermons: async function (req, res) {
-    try {
-      let user = req.user._id;
-      await UserSermon.find({user:user})
-      .populate("sermon_id")
-      .then(sermon =>{
-        res.status(200).json({
-          success:true,
-          message:"Purchase sermons",
-          data:sermon
-        })
-      })
-      .catch(err =>{
-        res.status(400).json({
-          success:false,
-          message:"Unable to get sermons",
-          data:err
-        })
-      })
+//   fetchUserSermons: async function (req, res) {
+//     try {
+//       let user = req.user._id;
+//       await UserSermon.find({user:user})
+//       .populate("sermon_id")
+//       .then(sermon =>{
+//         res.status(200).json({
+//           success:true,
+//           message:"Purchase sermons",
+//           data:sermon
+//         })
+//       })
+//       .catch(err =>{
+//         res.status(400).json({
+//           success:false,
+//           message:"Unable to get sermons",
+//           data:err
+//         })
+//       })
     //   const content_type = req.query.content_type
     //     ? req.query.content_type
     //     : null;
@@ -453,15 +453,15 @@ module.exports = {
     //     sermons,
     //   });
     //   //fetch bought sermons
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-        success: false,
-        message: "Unable to fetch user sermons",
-        error,
-      });
-    }
-  },
+//     } catch (error) {
+//       console.log(error);
+//       return res.status(500).json({
+//         success: false,
+//         message: "Unable to fetch user sermons",
+//         error,
+//       });
+//     }
+//   },
 //   featuredSermon:async(req, res, next) =>{
 //     let id = req.query.id;
 //     await Sermon.findById(id)
@@ -498,37 +498,37 @@ module.exports = {
 //     }))
 //   },
   // get sermon without pagination
-  getKidsWithNoLimit:async(req, res, nesxt) =>{
-    await Kids.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
-    .then(kids =>{
+  getWorshipWithNoLimit:async(req, res, nesxt) =>{
+    await Worship.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
+    .then(worship =>{
       res.status(200).json({
         success:true,
-        message:'All kids content',
-        data:kids
+        message:'All worship content',
+        data:worship
       })
     })
     .catch(err =>{
       res.status(200).json({
         success:false,
-        message:"Unable to find kids content",
+        message:"Unable to find worship content",
         data:null
       })
     })
   },
 
-  getAdminKids:async(req, res, next) =>{
-    await Kids.find()
-    .then(kids =>{
+  getAdminWorship:async(req, res, next) =>{
+    await Worship.find()
+    .then(worship =>{
       res.status(200).json({
         success:true,
-        message:"All Kids content",
-        data:kids
+        message:"All worship content",
+        data:worship
       })
     })
     .catch(err =>{
       res.status(404).json({
         success:false,
-        message:"Unable to get Kids content",
+        message:"Unable to get worship content",
         data:err
       })
     })

@@ -2,6 +2,7 @@ const asyncHandler = require("../middleware/async");
 const ErrorResponse = require("../utils/errorResponse.js");
 const Testimony = require('../models/Testimony');
 const User = require('../models/User');
+const TestimonyCategory = require("../models/TestimonyCategory");
 
 
 
@@ -11,8 +12,19 @@ const testimonyPost = async (req, res, next) =>{
     // GETTING TESTIMONY BODY AND ANONYMOUS FROM USER
     let {
         testimonyBody,
-        anonymous
+        anonymous,
+        imageUrl,
+        videoUrl,
+        category,
+        subject
     } = req.body;
+    let cat = await TestimonyCategory.findById(category);
+    if(!cat){
+        return res.status(400).json({
+            success:false,
+            message:"No such category"
+        })
+    }
 
     // GETTING USER PICTURE, USERNAME AND ID FROM LOGIN USER
     let picture = req.user.profilePicture;
@@ -26,7 +38,11 @@ const testimonyPost = async (req, res, next) =>{
         anonymous,
         picture,
         username,
-        user
+        user,
+        videoUrl,
+        imageUrl,
+        category,
+        subject
     });
 
     // SAVING USER TO DATABASE
@@ -49,7 +65,8 @@ const editTestimony = asyncHandler(async(req, res, next) =>{
     // updated = {};
     const testimonyFields = {};
     if(req.body.testimonyBody) testimonyFields.testimonyBody = req.body.testimonyBody;
-    
+    if(req.body.imageUrl) testimonyFields.imageUrl = req.body.imageUrl;
+    if(req.body.videoUrl) testimonyFields.videoUrl = req.body.videoUrl;
 
      await Testimony.findByIdAndUpdate(
         { _id: id }, 
@@ -223,6 +240,149 @@ const deleteTestimony = (req, res, next)=>{
         })
     })
 }
+// :::::::::::::::::::::::::::::::::::::::::::::ADD TESTIMONY BY ADMIN:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const testimonyByAdmin = asyncHandler(async(req, res, next) =>{
+    let user = req.query.user;
+    let {
+        testimonyBody,
+        anonymous,
+        imageUrl,
+        videoUrl,
+        category,
+        subject
+    } = req.body;
+    let testimonyOwner = await User.findById(user);
+    if(!testimonyOwner){
+        return res.status(400).json({
+            success:false,
+            message:"Sorry this user does not exist"
+        })
+    }
+    let username = testimonyOwner.username;
+    let picture = testimonyOwner.profilePicture;
+    let status = true;
+     // CREATING NEW INSTANCE OF THE USER
+     let newTestimony = new Testimony({
+        testimonyBody,
+        anonymous,
+        picture,
+        username,
+        user,
+        videoUrl,
+        imageUrl,
+        status,
+        category,
+        subject
+    });
+
+    // SAVING USER TO DATABASE
+    newTestimony.save()
+        .then(testimony =>{
+        res.status(200).json({
+            success: true,
+            message: 'Testimony created Successfully.',
+            data: testimony
+        })
+    })
+    .catch(err => res.status(400).json({
+        success:false,
+        message:"Unable to create testimony",
+        data:err
+    }));
+})
+// ::::::::::::::::::::::::::::::::::::::::::::::::::create category :::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const createTestimonyCategory = asyncHandler(async(req, res, next) =>{
+    let name = req.body.name;
+    let newTestimonyCategory = new TestimonyCategory({
+        name
+    })
+    newTestimonyCategory.save()
+    .then(category =>{
+        res.status(200).json({
+            success:true,
+            message:"Testimony category created successfully",
+            data:category
+        })
+    })
+    .catch(err =>res.status(400).json({
+        success:false,
+        message:"Unable to create testimony category"
+    }))
+})
+// :::::::::::::::::::::::::::::::::::::::::::::::::get all testimony category::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const getAllTestimonyCategory = asyncHandler(async(req, res, next) =>{
+    await TestimonyCategory.find()
+    .then(category =>{
+        res.status(200).json({
+            success: true,
+            message:"Testimony category fetch successfully",
+            data: category
+        })
+    })
+    .catch(err =>res.status(400).json({
+        success:false,
+        message:"Unable to get testimony category"
+    }))
+})
+// :::::::::::::::::::::::::::::::::::::::::::::::::::GET SINGLE TESTIMONY CATEGORY::::::::::::::::::::::::::::::::::::::::::::::::::
+const getSingleTestimonyCategory = asyncHandler(async(req, res, next) =>{
+    let id = req.query.id;
+    await TestimonyCategory.findById(id)
+    .then(category =>{
+        res.status(200).json({
+            success:true,
+            message:"Testimony category fetch successfully",
+            data:category
+        })
+    })
+    .catch(err =>res.status(400).json({
+        success:false,
+        message:"Unable to fetch testimony category"
+    }))
+})
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::EDIT TESTIMONY CATEGORY::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const editTestimonyCategory = asyncHandler(async(req, res, next) =>{
+    const id = req.query.id;
+    const options = { new: true };
+    // updated = {};
+    const testimonyFields = {};
+    if(req.body.name) testimonyFields.name = req.body.name;
+
+     await TestimonyCategory.findByIdAndUpdate(
+        { _id: id }, 
+        { $set: testimonyFields },
+        { new: true }
+     )
+     .then(testimony =>{
+         if(!testimony){
+            return next( new ErrorResponse("Unable to update testimony category", 404))
+         }
+        res.status(200).json({
+            success: true,
+            message: 'updated successfully',
+            data: testimony
+        })
+     })
+     .catch(() =>{
+        return next( new ErrorResponse("Unable to update testimony category", 404))
+     })
+})
+// ::::::::::::::::::::::::::::::::::::::::::::::::::::::::DELETE TESTIMONY CATEGORY::::::::::::::::::::::::::::::::::::::::::::
+const deleteTestimonyCategory = asyncHandler(async(req, res, next) =>{
+    let id = req.query.id;
+    await TestimonyCategory.findById(id)
+    .then(category =>{
+        category.remove();
+        res.status(200).json({
+            success:true,
+            message:"Testimony category removed successfully"
+        })
+    })
+    .catch(err =>res.status(400).json({
+        success:false,
+        message:"Unable to delete testimony category"
+    }))
+})
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::EXPORTING ALL FUNCTIONS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -235,5 +395,11 @@ module.exports = {
     testimonySingle,
     testimonyApproveAll,
     editTestimony,
-    deactivateTestimony
+    deactivateTestimony,
+    testimonyByAdmin,
+    createTestimonyCategory,
+    getAllTestimonyCategory,
+    getSingleTestimonyCategory,
+    editTestimonyCategory,
+    deleteTestimonyCategory
 }

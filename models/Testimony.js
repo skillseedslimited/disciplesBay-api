@@ -7,6 +7,13 @@ const TestimonySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
+    category:{
+        type: Schema.Types.ObjectId,
+        ref: 'testimonyCategory'
+    },
+    subject:{
+        type: String
+    },
     username:{
         type: String
     },
@@ -30,7 +37,13 @@ const TestimonySchema = new Schema({
     anonymous:{
         type: Boolean,
         default: false
-    }    
+    },
+    imageUrl:{
+        type: String
+    },
+    videoUrl:{
+        type: String
+    }
 });
 
 module.exports = Testimony = mongoose.model('testimony', TestimonySchema);

@@ -3,6 +3,20 @@ const router = express.Router();
 const testimonyController = require('../controllers/testimony.controller');
 
 router
+.route('/delete-category')
+.delete(testimonyController.deleteTestimonyCategory);
+
+
+router
+.route('/get-single-category')
+.get(testimonyController.getSingleTestimonyCategory);
+
+router
+.route('/get-all-category')
+.get(testimonyController.getAllTestimonyCategory);
+
+
+router
 .route('/approve/:id')
 .post(testimonyController.testimonyActive); 
 
@@ -46,6 +60,18 @@ router
 router
 .route('/deactivate/:id')
 .post(testimonyController.deactivateTestimony);
+
+router
+.route('/admin-testimony')
+.post(testimonyController.testimonyByAdmin);
+
+router
+.route('/create-category')
+.post(testimonyController.createTestimonyCategory);
+
+router
+.route('/update-category')
+.put(testimonyController.editTestimonyCategory);
 
 
 

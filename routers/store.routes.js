@@ -16,4 +16,8 @@ router
   );
 router.route("/:item/purchase").post(storeController.purchaseStoreItem);
 
+router
+.route("/gift")
+.get(storeController.gift);
+
 module.exports = router;

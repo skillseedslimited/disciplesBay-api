@@ -4,6 +4,8 @@ const Apppointments = require("../../models/Appointments");
 module.exports = {
   allMyAppointments: async (req, res) => {
     Apppointments.find({user: req.user._id})
+      .populate("user")
+      .sort( {_id: -1} )
       .then(appointments => {
         res.send(appointments)
       })
@@ -37,6 +39,7 @@ module.exports = {
     let appointmentId = req.params.id;
 
     Appointments.findById({_id: appointmentId})
+    .populate("user")
       .then(appointment => {
         if (appointment != null) {
           res.status(200).json({

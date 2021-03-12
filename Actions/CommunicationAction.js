@@ -201,7 +201,7 @@ module.exports = {
 
         await call_log.save();
 
-        NotificationAction.sendCommunication(receiver,"New Incoming Call","ring",channel_name,call_type,sender,call_log._id);  
+        NotificationAction.sendCommunication(receiver, "New Incoming Call", "ring", channel_name, call_type, sender, call_log._id);  
          
         return call_log._id;
       }
@@ -240,7 +240,7 @@ module.exports = {
                 }).exec();
             }
         //send notification and return call connected successfully
-            NotificationAction.sendCommunication(notification_receiver,"Call connected","connected",channel_name,log.call_type,notification_sender,log._id);
+            NotificationAction.sendCommunication(notification_receiver, "Call connected", "connected", channel_name, log.call_type, notification_sender, log._id);
 
             return res.status(200).json({success : true,message : "Call connected successfully"});
         }else {
@@ -286,9 +286,9 @@ module.exports = {
             //     await Wallet.findByIdAndUpdate(user_wallet._id,{balance : user_wallet.balance - charge,amount_used :charge }).exec();
             // }
             //send notification and return call connected successfully
-            NotificationAction.sendCommunication(sender,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
+            NotificationAction.sendCommunication(sender, "Call ended", "ended", log.channel_name, log.call_type, sender, log._id);
 
-            NotificationAction.sendCommunication(receiver,"Call ended","ended",log.channel_name,log.call_type,sender,log._id);
+            NotificationAction.sendCommunication(receiver, "Call ended", "ended", log.channel_name, log.call_type, sender, log._id);
 
             return res.status(200).json({success : true,message : "Call ended successfully"});
         }else {
@@ -420,7 +420,7 @@ requestCounsellor : async function(req,res)
     
           await counsellor_request.save();
           //snd notification to councillor
-          NotificationAction.sendToUser(counsellor,"Call request","request","no link");
+          NotificationAction.sendToUser(counsellor, "Call request", "request", "no link");
     
           return res.status(200).json({
               success : true,

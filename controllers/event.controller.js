@@ -18,7 +18,9 @@ const createEVent = asyncHandler(async(req, res, next) =>{
         eventURL,
         isLive
     } =  req.body;
-    let passed = false
+
+    let passed = false;
+    
     const newEvent = new Event({
         eventName,
         coverImage,
@@ -42,7 +44,8 @@ const createEVent = asyncHandler(async(req, res, next) =>{
         NotificationAction.sendToGeneral(
             `A new event: (${eventName}) has just been posted in the app `,
             "event",
-            "#"
+            "#",
+            `${eventName}`
           );
     })
     .catch((err) =>{

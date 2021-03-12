@@ -11,7 +11,7 @@ const path = require('path');
 
 module.exports = {
      // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::REGISTRATION:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-     register: async (req, res, next) =>{
+     register: async (req, res, next) => {
         let { username, email, phoneNumber, password, confirmPassword, role, fullName } = req.body;
         // setting user isLogin to be true
         let isOnline = true;

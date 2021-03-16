@@ -476,6 +476,34 @@ module.exports = {
         data:err
       })
     })
+  },
+  // :::::::::::::::::::::::give store item:::::::::::::::::::::::::::::::::::::::::::
+  gift:async(req, res, next) =>{
+    let receiver_id = req.query.receiver_id;
+    let store_item = req.query.store_item;
+    let store_content = await Store.findById(store_item);
+    console.log(store_content.item)
+    if(!store_content){
+      return res.status(400).json({
+        success:false,
+        message:"Store item can not be found"
+      })
+    }
+    var user_sermon = new UserSermon({
+      user: receiver_id,
+      sermon_id: store_content.item,
+    });
+
+    await user_sermon.save()
+    .then(sermon =>{
+      res.status(200).json({
+        success:true,
+        message:"Gift sent successfully",
+        data:sermon
+      })
+    })
+    if (!user_sermon) {
+      throw Error("Unable to save sermon for this user");
+    }
   }
-  
 };

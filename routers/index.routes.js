@@ -22,6 +22,8 @@ module.exports = function (app) {
   );
 
   app.use("/api/v1/sermon", [verifyToken], require("./sermon.routes"));
+  app.use("/api/v1/kids", [verifyToken], require("./kids.routes"));
+  app.use("/api/v1/worship", [verifyToken], require("./worship.routes"));
   app.use("/api/v1/userManagement", require("./userManagement.routes"));
   app.use("/api/v1/counsellor", [verifyToken], require("./counsellor.routes"));
   app.use("/api/v1/wallet", [verifyToken], require("./wallet.routes"));
@@ -38,6 +40,7 @@ module.exports = function (app) {
   app.use("/api/v1/branch", [verifyToken], require("./branch.routes"));
   app.use("/api/v1/stream", [verifyToken],  require("./restream.routes"));
   app.use("/api/v1/department", [verifyToken],  require("./department.routes"));
+  app.use("/api/v1/feedback", [verifyToken],  require("./feedback.routes"));
   app.use("/api/v1/webstore", require("./store.web.routes"))
   app.use(
     "/api/v1/flutterwave",

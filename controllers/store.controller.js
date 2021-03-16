@@ -16,4 +16,8 @@ module.exports = {
   purchaseStoreItem: async function(req, res) {
     return await storeAction.purchaseStoreItem(req, res);
   },
+
+  gift: async function(req, res) {
+    return await storeAction.gift(req, res)
+  }
 };

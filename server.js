@@ -12,13 +12,8 @@ const errorHandler = require("./middleware/error");
 const { cloudinaryConfig } = require("./config/cloudinary.config");
 const node_media_server = require("./media_server");
 const thumbnail_generator = require("./cron/thumbnails");
-// const cron = require("./cron/event.cron");
 
 const app = express();
-
-// node_media_server.run();
-// thumbnail_generator.start();
-// cron.start();
 
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -56,13 +51,13 @@ app.use(errorHandler);
 // connect to mongoDB
 
 const port = process.env.PORT || 3100;
-
 const httpServer = require("http").createServer(app);
 const options = { /* ... */ };
 const io = require("socket.io")(httpServer, options);
 io.on("connection", socket => {
   
- });
+ }); 
+
 
 if (require.main === module) {
   //   console.log("this is not it");
@@ -84,19 +79,4 @@ process.on("unhandledRejection", (err, promise) => {
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::streaming:::::::::::::::::::::::::::::::::::::::::
 const NodeMediaServer = require("node-media-server");
 
-// const config = {
-//   rtmp: {
-//     port: 1935,
-//     chunk_size: 60000,
-//     gop_cache: true,
-//     ping: 30,
-//     ping_timeout: 60,
-//   },
-//   http: {
-//     port: 8000,
-//     allow_origin: '*',
-//   },
-// }
 
-// var nms = new NodeMediaServer(config)
-// nms.run()

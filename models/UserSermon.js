@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const UserSermonSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: "users",
   },
   sermon_id: {
     type: Schema.Types.ObjectId,

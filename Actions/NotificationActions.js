@@ -241,7 +241,7 @@ module.exports = {
     //   $inc: { notificationCounter: 1 },
     // }).exec();
     return true;
-  },
+  }, 
 
   sendChat: async function (user, themessage, type, sender) {
     console.log("this is the sender", user)

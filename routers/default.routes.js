@@ -1,7 +1,7 @@
 const defaultController = require("../controllers/default/index.controller");
 const registerController = require("../controllers/default/register.controller");
 const express = require("express");
-const login = require("../controllers/default/login.controller");
+const loginController = require("../controllers/default/login.controller");
 const router = express.Router();
 
 router.all("/*", (req, res, next) => {
@@ -18,7 +18,7 @@ router.route("/").get(defaultController.index);
 // @desc authenticate user
 // @access Public
 router.post("/auth/register", registerController.register);
-router.post("/auth/login", login);
+router.post("/auth/login", loginController);
 
 // @route Get verifyGetByEmail
 // @desc verify user by email

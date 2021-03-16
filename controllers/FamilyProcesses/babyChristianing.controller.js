@@ -10,7 +10,7 @@ module.exports = {
         })
       })
       .catch(err => {
-
+        console.log(err)
       })
   },
 
@@ -29,7 +29,7 @@ module.exports = {
       baby_dob, 
       guarantor_name} = req.body;
 
-    let newBabyChristianing = await new BabyChristianing({
+    let newBabyChristianing = new BabyChristianing({
       parents_name, 
       parents_contact_address,
       parents_phone_number,
@@ -43,24 +43,28 @@ module.exports = {
       guarantor_name
     });
 
-    // console.log(newBabyChristianing)
-
-    newBabyChristianing.save()
+    await newBabyChristianing.save()
       .then(newlyCreated => {
-        res.status(200).json({
+        res.status(201).json({
           success: true,
           message: "Baby Christianing Created succesfully",
           data: newlyCreated });
       })
       .catch(err => {
         if (err)
-          res.json(err)
+          res.json({
+            success: false,
+            message: "Something went wrong",
+            data: null 
+          })
       })
 
 
   },
 
   editOne: async function(req, res) {
+    let itemId = req.params.id;
+
     let {
       parents_name, 
       parents_contact_address, 
@@ -75,7 +79,7 @@ module.exports = {
       guarantor_name} = req.body;
     // console.log(req.body) 
 
-    BabyChristianing.findByIdAndUpdate(req.params.id, {
+    await BabyChristianing.findByIdAndUpdate({_id: itemId}, {
       parents_name, 
       parents_contact_address, 
       parents_phone_number, 
@@ -88,17 +92,20 @@ module.exports = {
       baby_dob, 
       guarantor_name})
       .then(updateItem => {
-        if (updateItem != null)
-          res.status(200).json({
+        if (updateItem != null){
+
+          res.status(201).json({
             success: true,
             message: "Updated Successfully",
             data: updateItem
           })
 
-        res.status(200).json({
-          success: false,
-          message: "No item found",
-        })
+        }else{
+          res.status(200).json({
+            success: false,
+            message: "No item found",
+          })
+        }
       })
       .catch(err => {
         console.log(err)
@@ -106,18 +113,22 @@ module.exports = {
   },
 
   deleteOne: async function(req, res) {
-    BabyChristianing.findByIdAndDelete(req.params.id)
+    let itemId = req.params.id;
+
+    await BabyChristianing.findByIdAndDelete({_id: itemId})
       .then(deletedItem => {
-        if (deletedItem != null)
+        if (deletedItem != null) {
           res.status(200).json({
             success: true,
             message: "Deleted Successfully",
             data: deletedItem
           })
-        res.status(200).json({
-          success: false,
-          message: "No item found",
-        })
+        }else{
+          res.status(200).json({
+            success: false,
+            message: "No item found",
+          })
+        }
       })
       .catch(err => {
         console.log(err)
@@ -129,10 +140,19 @@ module.exports = {
 
     await BabyChristianing.findById({_id: itemId})
       .then(singleItem => {
-        res.status(200).json({
-          success: true,
-          data: singleItem
-        });
+
+        if (singleItem != null) {
+          res.status(200).json({
+            success: true,
+            message: "Found Successfully",
+            data: singleItem
+          })
+        }else{
+          res.status(200).json({
+            success: false,
+            message: "No item found",
+          })
+        }
       })
       .catch(err => {
         console.log(err);

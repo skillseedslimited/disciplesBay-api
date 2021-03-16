@@ -13,6 +13,11 @@ const HouseDedicationSchema = new Schema({
   },
 
   house_owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users"
+  },
+
+  house_owner_name: {
     type: String,
     required: true
   },
@@ -32,12 +37,7 @@ const HouseDedicationSchema = new Schema({
     required: true
   },
 
-  house_owner_phpone: {
-    type: String,
-    required: true
-  },
-
-  house_owner_sign: {
+  house_owner_phone: {
     type: String,
     required: true
   },
@@ -45,11 +45,6 @@ const HouseDedicationSchema = new Schema({
   guarantor_name: {
     type: String,
     required: true
-  },
-
-  date: {
-    type: Date,
-    default: Date.now()
   }
 
 }, { timestamps : true});

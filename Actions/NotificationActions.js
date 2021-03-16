@@ -193,7 +193,7 @@ module.exports = {
   //     }
   //   },
 
-  sendCommunication: async function (user, themessage, type,channel_name,call_type ,sender) {
+  sendCommunication: async function (user, themessage, type, channel_name, call_type, sender) {
     var registrationToken = user.deviceToken;
     if(registrationToken)
     {
@@ -243,7 +243,7 @@ module.exports = {
     return true;
   },
 
-  sendChat: async function (user, themessage, type,sender) {
+  sendChat: async function (user, themessage, type, sender) {
     console.log("this is the sender", user)
     var registrationToken = user.deviceToken;
     if(registrationToken) {

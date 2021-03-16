@@ -18,8 +18,8 @@ const BusinessDedicationSchema = new Schema({
   },
 
   business_owner: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users"
   },
 
   business_owner_address: {
@@ -37,19 +37,9 @@ const BusinessDedicationSchema = new Schema({
     required: true
   },
 
-  business_owner_sign: {
-    type: String,
-    required: true
-  },
-
   guarantor_name: {
     type: String,
     required: true
-  },
-
-  date: {
-    type: Date,
-    default: Date.now()
   }
 
 }, { timestamps : true});

@@ -25,6 +25,7 @@ module.exports = {
       } = req.body;
 
       var category_obj = await SermonCategory.findOne({ _id: category });
+
       if (!category_obj) {
         return res.status(400).json({
           success: false,
@@ -104,7 +105,9 @@ module.exports = {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const sermons = await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]}) 
         .populate("category")
-        .sort({ createdAt: "desc" })
+        // .sort({ createdAt: "desc" })
+        // .sort( { 'timestamp': -1 } )
+        .sort( {'_id': -1} )
         .skip((page - 1) * this.sermon_limit)
         .limit(this.sermon_limit)
         .exec();
@@ -113,7 +116,7 @@ module.exports = {
       var sermon_counts = await Sermon.find({}).countDocuments();
       var number_of_pages = Math.ceil(sermon_counts / page);
       return res.status(200).json({
-        succes: true,
+        succes: true, 
         message: "Sermons fetched successfully",
         list: { sermons, current_page: page, number_of_pages },
       });
@@ -141,6 +144,7 @@ module.exports = {
           message: "Sermon not found",
         });
       }
+      
       const sermon_obj = _.pick(req.body, [
         "title",
         "author",
@@ -485,7 +489,7 @@ module.exports = {
     }
   },
 
-  featuredSermon:async(req, res, next) =>{
+  featuredSermon:async(req, res, next) => {
     let id = req.query.id;
     await Sermon.findById(id)
     .then(sermon =>{
@@ -506,7 +510,7 @@ module.exports = {
     })
   },
 
-  getFeaturedSermon:async(req, res, next) =>{
+  getFeaturedSermon:async(req, res, next) => {
     await Sermon.find({featured: true})
     .then(sermon =>{
       res.status(200).json({
@@ -521,8 +525,9 @@ module.exports = {
       data:null
     }))
   },
+  
   // get sermon without pagination
-  getSermonWithNoLimit:async(req, res, nesxt) =>{
+  getSermonWithNoLimit:async(req, res, nesxt) => {
     await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
     .then(sermon =>{
       res.status(200).json({
@@ -540,7 +545,7 @@ module.exports = {
     })
   },
 
-  getAdminSermon:async(req, res, next) =>{
+  getAdminSermon:async(req, res, next) => {
     await Sermon.find()
     .then(sermon =>{
       res.status(200).json({
@@ -558,7 +563,7 @@ module.exports = {
     })
   },
   
-  unFeaturedSermon:async(req, res, next) =>{
+  unFeaturedSermon:async(req, res, next) => {
     let id = req.query.id;
     await Sermon.findById(id)
     .then(sermon =>{

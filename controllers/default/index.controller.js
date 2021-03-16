@@ -6,11 +6,12 @@ const mailer = require('../../misc/mailer');
 const bcrypt = require('bcryptjs');
 
 module.exports = {
-    index: (req, res) =>{
+    index: (req, res) => {
         res.json('welcome to the index page');
     },
+
     // :::::::::::::::::::::::::::::::::::::::::::::::::::COLLECT FORGET PASSWORD EMAIL:::::::::::::::::::::::::::::::::::::::::::::::::
-    valEmail:asyncHandler(async(req, res, next) =>{
+    valEmail:asyncHandler(async(req, res, next) => {
         let email = req.body.email;
         await User.findOne({email})
         .then(async user =>{

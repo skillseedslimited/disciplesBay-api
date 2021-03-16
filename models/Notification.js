@@ -6,30 +6,37 @@ const NotificationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+
   message: {
     type: String,
     required: true,
   },
+  
   resource_link: {
     type: String,
     default: "#",
   },
+
   notification_id: {
     type: String,
     default: null,
   },
+
   type: {
     type: String,
     required: true,
   },
+
   createdAt: {
     type: String,
     default: moment().format(),
   },
+
   updatedAt: {
     type: String,
     default: null,
   },
+
   heading:{
     type:String,
     default:null

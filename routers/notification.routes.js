@@ -9,7 +9,7 @@ router.get(
   "/fetch-user-notifications",
   NotificationController.fetchUserNotifications
 );
-
+ 
 router.post(
   "/broadcast",
   [authorizeUpdated("can-mgt-notifications")],

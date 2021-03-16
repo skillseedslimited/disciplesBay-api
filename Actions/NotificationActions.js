@@ -12,6 +12,7 @@ module.exports = {
         body:  themessage
        
       },
+
       data: {
         themessage,
         resource_link,
@@ -19,12 +20,14 @@ module.exports = {
         created_at: moment().format(),
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
       },
+
       android: {
         notification: {
           sound: 'default',
           click_action: 'FLUTTER_NOTIFICATION_CLICK',
         },
       },
+
       topic: "general",
     };
 
@@ -46,14 +49,17 @@ module.exports = {
       type: "general",
       heading
     });
+
     notification.save(function (err) {
       if (err) return null;
       // saved!
     });
+
     if (notification) {
       //notification saved
       console.log("notification saved");
     }
+
     //update all user notification counter
     User.updateMany({}, { $inc: { notificationCounter: 1 } }, function (
       err,
@@ -68,49 +74,55 @@ module.exports = {
 
   sendToUser: async function (user, themessage, type, resource_link) {
     var registrationToken = user.deviceToken;
-if(registrationToken)
-{
-  var message = {
-    notification: {
-      title: 'New Notification Alert',
-      body:  themessage
-      },
-    data: {
-      themessage,
-      resource_link,
-      type,
-      created_at: moment().format(),
-      click_action: 'FLUTTER_NOTIFICATION_CLICK',
-    },
-    android: {
-      notification: {
-        sound: 'default',
-        click_action: 'FLUTTER_NOTIFICATION_CLICK',
-      },
-    },
-    token: registrationToken,
-  };
-  // console.log(registrationToken);f
+    if(registrationToken) {
+      var message = {
+        notification: {
+          title: 'New Notification Alert',
+          body:  themessage
+        },
 
-  firebaseadmin
-    .messaging()
-    .send(message)
-    .then((response) => { console.log(response)})
-    .catch((error) => {
-      console.log("Error sending message:", error);
-    });
-  var notification = new Notification({
-    message : themessage,
-    resource_link,
-    notification_id: user._id,
-    type: "individual",
-  });
-  await notification.save();
-  await User.findByIdAndUpdate(user._id, {
-    $inc: { notificationCounter: 1 },
-  }).exec();
-  return true;
-}
+        data: {
+          themessage,
+          resource_link,
+          type,
+          created_at: moment().format(),
+          click_action: 'FLUTTER_NOTIFICATION_CLICK',
+        },
+
+        android: {
+          notification: {
+            sound: 'default',
+            click_action: 'FLUTTER_NOTIFICATION_CLICK',
+          },
+        },
+
+        token: registrationToken,
+      };
+      // console.log(registrationToken);f
+
+      firebaseadmin
+        .messaging()
+        .send(message)
+        .then((response) => { console.log(response)})
+        .catch((error) => {
+          console.log("Error sending message:", error);
+        });
+
+      var notification = new Notification({
+        message : themessage,
+        resource_link,
+        notification_id: user._id,
+        type: "individual",
+      });
+
+      await notification.save();
+
+      await User.findByIdAndUpdate(user._id, {
+        $inc: { notificationCounter: 1 },
+      }).exec();
+
+      return true;
+    }
    
   },
   //   storeUsersNotiication: async function (
@@ -181,7 +193,7 @@ if(registrationToken)
   //     }
   //   },
 
-  sendCommunication: async function (user, themessage, type,channel_name,call_type ,sender) {
+  sendCommunication: async function (user, themessage, type, channel_name, call_type, sender) {
     var registrationToken = user.deviceToken;
     if(registrationToken)
     {
@@ -229,18 +241,18 @@ if(registrationToken)
     //   $inc: { notificationCounter: 1 },
     // }).exec();
     return true;
-  },
+  }, 
 
-  sendChat: async function (user, themessage, type,sender) {
+  sendChat: async function (user, themessage, type, sender) {
     console.log("this is the sender", user)
     var registrationToken = user.deviceToken;
-    if(registrationToken)
-    {
+    if(registrationToken) {
       var message = {
         notification: {
           title: sender.username,
           body:  themessage
-          },
+        },
+
         data: {
           themessage,
           type,
@@ -250,12 +262,14 @@ if(registrationToken)
           sender_image: sender.profilePicture,
           click_action: 'FLUTTER_NOTIFICATION_CLICK',
         },
+
         android: {
           notification: {
             sound: 'default',
             click_action: 'FLUTTER_NOTIFICATION_CLICK',
           },
         },
+        
         token: registrationToken,
       };
   

@@ -16,6 +16,7 @@ module.exports = {
       message: "Registeration token set successfully",
     });
   },
+  
   fetchUserNotifications: async function (req, res) {
     var page = req.query.page ? req.query.page : 1;
     try {
@@ -45,6 +46,7 @@ module.exports = {
       });
     }
   },
+  
   postBroadcast: async function (req, res) {
     var { message, link, broadcast_type } = req.body;
     if (message == null || link == null) {

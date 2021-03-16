@@ -25,12 +25,14 @@ module.exports = {
       } = req.body;
 
       var category_obj = await SermonCategory.findOne({ _id: category });
+
       if (!category_obj) {
         return res.status(400).json({
           success: false,
           message: "Selected category not found",
         });
       }
+
       var sermon = Sermon({
         title,
         author,
@@ -44,6 +46,7 @@ module.exports = {
         price,
         isDeleted: false,
       });
+
       if (!sermon) {
         return res.status(400).json({
           success: false,
@@ -51,6 +54,7 @@ module.exports = {
             "Unable to create sermon, please check the data and try again",
         });
       }
+
       //push item to store if it not free
       if (sermon.subscription_type != "free") {
         let item_to_store = new Store({
@@ -59,7 +63,9 @@ module.exports = {
           quantity: 0,
           content_type: sermon.content_type,
         });
+
         await item_to_store.save();
+
         if (!item_to_store) {
           return res.status(400).json({
             success: false,
@@ -68,10 +74,12 @@ module.exports = {
           });
         }
       }
+
       NotificationAction.sendToGeneral(
         `A new sermon: (${title}) has just been posted in the app `,
         "sermon",
-        "#"
+        "#",
+        `${title}`
       );
 
       await sermon.save();
@@ -90,13 +98,16 @@ module.exports = {
       });
     }
   },
+  
   listSermons: async function (req, res) {
     try {
       console.log("i was here")
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const sermons = await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]}) 
         .populate("category")
-        .sort({ createdAt: "desc" })
+        // .sort({ createdAt: "desc" }) 
+        // .sort( { 'timestamp': -1 } )
+        .sort( {'_id': -1} )
         .skip((page - 1) * this.sermon_limit)
         .limit(this.sermon_limit)
         .exec();
@@ -105,7 +116,7 @@ module.exports = {
       var sermon_counts = await Sermon.find({}).countDocuments();
       var number_of_pages = Math.ceil(sermon_counts / page);
       return res.status(200).json({
-        succes: true,
+        succes: true, 
         message: "Sermons fetched successfully",
         list: { sermons, current_page: page, number_of_pages },
       });
@@ -118,6 +129,7 @@ module.exports = {
       });
     }
   },
+
   updateSermon: async function (req, res) {
     try {
       const sermon_id = req.params.sermon;
@@ -132,6 +144,7 @@ module.exports = {
           message: "Sermon not found",
         });
       }
+      
       const sermon_obj = _.pick(req.body, [
         "title",
         "author",
@@ -194,6 +207,7 @@ module.exports = {
       });
     }
   },
+
   deleteSermon: async function (req, res) {
     try {
       const sermon_id = req.params.sermon;
@@ -204,7 +218,9 @@ module.exports = {
           message: "Sermon not found",
         });
       }
+
       const sermon_in_store = await Store.findOne({ item: sermon._id }).exec();
+
       if (sermon_in_store) {
         var sermon_removed_from_store = await Store.findOneAndUpdate(
           { item: sermon_id },
@@ -213,17 +229,20 @@ module.exports = {
         );
         
       }
+
       console.log("@@@@@@@@@@@@@i reached here");
       var deleted = await Sermon.findOneAndUpdate(
         { _id: sermon_id },
         { $set: { isDeleted: true } },
         { new: true }
       );
+
       return res.status(200).json({
         success: true,
         message: "Sermon deleted successfully",
         sermon: deleted,
       });
+
     } catch (error) {
       return res.status(500).json({
         succes: false,
@@ -232,6 +251,7 @@ module.exports = {
       });
     }
   },
+
   getSermon: async function (req, res) {
     
     try {
@@ -258,6 +278,7 @@ module.exports = {
       });
     }
   },
+
   createSermonCategory: async function (req, res) {
     try {
       var name = req.body.name;
@@ -288,6 +309,7 @@ module.exports = {
       });
     }
   },
+
   listSermonCategories: async function (req, res) {
     try {
       var sermon_category = await SermonCategory.find({ isDeleted: false })
@@ -312,6 +334,7 @@ module.exports = {
       });
     }
   },
+
   updateSermonCategory: async function (req, res) {
     try {
       var name = req.body.name;
@@ -344,6 +367,7 @@ module.exports = {
       });
     }
   },
+
   fetchSingleSermonCategory: async function (req, res) {
     try {
       const category_id = req.params.category;
@@ -368,6 +392,7 @@ module.exports = {
       });
     }
   },
+
   deleteSermonCategory: async function (req, res) {
     try {
       const category_id = req.params.category;
@@ -463,7 +488,8 @@ module.exports = {
       });
     }
   },
-  featuredSermon:async(req, res, next) =>{
+
+  featuredSermon:async(req, res, next) => {
     let id = req.query.id;
     await Sermon.findById(id)
     .then(sermon =>{
@@ -483,7 +509,8 @@ module.exports = {
       })
     })
   },
-  getFeaturedSermon:async(req, res, next) =>{
+
+  getFeaturedSermon:async(req, res, next) => {
     await Sermon.find({featured: true})
     .then(sermon =>{
       res.status(200).json({
@@ -498,8 +525,9 @@ module.exports = {
       data:null
     }))
   },
+  
   // get sermon without pagination
-  getSermonWithNoLimit:async(req, res, nesxt) =>{
+  getSermonWithNoLimit:async(req, res, nesxt) => {
     await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
     .then(sermon =>{
       res.status(200).json({
@@ -517,7 +545,7 @@ module.exports = {
     })
   },
 
-  getAdminSermon:async(req, res, next) =>{
+  getAdminSermon:async(req, res, next) => {
     await Sermon.find()
     .then(sermon =>{
       res.status(200).json({
@@ -534,7 +562,8 @@ module.exports = {
       })
     })
   },
-  unFeaturedSermon:async(req, res, next) =>{
+  
+  unFeaturedSermon:async(req, res, next) => {
     let id = req.query.id;
     await Sermon.findById(id)
     .then(sermon =>{

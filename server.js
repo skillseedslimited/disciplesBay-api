@@ -57,9 +57,17 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 3100;
 
+const httpServer = require("http").createServer(app);
+const options = { /* ... */ };
+const io = require("socket.io")(httpServer, options);
+io.on("connection", socket => {
+  
+ });
+
 if (require.main === module) {
   //   console.log("this is not it");
-  const server = app.listen(port, () =>
+
+  const server = httpServer.listen(port, () =>
     console.log(`server running on port ${port}!!`.yellow.bold)
   );
 } else {

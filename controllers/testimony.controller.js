@@ -25,7 +25,7 @@ const testimonyPost = async (req, res, next) =>{
     //     return res.status(400).json({
     //         success:false,
     //         message:"No such category"
-    //     })
+    //     }) 
     // } 
 
     // GETTING USER PICTURE, USERNAME AND ID FROM LOGGEDIN USER
@@ -49,7 +49,7 @@ const testimonyPost = async (req, res, next) =>{
 
     // SAVING USER TO DATABASE
     newTestimony.save()
-        .then(testimony =>{ 
+        .then(testimony => { 
         res.status(200).json({
             success: true,
             message: 'Testimony submited Successfully, awaiting approval.',

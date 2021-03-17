@@ -18,20 +18,22 @@ const testimonyPost = async (req, res, next) =>{
         category,
         subject
     } = req.body;
-    let cat = await TestimonyCategory.findById(category);
-    if(!cat){
-        return res.status(400).json({
-            success:false,
-            message:"No such category"
-        })
-    }
 
-    // GETTING USER PICTURE, USERNAME AND ID FROM LOGIN USER
+    // let cat = await TestimonyCategory.findById(category);
+
+    // if(!cat){
+    //     return res.status(400).json({
+    //         success:false,
+    //         message:"No such category"
+    //     })
+    // } 
+
+    // GETTING USER PICTURE, USERNAME AND ID FROM LOGGEDIN USER
     let picture = req.user.profilePicture;
     let username = req.user.username;
     let user = req.user._id;
 
-   
+    
     // CREATING NEW INSTANCE OF THE USER
     let newTestimony = new Testimony({
         testimonyBody,
@@ -47,7 +49,7 @@ const testimonyPost = async (req, res, next) =>{
 
     // SAVING USER TO DATABASE
     newTestimony.save()
-        .then(testimony =>{
+        .then(testimony =>{ 
         res.status(200).json({
             success: true,
             message: 'Testimony submited Successfully, awaiting approval.',

@@ -16,6 +16,7 @@ const login = asyncHandler(async (req, res, next) => {
         path: 'role',
         select: 'name'
     })
+    
     //find user with id
     const user = await query;
     console.log(user);

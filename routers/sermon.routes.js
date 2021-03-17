@@ -21,11 +21,13 @@ router.get(
   "/fetch-all",
   SermonsController.listSermons
 );
+
 router.get(
   "/:sermon/fetch",
   [authorizeUpdated(["can-mgt-sermons"])],
   SermonsController.getSermon
 );
+
 router.delete("/:sermon/delete", SermonsController.deleteSermon);
 
 router.post(

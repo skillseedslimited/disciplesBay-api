@@ -21,5 +21,4 @@ router.route("/:id")
   .put(editOne)
   .delete(deleteOne);
 
-
 module.exports = router;

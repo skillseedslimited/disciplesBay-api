@@ -3,6 +3,7 @@ const HouseDedication = require ("../../models/FamilyProcesses/HouseDedication")
 module.exports = {
   getAll: async function(req, res) {
     await HouseDedication.find({})
+      .sort({_id: -1})
       .then(HouseDedications => {
         res.status(201).json({
           success: true,
@@ -37,11 +38,11 @@ module.exports = {
       guarantor_name
     });
 
-    newHouseDedication.save()
+    await newHouseDedication.save()
       .then(newlyCreated => {
         res.status(201).json({
           success: true,
-          message: "House Dedication Created succesfully",
+          message: "House dedication created succesfully",
           data: newlyCreated 
         });
       })
@@ -84,7 +85,7 @@ module.exports = {
 
           res.status(201).json({
             success: true,
-            message: "Updated Successfully",
+            message: "Updated successfully",
             data: updateItem
           })
 
@@ -108,7 +109,7 @@ module.exports = {
         if (deletedItem != null) {
           res.status(200).json({
             success: true,
-            message: "Deleted Successfully",
+            message: "Deleted successfully",
             data: deletedItem
           })
         }else{
@@ -132,7 +133,7 @@ module.exports = {
         if (singleItem != null) {
           res.status(200).json({
             success: true,
-            message: "Found Successfully",
+            message: "Found successfully",
             data: singleItem
           })
         }else{

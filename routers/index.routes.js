@@ -1,4 +1,5 @@
 const { multerUploads } = require("../middleware/multer");
+// https://appadmin.coza.org.ng
 const {
   authorize,
   verifyToken,
@@ -15,11 +16,8 @@ module.exports = function (app) {
     next();
   });
 
-  app.use(
-    "/api/v1/role",
-    [verifyToken, authorizeUpdated(["can-mgt-role"])],
-    require("./role.routes")
-  );
+  // Users Role Management
+  app.use("/api/v1/role", [verifyToken, authorizeUpdated(["can-mgt-role"])], require("./role.routes"));
 
   app.use("/api/v1/sermon", [verifyToken], require("./sermon.routes"));
   app.use("/api/v1/kids", [verifyToken], require("./kids.routes"));
@@ -31,7 +29,7 @@ module.exports = function (app) {
   app.use("/api/v1/payment",  require("./payment.routes"));
   app.use("/api/v1", require("./default.routes"));
   app.use("/api/v1/devotion", [verifyToken], require("./devotion.routes"));
-  app.use("/api/v1/news", [verifyToken], require("./news.routes"));
+  app.use("/api/v1/news", require("./news.routes"));
   app.use("/api/v1/profile", [verifyToken], require("./profile.routes"));
   app.use("/api/v1/role", [verifyToken], require("./role.routes"));
   app.use("/api/v1/testimony", [verifyToken], require("./testimony.routes"));
@@ -42,18 +40,11 @@ module.exports = function (app) {
   app.use("/api/v1/department", [verifyToken],  require("./department.routes"));
   app.use("/api/v1/feedback", [verifyToken],  require("./feedback.routes"));
   app.use("/api/v1/webstore", require("./store.web.routes"))
-  app.use(
-    "/api/v1/flutterwave",
-    [verifyToken],
-    require("./flutterwave.routes")
-  );
+
+  app.use("/api/v1/flutterwave", [verifyToken], require("./flutterwave.routes"));
   app.use("/api/v1/settings", [verifyToken], require("./settings.routes"));
   app.use("/api/v1/donation", [verifyToken], require("./donation.routes"));
-  app.use(
-    "/api/v1/notification",
-    [verifyToken],
-    require("./notification.routes")
-  );
+  app.use("/api/v1/notification", [verifyToken], require("./notification.routes"));
 
   app.use("/api/v1/file", [verifyToken], require("./file.routes"));
   

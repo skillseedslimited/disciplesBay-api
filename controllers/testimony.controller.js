@@ -70,7 +70,7 @@ const editTestimony = asyncHandler(async(req, res, next) =>{
     if(req.body.imageUrl) testimonyFields.imageUrl = req.body.imageUrl;
     if(req.body.videoUrl) testimonyFields.videoUrl = req.body.videoUrl;
 
-     await Testimony.findByIdAndUpdate(
+     await Testimony.findByIdAndUpdate( 
         { _id: id }, 
         { $set: testimonyFields },
         { new: true }

@@ -25,12 +25,14 @@ module.exports = {
       } = req.body;
 
       var category_obj = await WorshipCategory.findOne({ _id: category });
+
       if (!category_obj) {
         return res.status(400).json({
           success: false,
           message: "Selected category not found",
         });
       }
+
       var worship = Worship({
         title,
         author,
@@ -44,13 +46,15 @@ module.exports = {
         price,
         isDeleted: false,
       });
+
       if (!worship) {
         return res.status(400).json({
           success: false,
           message:
             "Unable to create worship content, please check the data and try again",
         });
-      }
+      } 
+
       //push item to store if it not free
       if (worship.subscription_type != "free") {
         let item_to_store = new Store({
@@ -90,6 +94,7 @@ module.exports = {
       });
     }
   },
+
   listWorship: async function (req, res) {
     try {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
@@ -117,6 +122,7 @@ module.exports = {
       });
     }
   },
+
   updateWorship: async function (req, res) {
     try {
       const worship_id = req.params.worshipContent;
@@ -193,6 +199,7 @@ module.exports = {
       });
     }
   },
+
   deleteWorship: async function (req, res) {
     try {
       const worship_id = req.params.worshipContent;
@@ -231,6 +238,7 @@ module.exports = {
       });
     }
   },
+
   getWorship: async function (req, res) {
     
     try {
@@ -257,6 +265,7 @@ module.exports = {
       });
     }
   },
+
   createWorshipCategory: async function (req, res) {
     try {
       var name = req.body.name;
@@ -287,6 +296,7 @@ module.exports = {
       });
     }
   },
+
   listWorshipCategories: async function (req, res) {
     try {
       var worship_category = await WorshipCategory.find({ isDeleted: false })
@@ -311,6 +321,7 @@ module.exports = {
       });
     }
   },
+
   updateWorshipCategory: async function (req, res) {
     try {
       var name = req.body.name;
@@ -343,6 +354,7 @@ module.exports = {
       });
     }
   },
+
   fetchSingleWorshipCategory: async function (req, res) {
     try {
       const category_id = req.params.category;
@@ -367,6 +379,7 @@ module.exports = {
       });
     }
   },
+
   deleteWorshipCategory: async function (req, res) {
     try {
       const category_id = req.params.category;
@@ -498,7 +511,7 @@ module.exports = {
 //     }))
 //   },
   // get sermon without pagination
-  getWorshipWithNoLimit:async(req, res, nesxt) =>{
+  getWorshipWithNoLimit:async(req, res, nesxt) => {
     await Worship.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
     .then(worship =>{
       res.status(200).json({

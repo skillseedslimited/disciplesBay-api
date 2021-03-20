@@ -1,8 +1,9 @@
 const BabyChristianing = require("../../models/FamilyProcesses/BabyChristianing")
 
 module.exports = {
-  getAll: async function(req, res) {
+  getAll: async (req, res) => {
     await BabyChristianing.find({})
+      .sort({_id: -1})
       .then(babyChristianings => {
         res.status(200).json({
           success: true,
@@ -14,7 +15,7 @@ module.exports = {
       })
   },
 
-  createNew: async function(req, res) {
+  createNew: async (req, res) => {
 
     let {
       parents_name, 
@@ -47,7 +48,7 @@ module.exports = {
       .then(newlyCreated => {
         res.status(201).json({
           success: true,
-          message: "Baby Christianing Created succesfully",
+          message: "Baby christianing created succesfully",
           data: newlyCreated });
       })
       .catch(err => {
@@ -58,11 +59,9 @@ module.exports = {
             data: null 
           })
       })
-
-
   },
 
-  editOne: async function(req, res) {
+  editOne: async (req, res) => {
     let itemId = req.params.id;
 
     let {
@@ -96,7 +95,7 @@ module.exports = {
 
           res.status(201).json({
             success: true,
-            message: "Updated Successfully",
+            message: "Updated successfully",
             data: updateItem
           })
 
@@ -112,7 +111,7 @@ module.exports = {
       })
   },
 
-  deleteOne: async function(req, res) {
+  deleteOne: async (req, res) => {
     let itemId = req.params.id;
 
     await BabyChristianing.findByIdAndDelete({_id: itemId})
@@ -135,7 +134,7 @@ module.exports = {
       })
   },
 
-  singleItem: async function(req, res) {
+  singleItem: async (req, res) => {
     let itemId = req.params.id;
 
     await BabyChristianing.findById({_id: itemId})

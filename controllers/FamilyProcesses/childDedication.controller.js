@@ -1,8 +1,9 @@
 const ChildDedication = require("../../models/FamilyProcesses/ChildDedication");
 
 module.exports = {
-  getAll: async function(req, res) {
+  getAll: async (req, res) => {
     await ChildDedication.find({})
+      .sort({_id: -1})
       .then(childDedications => {
         res.status(200).json({
           success: true,
@@ -14,7 +15,7 @@ module.exports = {
       })
   },
 
-  createNew: async function(req, res) {
+  createNew: async (req, res) => {
 
     let {
       parents_name, 
@@ -49,7 +50,7 @@ module.exports = {
       .then(newlyCreated => {
         res.status(201).json({
           success: true,
-          message: "Baby Christianing created succesfully",
+          message: "Child dedication created succesfully",
           data: newlyCreated });
       })
       .catch(err => {
@@ -64,7 +65,7 @@ module.exports = {
 
   },
 
-  editOne: async function(req, res) {
+  editOne: async (req, res) => {
     let itemId = req.params.id;
 
     let {
@@ -111,7 +112,7 @@ module.exports = {
       })
   },
 
-  deleteOne: async function(req, res) {
+  deleteOne: async (req, res) => {
     let itemId = req.params.id;
 
     await ChildDedication.findByIdAndDelete({_id: itemId})
@@ -133,7 +134,7 @@ module.exports = {
       })
   },
 
-  singleItem: async function(req, res) {
+  singleItem: async (req, res) => {
     let itemId = req.params.id;
 
     await ChildDedication.findById({_id: itemId})

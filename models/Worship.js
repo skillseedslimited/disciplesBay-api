@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const moment = require("moment");
+
 const commentSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User" },
   comment: { type: String, default: null },
 });
+
 const WorshipSchema = new Schema({
   title: {
     type: String
@@ -56,10 +58,12 @@ const WorshipSchema = new Schema({
     type: String,
     default: null,
   },
+
   featured:{
     type:Boolean,
     default: false
   },
+
   comments: [commentSchema],
 });
 

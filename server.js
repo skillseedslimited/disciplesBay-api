@@ -67,7 +67,7 @@ if (require.main === module) {
   );
 } else {
   //   console.log("this is it");
-  module.exports = app;
+  module.exports = app; 
 }
 
 //catch any unhandled rejection error

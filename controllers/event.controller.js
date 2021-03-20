@@ -5,7 +5,7 @@ const ActiveEvent = require('../models/ActiveEvent');
 const NotificationAction = require("../Actions/NotificationActions");
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::CREATING EVENTS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const createEVent = asyncHandler(async(req, res, next) =>{
+const createEVent = asyncHandler(async(req, res, next) => {
 
     let {
         eventName,
@@ -21,7 +21,7 @@ const createEVent = asyncHandler(async(req, res, next) =>{
 
     let passed = false;
     
-    const newEvent = new Event({
+    const newEvent = await new Event({
         eventName,
         coverImage,
         description,
@@ -34,27 +34,26 @@ const createEVent = asyncHandler(async(req, res, next) =>{
         passed
     });
 
+    // res.json(newEvent) 
+
     newEvent.save()
-    .then(event =>{
+    .then(event => {
         res.status(200).json({
             success: true,
-            message: 'event created successfully',
+            message: 'Event created successfully',
             data: event
         })
+
         NotificationAction.sendToGeneral(
             `A new event: (${eventName}) has just been posted in the app `,
             "event",
             "#",
             `${eventName}`
-          );
+        );
     })
     .catch((err) =>{
         return next( new ErrorResponse(`Unable to create event`, 404))
-    })
-
-
-
-   
+    })   
 })
 
 
@@ -98,9 +97,9 @@ const createEVent = asyncHandler(async(req, res, next) =>{
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL EVENTS:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const getAllEvent = asyncHandler(async (req, res, next) =>{
-    let onlineEvent =  await Event.find({isLive:true});
-    console.log("this are online event", onlineEvent)
+const getAllEvent = asyncHandler(async (req, res, next) => { 
+    let onlineEvent =  await Event.find({isLive: true});
+    // console.log("this are online event", onlineEvent)
     // finding all events
     Event.find()
     .sort({date: -1})
@@ -111,7 +110,7 @@ const getAllEvent = asyncHandler(async (req, res, next) =>{
             data: event
         })
     })
-    .catch(err =>{
+    .catch(err =>{ 
         return next( new ErrorResponse("Unable to Get events", 404))
     });
 

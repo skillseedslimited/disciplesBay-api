@@ -105,9 +105,7 @@ module.exports = {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const sermons = await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]}) 
         .populate("category")
-        // .sort({ createdAt: "desc" }) 
-        // .sort( { 'timestamp': -1 } )
-        .sort( {'_id': -1} )
+        .sort( {_id: -1} )
         .skip((page - 1) * this.sermon_limit)
         .limit(this.sermon_limit)
         .exec();
@@ -529,6 +527,7 @@ module.exports = {
   // get sermon without pagination
   getSermonWithNoLimit:async(req, res, nesxt) => {
     await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
+    .sort({_id: -1})
     .then(sermon =>{
       res.status(200).json({
         success:true,
@@ -547,6 +546,7 @@ module.exports = {
 
   getAdminSermon:async(req, res, next) => {
     await Sermon.find()
+    .sort({_id: -1})
     .then(sermon =>{
       res.status(200).json({
         success:true,

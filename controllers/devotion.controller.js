@@ -8,14 +8,15 @@ const createDevotion = asyncHandler(async(req, res, next) => {
     const devotion = await Devotion.create(req.body);
     res.status(200).json({
         success: true,
-        message: "Devotion created Successfully",
+        message: "Devotion created successfully",
         data: devotion
     });
     let title = devotion.title;
     NotificationAction.sendToGeneral(
         `A new devotion: (${title}) has just been posted in the app `,
-        "sermon",
-        "#"
+        "devotion",
+        "#",
+        `${title}`
       );
 });
 

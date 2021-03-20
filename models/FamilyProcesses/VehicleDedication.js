@@ -2,11 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const VehicleDedicationSchema = new Schema({
+  vehicle_owner: {
+    type: String
+  },
+
   vehicle_type: {
     type: String
   },
 
-  vehicle_owner: {
+  vehicle_owner_name: {
     type: String
   },
 
@@ -30,8 +34,6 @@ const VehicleDedicationSchema = new Schema({
     type: Date,
     default: Date.now()
   }
-
-
 
 }, { timestamps : true});
 

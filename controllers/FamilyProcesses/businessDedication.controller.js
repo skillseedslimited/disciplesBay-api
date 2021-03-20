@@ -1,8 +1,9 @@
 const BusinessDedication = require("../../models/FamilyProcesses/BusinessDedication")
 
 module.exports = {
-  getAll: async function(req, res) {
+  getAll: async (req, res) => {
     await BusinessDedication.find({})
+      .sort({_id: -1})
       .then(businesDedications => {
         res.status(200).json({
           success: true,
@@ -19,7 +20,7 @@ module.exports = {
       })
   },
 
-  createNew: async function(req, res) {
+  createNew: async (req, res) => {
     let {
       business_name,
       business_type,
@@ -44,7 +45,7 @@ module.exports = {
       .then(newlyCreated => {
         res.status(201).json({
           success: true,
-          message: "Business Dedication Created succesfully",
+          message: "Business dedication created succesfully",
           data: newlyCreated 
         });
       })
@@ -58,7 +59,7 @@ module.exports = {
       })
   },
 
-  editOne: async function(req, res) {
+  editOne: async (req, res) => {
     let itemId = req.params.id;
 
     let {
@@ -106,7 +107,7 @@ module.exports = {
       })
   },
 
-  deleteOne: async function(req, res) {
+  deleteOne: async (req, res) => {
     let itemId = req.params.id;
 
     await BusinessDedication.findByIdAndDelete({_id: itemId})
@@ -134,7 +135,7 @@ module.exports = {
       })
   },
 
-  singleItem: async function(req, res) {
+  singleItem: async (req, res) => {
     let itemId = req.params.id;
 
     await BusinessDedication.findById({_id: itemId})

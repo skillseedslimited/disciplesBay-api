@@ -31,10 +31,10 @@ module.exports = {
                 <br>
                 Use this TOKEN to change your password:
                 <br/>
-                TOKEN:${resetPasswordToken}
+                TOKEN: ${resetPasswordToken}
                 <br><br>
                 <strong>All the best!!!</strong><br><br>
-                <strong>Coza Team</strong>
+                <strong>COZA Team</strong>
 
                 `
                 // Sending the mail

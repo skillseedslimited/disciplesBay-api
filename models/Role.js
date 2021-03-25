@@ -5,10 +5,12 @@ const RoleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
   menu_structure: {
     type: JSON,
     default: null,
   },
+  
   createdAt: {
     type: Date,
     default: moment().format(),

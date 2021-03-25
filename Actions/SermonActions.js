@@ -75,12 +75,12 @@ module.exports = {
         }
       }
 
-      NotificationAction.sendToGeneral(
-        `A new sermon: (${title}) has just been posted in the app `,
-        "sermon",
-        "#",
-        `${title}`
-      );
+      // NotificationAction.sendToGeneral(
+      //   `A new sermon: (${title}) has just been posted in the app `,
+      //   "sermon",
+      //   "#",
+      //   `${title}`
+      // );
 
       await sermon.save();
       return res.status(200).json({

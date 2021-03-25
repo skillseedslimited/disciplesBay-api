@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
+const logger = require("morgan");
 const dotenv = require("dotenv").config();
 const colors = require("colors");
 const compression = require("compression");
@@ -20,11 +21,14 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("*", cloudinaryConfig);
-app.use(compression());
+app.use(compression()); 
+
+app.use(logger("dev"));
 // app.use('/live-stream-cron-job', require("./cron/event.cron"));
 // Routes config
 const db = require("./config/keys").mongoURL;
-mongoose
+
+mongoose 
   .connect(db, {
     useFindAndModify: false,
     useUnifiedTopology: true,
@@ -52,7 +56,8 @@ const options = { /* ... */ };
 const io = require("socket.io")(httpServer, options);
 io.on("connection", socket => {
   
- });
+ }); 
+
 
 if (require.main === module) {
   //   console.log("this is not it");
@@ -62,14 +67,14 @@ if (require.main === module) {
   );
 } else {
   //   console.log("this is it");
-  module.exports = app;
+  module.exports = app; 
 }
 
 //catch any unhandled rejection error
 process.on("unhandledRejection", (err, promise) => {
   console.log(`Error: ${err.message}`.red);
   //Close server & exit process
-  process.exit(1);
+  process.exit(1); 
 });
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::streaming:::::::::::::::::::::::::::::::::::::::::
 const NodeMediaServer = require("node-media-server");

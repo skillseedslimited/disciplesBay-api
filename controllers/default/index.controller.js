@@ -6,14 +6,15 @@ const mailer = require('../../misc/mailer');
 const bcrypt = require('bcryptjs');
 
 module.exports = {
-    index: (req, res) =>{
+    index: (req, res) => {
         res.json('welcome to the index page');
     },
+
     // :::::::::::::::::::::::::::::::::::::::::::::::::::COLLECT FORGET PASSWORD EMAIL:::::::::::::::::::::::::::::::::::::::::::::::::
-    valEmail:asyncHandler(async(req, res, next) =>{
+    valEmail: asyncHandler(async (req, res, next) => {
         let email = req.body.email;
         await User.findOne({email})
-        .then(async user =>{
+        .then(async user => {
             if(!user){
                 return next( new ErrorResponse("Unable to find user with this email", 404))
             }
@@ -28,14 +29,16 @@ module.exports = {
 
                 <br/>
                 <br>
-                use the TOKEN to change your password:
+                Use this TOKEN to change your password:
                 <br/>
-                TOKEN:${resetPasswordToken}
+                TOKEN: ${resetPasswordToken}
                 <br><br>
-                <strong>All the best!!!</strong>
+                <strong>All the best!!!</strong><br><br>
+                <strong>COZA Team</strong>
+
                 `
                 // Sending the mail
-                mailer.sendEmail('checkycheck@gmail.com', user.email, 'Please activate your email', html);
+                mailer.sendEmail('checkycheck@gmail.com', user.email, 'Password reset token', html);
                 // =====================end of sending message=====================================
 
                 await user.save()
@@ -54,6 +57,7 @@ module.exports = {
             return next( new ErrorResponse("Unable to find user with this email", 404))
         })
     }),
+
     // ::::::::::::::::::::::::::::::::::::::::::::::::verify reset password token::::::::::::::::::::::::::::::::::::::::::::::::::::
     verifyToken: asyncHandler(async(req, res, next) =>{
         let resetPasswordToken  = req.body.resetPasswordToken;

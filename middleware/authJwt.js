@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const asyncHandler = require("./async.js");
 const ErrorResponse = require("../utils/errorResponse.js");
-const User = require("../models/User");
+const User = require("../models/User"); 
 const Role = require("../models/Role.js");
 const RoleAndPermission = require("../models/RoleAndPermission.js");
 
@@ -51,7 +51,7 @@ const authorizeUpdated = (permissions) => {
     });
 
     if (!check_role) {
-      return next(
+      return next( 
         new ErrorResponse(
           `User role ${req.user.role.name} is not authorized to access this route`,
           403

@@ -60,6 +60,7 @@ module.exports = {
       });
     }
   },
+  
   processStoreContents: async function (all_contents) {
     let contents = [];
     for (let content of all_contents) {

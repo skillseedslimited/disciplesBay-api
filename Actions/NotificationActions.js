@@ -10,13 +10,13 @@ module.exports = {
       notification: {
         title: 'New Notification Alert',
         body:  themessage
-       
       },
 
       data: {
         themessage,
         resource_link,
         type,
+        heading,
         created_at: moment().format(),
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
       },
@@ -31,21 +31,24 @@ module.exports = {
       topic: "general",
     };
 
+    // console.log("::::::::::::::::::::::", message)    
+
     firebaseadmin
       .messaging()
       .send(message)
       .then((response) => {
-        console.log(response);
+        console.log("Notifications response:+++====>>> ", response);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error); 
       });
+
     //save notification
     //using general for notification id so we dont do multiple entry for users
     var notification = new Notification({
       message: themessage,
       resource_link,
-      notification_id: "general",
+      notification_id: "general", 
       type: "general",
       heading
     });
@@ -193,7 +196,7 @@ module.exports = {
   //     }
   //   },
 
-  sendCommunication: async function (user, themessage, type,channel_name,call_type ,sender) {
+  sendCommunication: async function (user, themessage, type, channel_name, call_type, sender) {
     var registrationToken = user.deviceToken;
     if(registrationToken)
     {
@@ -241,9 +244,9 @@ module.exports = {
     //   $inc: { notificationCounter: 1 },
     // }).exec();
     return true;
-  },
+  }, 
 
-  sendChat: async function (user, themessage, type,sender) {
+  sendChat: async function (user, themessage, type, sender) {
     console.log("this is the sender", user)
     var registrationToken = user.deviceToken;
     if(registrationToken) {

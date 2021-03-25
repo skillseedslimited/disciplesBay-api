@@ -6,7 +6,7 @@ const ChildDedicationSchema = new Schema({
   parent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users"
-  },
+  }, 
 
   parents_name: {
     type: String,

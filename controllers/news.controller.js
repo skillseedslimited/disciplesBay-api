@@ -40,7 +40,7 @@ const createNews = asyncHandler(async (req, res, next) =>{
 const getAllNews = asyncHandler( async(req, res, next) =>{
     
     // finding news
-    await Broadcast.find({type:'general'})
+    await Broadcast.find({ type:'general' })
     .sort({_id: -1})
     .then(news =>{
         if(!news){

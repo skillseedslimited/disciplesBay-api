@@ -1,7 +1,6 @@
 const config = require('../config/mailer');
 const nodemailer = require('nodemailer');
 
-
 //Creating or building the transport object
 const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",

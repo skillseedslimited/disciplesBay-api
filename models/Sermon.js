@@ -61,6 +61,6 @@ const SermonSchema = new Schema({
     default: false
   },
   comments: [commentSchema],
-});
+}, {timestamps: true});
 
 module.exports = mongoose.model("Sermon", SermonSchema);

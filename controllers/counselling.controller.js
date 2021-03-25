@@ -106,6 +106,7 @@ const counsellorSingle = asyncHandler(async (req, res, next) => {
       return next(new ErrorResponse("Unable to find counsellor", 404));
     });
 });
+
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::ONLINE STATUS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const status = asyncHandler(async(req, res, next) =>{
   let user = req.user._id
@@ -140,7 +141,7 @@ const status = asyncHandler(async(req, res, next) =>{
   })
 })
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::COUNSELOR CATEGORY::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const category = asyncHandler(async(req, res, next) =>{
+const category = asyncHandler(async(req, res, next) => {
   let cat = req.params.cat;
   await User.find({counselorCat:cat})
   .then(user =>{
@@ -155,7 +156,7 @@ const category = asyncHandler(async(req, res, next) =>{
   })
 })
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const getCounselor = asyncHandler(async(req, res, next) =>{
+const getCounselor = asyncHandler(async(req, res, next) => {
   let counsel = await Role.findOne({ name: "counsellor" });
 
   let status = req.query.status;

@@ -226,7 +226,7 @@ const createUser = asyncHandler( async(req, res, next) =>{
             if (user) {
                 console.log('username already exists')
                return  next(new ErrorResponse("Email already exists", 400))   
-            }else{
+            }else{ 
                  // Comparison of passwords
                 if ((confirmPassword) && (password !== confirmPassword)) {
                     return next(new ErrorResponse("Passwords do not match", 400))              

@@ -29,8 +29,7 @@ const MaritalClassesSchema = new Schema({
   },
 
   p1_spouse: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users"
+    type: String
   },
 
   p1_when_born_again: {
@@ -92,8 +91,7 @@ const MaritalClassesSchema = new Schema({
   },
 
   p2_spouse: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users"
+    type: String
   },
 
   p2_when_born_again: {
@@ -124,11 +122,6 @@ const MaritalClassesSchema = new Schema({
   p2_guarantor_name: {
     type: String,
     required: true
-  },
-
-  date: {
-    type: Date,
-    default: Date.now()
   }
 
 }, { timestamps : true});

@@ -25,6 +25,7 @@ module.exports = {
       } = req.body;
 
       var category_obj = await SermonCategory.findOne({ _id: category });
+
       if (!category_obj) {
         return res.status(400).json({
           success: false,
@@ -74,12 +75,12 @@ module.exports = {
         }
       }
 
-      NotificationAction.sendToGeneral(
-        `A new sermon: (${title}) has just been posted in the app `,
-        "sermon",
-        "#",
-        `${title}`
-      );
+      // NotificationAction.sendToGeneral(
+      //   `A new sermon: (${title}) has just been posted in the app `,
+      //   "sermon",
+      //   "#",
+      //   `${title}`
+      // );
 
       await sermon.save();
       return res.status(200).json({
@@ -104,7 +105,7 @@ module.exports = {
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const sermons = await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]}) 
         .populate("category")
-        .sort({ createdAt: "desc" })
+        .sort( {_id: -1} )
         .skip((page - 1) * this.sermon_limit)
         .limit(this.sermon_limit)
         .exec();
@@ -113,7 +114,7 @@ module.exports = {
       var sermon_counts = await Sermon.find({}).countDocuments();
       var number_of_pages = Math.ceil(sermon_counts / page);
       return res.status(200).json({
-        succes: true,
+        succes: true, 
         message: "Sermons fetched successfully",
         list: { sermons, current_page: page, number_of_pages },
       });
@@ -141,6 +142,7 @@ module.exports = {
           message: "Sermon not found",
         });
       }
+      
       const sermon_obj = _.pick(req.body, [
         "title",
         "author",
@@ -173,22 +175,22 @@ module.exports = {
         { new: true }
       );
       //push item to store if it not free
-      if (updated.subscription_type != "free") {
-        let item_to_store = new Store({
-          item: updated._id,
-          item_type: "sermon",
-          quantity: 0,
-          content_type: updated.content_type,
-        });
-        await item_to_store.save();
-        if (!item_to_store) {
-          return res.status(400).json({
-            success: false,
-            message:
-              "Unable to create sermon, please check the data and try again",
-          });
-        }
-      }
+      // if (updated.subscription_type != "free") {
+      //   let item_to_store = new Store({
+      //     item: updated._id,
+      //     item_type: "sermon",
+      //     quantity: 0,
+      //     content_type: updated.content_type,
+      //   });
+      //   await item_to_store.save();
+      //   if (!item_to_store) {
+      //     return res.status(400).json({
+      //       success: false,
+      //       message:
+      //         "Unable to create sermon, please check the data and try again",
+      //     });
+      //   }
+      // }
 
       return res.status(200).json({
         success: true,
@@ -485,7 +487,7 @@ module.exports = {
     }
   },
 
-  featuredSermon:async(req, res, next) =>{
+  featuredSermon:async(req, res, next) => {
     let id = req.query.id;
     await Sermon.findById(id)
     .then(sermon =>{
@@ -506,7 +508,7 @@ module.exports = {
     })
   },
 
-  getFeaturedSermon:async(req, res, next) =>{
+  getFeaturedSermon:async(req, res, next) => {
     await Sermon.find({featured: true})
     .then(sermon =>{
       res.status(200).json({
@@ -521,9 +523,11 @@ module.exports = {
       data:null
     }))
   },
+  
   // get sermon without pagination
-  getSermonWithNoLimit:async(req, res, nesxt) =>{
+  getSermonWithNoLimit:async(req, res, nesxt) => {
     await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
+    .sort({_id: -1})
     .then(sermon =>{
       res.status(200).json({
         success:true,
@@ -540,8 +544,9 @@ module.exports = {
     })
   },
 
-  getAdminSermon:async(req, res, next) =>{
+  getAdminSermon:async(req, res, next) => {
     await Sermon.find()
+    .sort({_id: -1})
     .then(sermon =>{
       res.status(200).json({
         success:true,
@@ -558,7 +563,7 @@ module.exports = {
     })
   },
   
-  unFeaturedSermon:async(req, res, next) =>{
+  unFeaturedSermon:async(req, res, next) => {
     let id = req.query.id;
     await Sermon.findById(id)
     .then(sermon =>{

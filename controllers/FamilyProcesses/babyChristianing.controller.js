@@ -1,8 +1,9 @@
 const BabyChristianing = require("../../models/FamilyProcesses/BabyChristianing")
 
 module.exports = {
-  getAll: async function(req, res) {
+  getAll: async (req, res) => {
     await BabyChristianing.find({})
+      .sort({_id: -1})
       .then(babyChristianings => {
         res.status(200).json({
           success: true,
@@ -10,11 +11,11 @@ module.exports = {
         })
       })
       .catch(err => {
-
+        console.log(err)
       })
   },
 
-  createNew: async function(req, res) {
+  createNew: async (req, res) => {
 
     let {
       parents_name, 
@@ -29,7 +30,7 @@ module.exports = {
       baby_dob, 
       guarantor_name} = req.body;
 
-    let newBabyChristianing = await new BabyChristianing({
+    let newBabyChristianing = new BabyChristianing({
       parents_name, 
       parents_contact_address,
       parents_phone_number,
@@ -43,24 +44,26 @@ module.exports = {
       guarantor_name
     });
 
-    // console.log(newBabyChristianing)
-
-    newBabyChristianing.save()
+    await newBabyChristianing.save()
       .then(newlyCreated => {
-        res.status(200).json({
+        res.status(201).json({
           success: true,
-          message: "Baby Christianing Created succesfully",
+          message: "Baby christianing created succesfully",
           data: newlyCreated });
       })
       .catch(err => {
         if (err)
-          res.json(err)
+          res.json({
+            success: false,
+            message: "Something went wrong",
+            data: null 
+          })
       })
-
-
   },
 
-  editOne: async function(req, res) {
+  editOne: async (req, res) => {
+    let itemId = req.params.id;
+
     let {
       parents_name, 
       parents_contact_address, 
@@ -75,7 +78,7 @@ module.exports = {
       guarantor_name} = req.body;
     // console.log(req.body) 
 
-    BabyChristianing.findByIdAndUpdate(req.params.id, {
+    await BabyChristianing.findByIdAndUpdate({_id: itemId}, {
       parents_name, 
       parents_contact_address, 
       parents_phone_number, 
@@ -88,51 +91,67 @@ module.exports = {
       baby_dob, 
       guarantor_name})
       .then(updateItem => {
-        if (updateItem != null)
-          res.status(200).json({
+        if (updateItem != null){
+
+          res.status(201).json({
             success: true,
-            message: "Updated Successfully",
+            message: "Updated successfully",
             data: updateItem
           })
 
-        res.status(200).json({
-          success: false,
-          message: "No item found",
-        })
+        }else{
+          res.status(200).json({
+            success: false,
+            message: "No item found",
+          })
+        }
       })
       .catch(err => {
         console.log(err)
       })
   },
 
-  deleteOne: async function(req, res) {
-    BabyChristianing.findByIdAndDelete(req.params.id)
+  deleteOne: async (req, res) => {
+    let itemId = req.params.id;
+
+    await BabyChristianing.findByIdAndDelete({_id: itemId})
       .then(deletedItem => {
-        if (deletedItem != null)
+        if (deletedItem != null) {
           res.status(200).json({
             success: true,
             message: "Deleted Successfully",
             data: deletedItem
           })
-        res.status(200).json({
-          success: false,
-          message: "No item found",
-        })
+        }else{
+          res.status(200).json({
+            success: false,
+            message: "No item found",
+          })
+        }
       })
       .catch(err => {
         console.log(err)
       })
   },
 
-  singleItem: async function(req, res) {
+  singleItem: async (req, res) => {
     let itemId = req.params.id;
 
     await BabyChristianing.findById({_id: itemId})
       .then(singleItem => {
-        res.status(200).json({
-          success: true,
-          data: singleItem
-        });
+
+        if (singleItem != null) {
+          res.status(200).json({
+            success: true,
+            message: "Found Successfully",
+            data: singleItem
+          })
+        }else{
+          res.status(200).json({
+            success: false,
+            message: "No item found",
+          })
+        }
       })
       .catch(err => {
         console.log(err);

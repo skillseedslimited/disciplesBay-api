@@ -7,11 +7,13 @@ const RoleAndPermissionSchema = new Schema({
     ref: "Permission",
     default: null,
   },
+
   role: {
     type: Schema.Types.ObjectId,
     ref: "Role",
     default: null,
   },
+  
   permission_name: {
     type: String,
     default: "",

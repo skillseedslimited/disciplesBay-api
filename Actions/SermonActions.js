@@ -175,22 +175,22 @@ module.exports = {
         { new: true }
       );
       //push item to store if it not free
-      if (updated.subscription_type != "free") {
-        let item_to_store = new Store({
-          item: updated._id,
-          item_type: "sermon",
-          quantity: 0,
-          content_type: updated.content_type,
-        });
-        await item_to_store.save();
-        if (!item_to_store) {
-          return res.status(400).json({
-            success: false,
-            message:
-              "Unable to create sermon, please check the data and try again",
-          });
-        }
-      }
+      // if (updated.subscription_type != "free") {
+      //   let item_to_store = new Store({
+      //     item: updated._id,
+      //     item_type: "sermon",
+      //     quantity: 0,
+      //     content_type: updated.content_type,
+      //   });
+      //   await item_to_store.save();
+      //   if (!item_to_store) {
+      //     return res.status(400).json({
+      //       success: false,
+      //       message:
+      //         "Unable to create sermon, please check the data and try again",
+      //     });
+      //   }
+      // }
 
       return res.status(200).json({
         success: true,

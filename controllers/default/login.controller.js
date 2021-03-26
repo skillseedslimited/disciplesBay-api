@@ -12,7 +12,7 @@ const login = asyncHandler(async (req, res, next) => {
   const { id, password } = req.body;
   let query;
 
-    query = User.findOne({$or:[{ username: id },{ phoneNumber: id }]}).populate({
+    query = User.findOne({$or:[{ username: id },{ phoneNumber: id }, { email: id }]}).populate({
         path: 'role',
         select: 'name'
     })

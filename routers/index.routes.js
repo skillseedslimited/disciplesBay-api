@@ -11,7 +11,7 @@ module.exports = function (app) {
     res.header(
       "Access-Control-Allow-Headers",
       "x-access-token, Origin, Content-Type, Accept"
-    );
+    ); 
 
     next();
   });
@@ -19,7 +19,7 @@ module.exports = function (app) {
   // Users Role Management
   app.use("/api/v1/role", [verifyToken, authorizeUpdated(["can-mgt-role"])], require("./role.routes"));
 
-  app.use("/api/v1/sermon", [verifyToken], require("./sermon.routes"));
+  app.use("/api/v1/sermon", require("./sermon.routes"));
   app.use("/api/v1/kids", [verifyToken], require("./kids.routes"));
   app.use("/api/v1/worship", [verifyToken], require("./worship.routes"));
   app.use("/api/v1/userManagement", require("./userManagement.routes"));
@@ -62,4 +62,12 @@ module.exports = function (app) {
   app.use("/api/v1/relationship-registration", require("./FamilyProcesses/relationshipReg.routes"));
   app.use("/api/v1/vehicle-dedication", require("./FamilyProcesses/vehicleDedication.routes"));
   app.use("/api/v1/wedding-dedication", require("./FamilyProcesses/weddingDedication.routes"));
-};
+
+  //User Appointments routes
+  app.use("/api/v1/user/appointments/", [verifyToken], require("./Appointments/userAppointments.routes"));
+
+  //User Appointments routes
+  app.use("/api/v1/admin/appointments/", [verifyToken], require("./Appointments/adminAppointments.routes"));
+
+  
+}; 

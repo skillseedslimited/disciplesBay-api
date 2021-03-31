@@ -9,9 +9,9 @@ const conn = require("mongoose").connection;
 const NotificationAction = require("../Actions/NotificationActions");
 module.exports = {
   sermon_limit: 20,
-  createSermon: async function (req, res) {
+  createSermon: async (req, res) => {
     try {
-      var {
+      let {
         title,
         author,
         category,
@@ -24,7 +24,7 @@ module.exports = {
         price,
       } = req.body;
 
-      var category_obj = await SermonCategory.findOne({ _id: category });
+      let category_obj = await SermonCategory.findOne({ _id: category });
 
       if (!category_obj) {
         return res.status(400).json({
@@ -33,7 +33,7 @@ module.exports = {
         });
       }
 
-      var sermon = Sermon({
+      let sermon = Sermon({
         title,
         author,
         category,
@@ -75,12 +75,12 @@ module.exports = {
         }
       }
 
-      // NotificationAction.sendToGeneral(
-      //   `A new sermon: (${title}) has just been posted in the app `,
-      //   "sermon",
-      //   "#",
-      //   `${title}`
-      // );
+      NotificationAction.sendToGeneral(
+        `A new sermon: (${title}) has just been posted in the app `,
+        "sermon",
+        "#",
+        `${title}`
+      );
 
       await sermon.save();
       return res.status(200).json({

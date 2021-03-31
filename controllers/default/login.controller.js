@@ -17,7 +17,7 @@ const login = asyncHandler(async (req, res, next) => {
         select: 'name'
     })
     
-    //find user with id
+    //find user with id 
     const user = await query;
     console.log(user);
      if(!user){

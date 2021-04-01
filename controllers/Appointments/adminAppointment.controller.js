@@ -2,9 +2,9 @@ const Appointments = require("../../models/Appointments");
 const NotificationAction = require("../../Actions/NotificationActions");
 const User = require("../../models/User");
 
-module.exports = {
+module.exports = { 
   getAll: async (req, res) => {
-    Appointments.find({})
+    await Appointments.find({})
       .populate("user")
       .sort( {_id: -1} )
       .then(appointments => {
@@ -53,6 +53,8 @@ module.exports = {
 
   approvedAppointments: async (req, res) => {
     Appointments.find({appointment_status: "Approved"})
+      .populate("user")
+      .sort( {_id: -1} )
       .then(allApproved => {
         if (allApproved != null) {
           
@@ -110,6 +112,8 @@ module.exports = {
 
   disapprovedAppointments: async (req, res) => {
     Appointments.find({appointment_status: "Disapproved"})
+      .populate("user")
+      .sort( {_id: -1} )
       .then(allDisapproved => {
         if (allDisapproved != null) {
           
@@ -129,6 +133,8 @@ module.exports = {
 
   pendingAppointments: async (req, res) => {
     Appointments.find({appointment_status: "Pending"})
+      .populate("user")
+      .sort( {_id: -1} )
       .then(allPending => {
         if (allPending != null) {
           
@@ -178,6 +184,8 @@ module.exports = {
 
   completedAppointments: async (req, res) => {
     Appointments.find({completed: true})
+      .populate("user")
+      .sort( {_id: -1} )
       .then(allCompleted => {
         if (allCompleted != null) {
           
@@ -221,6 +229,8 @@ module.exports = {
 
   rescheduledAppointments: async (req, res) => {
     Appointments.find({rescheduled: true})
+      .populate("user")
+      .sort( {_id: -1} )
       .then(allRescheduled => {
         if (allRescheduled != null) {
           

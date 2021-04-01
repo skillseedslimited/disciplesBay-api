@@ -15,6 +15,13 @@ const thumbnail_generator = require("./cron/thumbnails");
 
 const app = express();
 
+// Cors config
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "https://portal.coza.org.ng"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

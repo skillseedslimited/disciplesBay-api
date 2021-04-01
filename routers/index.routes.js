@@ -8,18 +8,19 @@ const {
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); 
     res.header(
       "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
+      "x-access-token, Origin, X-Requested-With, Content-Type, Accept"
     ); 
-
+ 
     next();
   });
 
   // Users Role Management
   app.use("/api/v1/role", [verifyToken, authorizeUpdated(["can-mgt-role"])], require("./role.routes"));
 
-  app.use("/api/v1/sermon", require("./sermon.routes"));
+  app.use("/api/v1/sermon", [verifyToken], require("./sermon.routes"));
   app.use("/api/v1/kids", [verifyToken], require("./kids.routes"));
   app.use("/api/v1/worship", [verifyToken], require("./worship.routes"));
   app.use("/api/v1/userManagement", require("./userManagement.routes"));

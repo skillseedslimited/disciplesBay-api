@@ -51,7 +51,7 @@ module.exports = {
       notification_id: "general", 
       type: "general",
       heading
-    });
+    }); 
 
     notification.save(function (err) {
       if (err) return null;

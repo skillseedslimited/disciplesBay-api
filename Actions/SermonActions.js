@@ -9,7 +9,7 @@ const conn = require("mongoose").connection;
 const NotificationAction = require("../Actions/NotificationActions");
 module.exports = {
   sermon_limit: 20,
-  createSermon: async (req, res) => {
+  createSermon: async (req, res, next) => {
     try {
       let {
         title,
@@ -33,7 +33,7 @@ module.exports = {
         });
       }
 
-      let sermon = Sermon({
+      let sermon = new Sermon({
         title,
         author,
         category,
@@ -54,7 +54,7 @@ module.exports = {
             "Unable to create sermon, please check the data and try again",
         });
       }
-
+ 
       //push item to store if it not free
       if (sermon.subscription_type != "free") {
         let item_to_store = new Store({

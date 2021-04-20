@@ -26,6 +26,7 @@ module.exports = function (app) {
   app.use("/api/v1/userManagement", require("./userManagement.routes"));
   app.use("/api/v1/counsellor", [verifyToken], require("./counsellor.routes"));
   app.use("/api/v1/wallet", [verifyToken], require("./wallet.routes"));
+  app.use("/api/v1/webstore", require("./store.web.routes"))
   app.use("/api/v1/store", [verifyToken], require("./store.routes"));
   app.use("/api/v1/payment",  require("./payment.routes"));
   app.use("/api/v1", require("./default.routes"));
@@ -40,7 +41,6 @@ module.exports = function (app) {
   app.use("/api/v1/stream", [verifyToken],  require("./restream.routes"));
   app.use("/api/v1/department", [verifyToken],  require("./department.routes"));
   app.use("/api/v1/feedback", [verifyToken],  require("./feedback.routes"));
-  app.use("/api/v1/webstore", require("./store.web.routes"))
 
   app.use("/api/v1/flutterwave", [verifyToken], require("./flutterwave.routes"));
   app.use("/api/v1/settings", [verifyToken], require("./settings.routes"));

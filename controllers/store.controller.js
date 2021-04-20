@@ -1,6 +1,10 @@
 const storeAction = require("../Actions/StoreAction");
 // const { functionsIn } = require("lodash");
 module.exports = {
+  deleteNull: async function(req, res) {
+    return await storeAction.deleteNull(req, res);
+  },
+
   fetchAllStoreContents: async function(req, res) {
     return await storeAction.fetchAllStoreContents(req, res);
   },

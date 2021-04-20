@@ -2,7 +2,7 @@ const sermonActions = require("../Actions/SermonActions");
 module.exports = {
   sermon_limit: 20,
   createSermon: async function(req, res) {
-    return await sermonActions.createSermon(req, res);
+    return await sermonActions.createSermon(req, res, next);
   },
 
   listSermons: async function(req, res) {

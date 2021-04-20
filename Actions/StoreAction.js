@@ -2,14 +2,23 @@ const Store = require("../models/Store");
 const Sermon = require("../models/Sermon");
 const _ = require("lodash");
 const conn = require("mongoose").connection;
-const Payment = require("../Actions/PaymentActions");
+const Payment = require("../Actions/PaymentActions"); 
 const UserSermon = require("../models/UserSermon");
 const Transaction = require("../models/Transaction");
 const User = require('../models/User');
-const { response } = require("express");
+const { response } = require("express"); 
 const { forEach } = require("lodash");
-module.exports = {
-  store_limit: 40,
+const { findByIdAndDelete } = require("../models/User");
+module.exports = { 
+  store_limit: 40, 
+  deleteNull: async (req, res) => {
+    res.send(req.params.id) 
+    Store.findByIdAndDelete(req.params.id)
+      .then(item => {
+        res.status(200).json(item)
+      })
+  },
+
   fetchAllStoreContents: async function (req, res) {
     try {
       // ::::::::::::::::content of login user:::::::::::::::::::::::::
@@ -19,25 +28,29 @@ module.exports = {
       Purchase.forEach(sermon =>{
         let sermon1 = sermon.sermon_id
         user_sermon.push(sermon1);
-      })
+      }); 
+
       const page = req.query.page && req.query.page > 0 ? req.page : 1;
       const content_type = req.query.content_type || null;
       let query = {};
       if (content_type) {
         query = { content_type };
       }
-      // let all_contents = await Store.find(query)
-      //   .sort({ createdAt: "desc" })
+
+      // let all_contents = await Store.find(query) 
+      //   .sort({ createdAt: "desc" }) 
       //   .skip((page - 1) * this.store_limit)
       //   .limit(this.store_limit)
       //   .lean()
       //   .exec();
+
       let all_contents = await Store.find({ item: { $nin: [ ...user_sermon ] } })
         .sort({ createdAt: "desc" })
         .skip((page - 1) * this.store_limit)
         .limit(this.store_limit)
         .lean()
         .exec();
+
       console.log("all content", all_contents)              
       all_contents = await this.processStoreContents(all_contents);
 
@@ -460,7 +473,8 @@ module.exports = {
         .json({ success: false, message: "Unable to fetch Store item", error });
     }
   },
-  webGetAllStore:async(req, res, next) =>{
+
+  webGetAllStore:async(req, res, next) => {
     await Store.find()
     .populate("item")
     .then(store =>{
@@ -472,7 +486,7 @@ module.exports = {
     })
     .catch(err =>{
       res.status(400).json({
-        success:true,
+        success:false,
         message:"Unable to get store items",
         data:err
       })

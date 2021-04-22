@@ -42,7 +42,7 @@ router.route("/delete-cell/:id")
 
 // ================ Assign Cell Leader ===============
 router.route("/assign-leader/:id")
-  .get(assignLeader);
+  .post(assignLeader);
 
 
 // ================ Add Single Member ===============

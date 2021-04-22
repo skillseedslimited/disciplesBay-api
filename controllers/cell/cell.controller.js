@@ -188,26 +188,104 @@ module.exports = {
     let {userId} = req.body;
 
     let seeCell = await Cell.findOne({_id:cellId}).populate("cell_members").populate("cell_leader");
+    // console.log( seeCell.cell_leader)
 
     if (!seeCell) return res.status(200).json({
       success: false,
       message: "Cell not found",
       data: null
-    })
+    });
 
-    let user = await User.findById({_id: userId});
-    user.cell = null;
-    user.cell_leader = false;
-    console.log(seeCell)
-    // user.save();
-
-    // seeCell.cell_member.pop()
+    if(seeCell.cell_leader && seeCell.cell_leader._id == userId) {
+      console.log(seeCell.cell_leader.cell_leader)
+      seeCell.cell_leader.cell = null
+      seeCell.cell_leader.cell_leader = false
+      seeCell.cell_leader = null
+    }
     
+    let user = await User.findById({_id: userId});
+    if(!user) return res.status(200).json({
+      success: false,
+      message: "Unable to remove cell member, no such member",
+      data: null
+    });
+
+ 
+      user.cell = null;
+      user.cell_leader = false;
+      user.save();
+
+
+    let new_members = seeCell.cell_members.filter(member => member._id != userId);
+    seeCell.cell_members = new_members;
+    seeCell.save();
+    
+    if(new_members) {
+      res.status(200).json({
+        success: true,
+        message: "Cell Member removed",
+        data: null
+      })
+    }else{
+      res.status(200).json({
+        success: true,
+        message: "No such member",
+        data: null
+      })
+    }   
   },
-  
+   
   assignLeader: async (req, res) => {
     let cellId = req.params.id;
-    // asign cell leader make all others "false as cell leaders so not to have duplicate cell leaders"
+    let {userId} = req.body;
+
+    let cell = await  await Cell.findById({_id: cellId}).populate("cell_members").populate("cell_leader");
+
+    if(!cell) return res.status(200).json({
+      success: false,
+      message: "Cell not found",
+      data: null
+    });
+
+    if(cell.cell_leader && cell.cell_leader._id == userId) return res.status(200).json({
+      success: false,
+      message: "This member is already a cell leader",
+      data: null
+    });
+
+    let oldLeader = await User.findOne({_id: cell.cell_leader._id});
+    oldLeader.cell_leader = false;
+    oldLeader.save();
+
+    let newLeader = await User.findOne({_id: userId});
+    if (!newLeader) return res.status(200).json({
+      success: false,
+      message: "Invalid user",
+      data: null
+    });
+
+    newLeader.cell_leader = true;
+    newLeader.save();
+
+    console.log(newLeader)
+    cell.cell_leader = userId;
+    cell.save()
+      .then(updatedCell => {
+        if(updatedCell) return res.status(200).json({
+          success: true,
+          message: "Cell leader assigned successfully",
+          data: updatedCell
+        })
+      })
+      .catch(err => {
+        if(err) return res.status(200).json({
+          success: false,
+          message: "Unable to assign cell leader",
+          data: null
+        })
+      });
+
+
   },
 
   addMembers: async (req, res) => {
@@ -215,25 +293,33 @@ module.exports = {
     let {members} = req.body;
     let cell = await Cell.findOne({_id: cellId});
 
-    members.forEach(member => {
-      cell.cell_members.push(member);
-    });
-
-    await cell.save()
-      .then(updatedCell => {
-        if(updatedCell) return res.status(200).json({
-          success: true,
-          message: "Members added to cell",
-          data: updatedCell
-        })
-      })
-      .catch(err => {
-        if(err) return res.status(200).json({
-          success: false,
-          message: "Unable to add members to cell",
-          data: null
-        })
+    if(cell) {
+      members.forEach(member => {
+        cell.cell_members.push(member);
       });
+  
+      await cell.save()
+        .then(updatedCell => {
+          if(updatedCell) return res.status(200).json({
+            success: true,
+            message: "Members added to cell",
+            data: updatedCell
+          })
+        })
+        .catch(err => {
+          if(err) return res.status(200).json({
+            success: false,
+            message: "Unable to add members to cell",
+            data: null
+          })
+        });
+    }else{
+      res.status(200).json({
+        success: false,
+        message: "Unable to add members to cell, cell not found",
+        data: null
+      })
+    }
   },
 
   allMembers: async (req, res) => {

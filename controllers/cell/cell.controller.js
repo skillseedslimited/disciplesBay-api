@@ -292,6 +292,12 @@ module.exports = {
             message: "Logged in user cell",
             data: cell
           })
+        }else{
+          res.status(200).json({
+            success: false,
+            message: "You do not belong to any cell",
+            data: null
+          })
         }
       })
       .catch(err => {

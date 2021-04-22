@@ -19,32 +19,50 @@ const UserSchema = new Schema({
   campus:{
     type: String
   },
+
   stream_key:{
     type: String
   },
+
   fullName:{
     type:String
   },
+
   phoneNumber: {
     type: String,
   },
+
   password: {
     type: String,
     required: true,
   },
+
   confirmPassword: {
     type: String,
     required: false,
   },
+
   role: {
     type: Schema.Types.ObjectId,
     ref: "Role",
     required: true,
   },
+
+  cell: {
+    type: Schema.Types.ObjectId,
+    ref: "cell"
+  },
+
+  cell_leader: {
+    type: Boolean,
+    default: false
+  },
+
   date: {
     type: Date,
     default: Date.now,
   },
+
   active: {
     type: Boolean,
     default: false,
@@ -66,26 +84,32 @@ const UserSchema = new Schema({
       },
     },
   ],
+
   department: {
     type: String,
     default: null,
   },
+
   profilePicture: {
     type: String,
     default: null,
   },
+
   maritalStatus: {
     type: String,
     default: null,
   },
+
   sex: {
     type: String,
     default: null,
   },
+
   occupation: {
     type: String,
     default: null,
   },
+
   familyMembers: [
     {
       name: {
@@ -98,25 +122,31 @@ const UserSchema = new Schema({
       },
     },
   ],
+
   notificationCounter: {
     type: Number,
     default: 0,
   },
+
   deviceToken: {
     type: String,
     default: null,
   },
+
   deviceRegistered: {
     type: Boolean,
     default: false,
   },
+
   active: {
     type: Boolean,
     default: false,
   },
+
   counselorCat:{
     type:String
   },
+
   description:{
     type: String
   },

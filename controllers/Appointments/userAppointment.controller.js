@@ -1,9 +1,8 @@
 const Appointments = require("../../models/Appointments");
-const Apppointments = require("../../models/Appointments");
 
 module.exports = {
   allMyAppointments: async (req, res) => {
-    Apppointments.find({user: req.user._id})
+    Appointments.find({user: req.user._id})
       .populate("user")
       .sort( {_id: -1} )
       .then(appointments => {
@@ -26,6 +25,7 @@ module.exports = {
       .then(data => {
         res.status(201).json({
           success: true,
+          message: "Appointment created successfully",
           data
         })
       })

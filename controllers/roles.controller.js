@@ -11,39 +11,39 @@ const createRole = asyncHandler(async (req, res, next) => {
 
     var role = Role({ name, menu_structure });
     await role.save();
-    if (!role) {
-      return res.status(400).json({
-        success: false,
-        message: "unable to create role, please check the data and try again",
-      });
-    }
+    // if (!role) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "unable to create role, please check the data and try again",
+    //   });
+    // }
     //get permissions
-    for (permission of permissions) {
-      var perm = await Permission.findOne({
-        name: permission,
-      });
-      // console.log(perm);
-      if (perm) {
-        await RoleAndPermission.findOneAndUpdate(
-          {
-            permission: perm._id,
-            role: role._id,
-          },
-          {
-            permission: perm._id,
-            role: role._id,
-            permission_name: perm.name,
-          },
-          { upsert: true, setDefaultsOnInsert: true },
-          function(error, doc) {
-            if (!error) {
-            } else {
-              console.log(error);
-            }
-          }
-        );
-      }
-    }
+    // for (permission of permissions) {
+    //   var perm = await Permission.findOne({
+    //     name: permission,
+    //   });
+    //   // console.log(perm);
+    //   if (perm) {
+    //     await RoleAndPermission.findOneAndUpdate(
+    //       {
+    //         permission: perm._id,
+    //         role: role._id,
+    //       },
+    //       {
+    //         permission: perm._id,
+    //         role: role._id,
+    //         permission_name: perm.name,
+    //       },
+    //       { upsert: true, setDefaultsOnInsert: true },
+    //       function(error, doc) {
+    //         if (!error) {
+    //         } else {
+    //           console.log(error);
+    //         }
+    //       }
+    //     );
+    //   }
+    // }
     return res.status(200).json({
       success: true,
       message: "Role created Successfully",

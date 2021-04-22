@@ -7,7 +7,7 @@ router.route("/:id").delete(authorize("admin"), RolesController.deleteRole);
 
 router
   .route("/")
-  .post([rolePolicies.validateRole], RolesController.createRole)
+  .post(RolesController.createRole)
   .get(RolesController.getRoles);
 
 router.get("/:role", RolesController.getSingleRole);

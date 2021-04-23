@@ -81,7 +81,7 @@ if (require.main === module) {
 process.on("unhandledRejection", (err, promise) => {
   console.log(`Error: ${err.message}`.red);
   //Close server & exit process
-  process.exit(1); 
+  process.exit(0); 
 });
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::streaming:::::::::::::::::::::::::::::::::::::::::
 const NodeMediaServer = require("node-media-server");

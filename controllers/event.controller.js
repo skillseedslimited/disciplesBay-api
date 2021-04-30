@@ -16,6 +16,7 @@ const createEVent = asyncHandler(async(req, res, next) => {
         time,
         eventType,
         eventURL,
+        videoURL,
         isLive
     } =  req.body;
 
@@ -30,6 +31,7 @@ const createEVent = asyncHandler(async(req, res, next) => {
         time,
         eventType,
         eventURL,
+        videoURL,
         isLive,
         passed
     });

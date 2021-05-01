@@ -54,15 +54,15 @@ module.exports = function (app) {
   app.use("/api/v1/mentorship", [verifyToken], require("./mentorship.routes"));
 
   // Family Processes
-  app.use("/api/v1/baby-christianing", require("./FamilyProcesses/babyChristianing.routes"));
-  app.use("/api/v1/business-dedication", require("./FamilyProcesses/businessDedication.routes"));
-  app.use("/api/v1/child-dedication", require("./FamilyProcesses/childDedication.routes"));
-  app.use("/api/v1/house-dedication", require("./FamilyProcesses/houseDedication.routes"));
-  app.use("/api/v1/marital-class", require("./FamilyProcesses/maritalClasses.routes"));
-  app.use("/api/v1/marriage-form", require("./FamilyProcesses/marriageForm.routes"));
-  app.use("/api/v1/relationship-registration", require("./FamilyProcesses/relationshipReg.routes"));
-  app.use("/api/v1/vehicle-dedication", require("./FamilyProcesses/vehicleDedication.routes"));
-  app.use("/api/v1/wedding-dedication", require("./FamilyProcesses/weddingDedication.routes"));
+  app.use("/api/v1/baby-christianing", [verifyToken], require("./FamilyProcesses/babyChristianing.routes"));
+  app.use("/api/v1/business-dedication", [verifyToken], require("./FamilyProcesses/businessDedication.routes"));
+  app.use("/api/v1/child-dedication", [verifyToken], require("./FamilyProcesses/childDedication.routes"));
+  app.use("/api/v1/house-dedication", [verifyToken], require("./FamilyProcesses/houseDedication.routes"));
+  app.use("/api/v1/marital-class", [verifyToken], require("./FamilyProcesses/maritalClasses.routes"));
+  app.use("/api/v1/marriage-form", [verifyToken], require("./FamilyProcesses/marriageForm.routes"));
+  app.use("/api/v1/relationship-registration", [verifyToken], require("./FamilyProcesses/relationshipReg.routes"));
+  app.use("/api/v1/vehicle-dedication", [verifyToken], require("./FamilyProcesses/vehicleDedication.routes"));
+  app.use("/api/v1/wedding-dedication", [verifyToken], require("./FamilyProcesses/weddingDedication.routes"));
 
   //User Appointments routes
   app.use("/api/v1/user/appointments/", [verifyToken], require("./Appointments/userAppointments.routes"));

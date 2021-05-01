@@ -34,6 +34,10 @@ const EventSchema = new Schema({
         type:String
     },
 
+    videoURL: {
+        type: String
+    },
+
     isLive:{
         type: Boolean
     }, 

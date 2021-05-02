@@ -16,11 +16,11 @@ const thumbnail_generator = require("./cron/thumbnails");
 const app = express();
 
 // Cors config
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://portal.coza.org.ng"); // update to match the domain you will make the request from
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "https://portal.coza.org.ng"); // update to match the domain you will make the request from
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
 
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -57,7 +57,7 @@ app.use(errorHandler);
 // console.log(db);
 // connect to mongoDB
 
-const port = process.env.PORT || 4100;
+const port = process.env.PORT || 3100;
 const httpServer = require("http").createServer(app);
 const options = { /* ... */ };
 const io = require("socket.io")(httpServer, options);
@@ -81,7 +81,7 @@ if (require.main === module) {
 process.on("unhandledRejection", (err, promise) => {
   console.log(`Error: ${err.message}`.red);
   //Close server & exit process
-  process.exit(0); 
+  process.exit(1); 
 });
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::streaming:::::::::::::::::::::::::::::::::::::::::
 const NodeMediaServer = require("node-media-server");

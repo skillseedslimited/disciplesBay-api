@@ -26,6 +26,7 @@ module.exports = {
       .then(data => {
         res.status(201).json({
           success: true,
+          message: "Appointment created successfully",
           data
         })
       })

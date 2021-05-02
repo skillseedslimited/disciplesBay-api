@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const storeController = require("../controllers/store.controller");
 const storePolicies = require("../policies/storePolicies");
-const { authorize, authorizeUpdated } = require("../middleware/authJwt");
+const { authorize, authorizeUpdated} = require("../middleware/authJwt");
+
+router.route("/delete-null/:id").delete(storeController.deleteNull);
 
 router.route("/all").get(storeController.fetchAllStoreContents);
 

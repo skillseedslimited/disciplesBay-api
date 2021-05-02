@@ -2,14 +2,23 @@ const Store = require("../models/Store");
 const Sermon = require("../models/Sermon");
 const _ = require("lodash");
 const conn = require("mongoose").connection;
-const Payment = require("../Actions/PaymentActions");
+const Payment = require("../Actions/PaymentActions"); 
 const UserSermon = require("../models/UserSermon");
 const Transaction = require("../models/Transaction");
 const User = require('../models/User');
-const { response } = require("express");
+const { response } = require("express"); 
 const { forEach } = require("lodash");
-module.exports = {
-  store_limit: 40,
+const { findByIdAndDelete } = require("../models/User");
+module.exports = { 
+  store_limit: 40, 
+  deleteNull: async (req, res) => {
+    res.send(req.params.id) 
+    Store.findByIdAndDelete(req.params.id)
+      .then(item => {
+        res.status(200).json(item)
+      })
+  },
+
   fetchAllStoreContents: async function (req, res) {
     try {
       // ::::::::::::::::content of login user:::::::::::::::::::::::::

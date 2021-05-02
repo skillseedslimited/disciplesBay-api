@@ -1,0 +1,14 @@
+{
+  "paypal": {
+    "client_id": "NO CLIENT ID",
+    "secret": "NO SECRET",
+    "api_url": "NO URL",
+    "redirect_url": "No URL",
+    "cancel_url": "No URL"
+  },
+  "flutterwave": {
+    "public_key": "NO PUBKEY KEY",
+    "sec_key": "NO SECRET",
+    "enc_key": "NO ENCRYPT"
+  }
+}

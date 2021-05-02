@@ -1,0 +1,26 @@
+[
+  {
+    "name": "super_admin"
+  },
+  {
+    "name": "user"
+  },
+  {
+    "name": "media_admin"
+  },
+  {
+    "name": "accounts_admin"
+  },
+  {
+    "name": "subscriber"
+  },
+  {
+    "name": "member"
+  },
+  {
+    "name": "counsellor"
+  },
+  {
+    "name": "mentor"
+  }
+]

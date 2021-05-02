@@ -1,0 +1,68 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const BabyChristianingSchema = new Schema({
+  parent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users"
+  },
+
+  parents_name: {
+    type: String,
+    required: true
+  },
+
+  parents_contact_address: {
+    type: String,
+    required: true
+  },
+
+  parents_phone_number: {
+    type: String,
+    required: true
+  },
+
+  when_married: {
+    type: Date,
+    required: true
+  },
+
+  where_married: {
+    type: String,
+    required: true
+  },
+
+  how_long: {
+    type: String,
+    required: true
+  },
+
+  baby_gender: {
+    type: String,
+    required: true
+  },
+
+  baby_name: {
+    type: String,
+    required: true
+  },
+
+  baby_position: {
+    type: String,
+    required: true
+  },
+
+  baby_dob: {
+    type: Date,
+    required: true
+  },  
+
+  guarantor_name: {
+    type: String, 
+    required: true
+  }
+
+ 
+}, { timestamps : true});
+
+module.exports = BabyChristianing = mongoose.model("baby_christianing", BabyChristianingSchema);

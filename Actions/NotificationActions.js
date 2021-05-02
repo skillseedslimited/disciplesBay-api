@@ -102,7 +102,6 @@ module.exports = {
         token: registrationToken,
       };
       // console.log(registrationToken);f
-
       firebaseadmin
         .messaging()
         .send(message)

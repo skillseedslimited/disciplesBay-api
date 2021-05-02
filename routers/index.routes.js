@@ -26,6 +26,7 @@ module.exports = function (app) {
   app.use("/api/v1/userManagement", require("./userManagement.routes"));
   app.use("/api/v1/counsellor", [verifyToken], require("./counsellor.routes"));
   app.use("/api/v1/wallet", [verifyToken], require("./wallet.routes"));
+  app.use("/api/v1/webstore", require("./store.web.routes"))
   app.use("/api/v1/store", [verifyToken], require("./store.routes"));
   app.use("/api/v1/payment",  require("./payment.routes"));
   app.use("/api/v1", require("./default.routes"));
@@ -64,11 +65,21 @@ module.exports = function (app) {
   app.use("/api/v1/vehicle-dedication", [verifyToken], require("./FamilyProcesses/vehicleDedication.routes"));
   app.use("/api/v1/wedding-dedication", [verifyToken], require("./FamilyProcesses/weddingDedication.routes"));
 
+
+  // ============================================ APPOINTMENT ROUTES =============================================
   //User Appointments routes
   app.use("/api/v1/user/appointments/", [verifyToken], require("./Appointments/userAppointments.routes"));
 
   //User Appointments routes
   app.use("/api/v1/admin/appointments/", [verifyToken], require("./Appointments/adminAppointments.routes"));
+
+
+  // =========================================== CELL ROUTES =====================================================
+  // Cell Admin routes
+  app.use("/api/v1/admin/cell/", [verifyToken], require("./cell/adminCell.routes"));
+
+  // Cell user routes
+  app.use("/api/v1/user/cell/", [verifyToken], require("./cell/userCell.routes"));
 
   
 }; 

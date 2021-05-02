@@ -54,7 +54,6 @@ module.exports = {
             "Unable to create sermon, please check the data and try again",
         });
       }
-
       //push item to store if it not free
       if (sermon.subscription_type != "free") {
         let item_to_store = new Store({

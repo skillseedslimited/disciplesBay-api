@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ChildDedicationSchema = new Schema({
 
-  parent: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users"
   }, 

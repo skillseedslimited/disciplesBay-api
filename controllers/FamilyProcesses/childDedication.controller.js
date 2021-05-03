@@ -4,6 +4,7 @@ module.exports = {
   getAll: async (req, res) => {
     await ChildDedication.find({})
       .sort({_id: -1})
+      .populate("author")
       .then(childDedications => {
         res.status(200).json({
           success: true,
@@ -16,6 +17,7 @@ module.exports = {
   },
 
   createNew: async (req, res) => {
+    let userId = req.user._id;
 
     let {
       parents_name, 
@@ -31,6 +33,7 @@ module.exports = {
       guarantor_name} = req.body;
 
     let newChildDedication = await new ChildDedication({
+      author: userId,
       parents_name, 
       parents_contact_address,
       parents_phone_number,
@@ -138,6 +141,7 @@ module.exports = {
     let itemId = req.params.id;
 
     await ChildDedication.findById({_id: itemId})
+    .populate("author")
       .then(singleItem => {
         if (singleItem != null) {
           res.status(201).json({

@@ -3,8 +3,9 @@ const Schema = mongoose.Schema;
 
 const WeddingDedicationSchema = new Schema({
   author: {
-    type: String
-  }, 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users"
+  },
 
   name: { 
     type: String 

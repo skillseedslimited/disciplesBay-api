@@ -17,7 +17,7 @@ const BusinessDedicationSchema = new Schema({
     required: true
   },
 
-  business_owner: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users"
   },

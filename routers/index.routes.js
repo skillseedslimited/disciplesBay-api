@@ -64,6 +64,8 @@ module.exports = function (app) {
   app.use("/api/v1/relationship-registration", [verifyToken], require("./FamilyProcesses/relationshipReg.routes"));
   app.use("/api/v1/vehicle-dedication", [verifyToken], require("./FamilyProcesses/vehicleDedication.routes"));
   app.use("/api/v1/wedding-dedication", [verifyToken], require("./FamilyProcesses/weddingDedication.routes"));
+  app.use("/api/v1/user-listings", [verifyToken], require("./FamilyProcesses/myListings.routes"));
+
 
 
   // ============================================ APPOINTMENT ROUTES =============================================
@@ -80,6 +82,8 @@ module.exports = function (app) {
 
   // Cell user routes
   app.use("/api/v1/user/cell/", [verifyToken], require("./cell/userCell.routes"));
+
+  
 
   
 }; 

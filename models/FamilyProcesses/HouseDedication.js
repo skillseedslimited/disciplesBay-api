@@ -12,7 +12,7 @@ const HouseDedicationSchema = new Schema({
     required: true
   },
 
-  house_owner: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users"
   },

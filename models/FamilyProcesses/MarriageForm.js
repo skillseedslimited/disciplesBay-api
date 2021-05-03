@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const MarriageFormSchema = new Schema({
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users"
+  },
+  
   name: {
     type: String,
   },

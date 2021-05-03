@@ -381,7 +381,7 @@ module.exports = {
         }else{
           res.status(200).json({
             success: false,
-            message: "You do not belong to any cell",
+            message: "You do not belong to any cell yet",
             data: null
           })
         }

@@ -4,6 +4,7 @@ module.exports = {
   getAll: async function(req, res) {
     await HouseDedication.find({})
       .sort({_id: -1})
+      .populate("author")
       .then(HouseDedications => {
         res.status(201).json({
           success: true,
@@ -16,6 +17,7 @@ module.exports = {
   },
 
   createNew: async function(req, res) {
+    let userId = req.user._id;
     let {
       house_type,
       house_address,
@@ -28,6 +30,7 @@ module.exports = {
     } = req.body;
 
     let newHouseDedication = await new HouseDedication ({
+      author: userId,
       house_type,
       house_address,
       house_owner_name,
@@ -128,6 +131,7 @@ module.exports = {
     let itemId = req.params.id;
 
     await HouseDedication.findById({_id: itemId})
+    .populate("author")
       .then(singleItem => {
 
         if (singleItem != null) {

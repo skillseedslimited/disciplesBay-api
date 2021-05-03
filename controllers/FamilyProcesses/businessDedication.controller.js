@@ -4,6 +4,7 @@ module.exports = {
   getAll: async (req, res) => {
     await BusinessDedication.find({})
       .sort({_id: -1})
+      .populate("author")
       .then(businesDedications => {
         res.status(200).json({
           success: true,
@@ -21,6 +22,9 @@ module.exports = {
   },
 
   createNew: async (req, res) => {
+    let userId = req.user._id;
+    
+
     let {
       business_name,
       business_type,
@@ -32,6 +36,7 @@ module.exports = {
     } = req.body;
 
     let newBusinessDedication = new BusinessDedication({
+      author: userId,
       business_name,
       business_type,
       business_address,
@@ -139,6 +144,7 @@ module.exports = {
     let itemId = req.params.id;
 
     await BusinessDedication.findById({_id: itemId})
+    .populate("author")
       .then(singleItem => {
 
         if (singleItem != null) {

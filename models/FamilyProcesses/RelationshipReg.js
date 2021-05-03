@@ -3,6 +3,11 @@ const Schema = mongoose.Schema;
 
 // Lets just make it one form with both partner details
 const RelationshipRegSchema = new Schema({
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users"
+  },
+
   p1_passport: {
     type: String
   },
@@ -30,8 +35,7 @@ const RelationshipRegSchema = new Schema({
   },
 
   p1_spouse: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users"
+    type: String
   },
 
   p1_when_born_again: {
@@ -97,8 +101,7 @@ const RelationshipRegSchema = new Schema({
   },
 
   p2_spouse: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users"
+    type: String
   },
 
   p2_when_born_again: {

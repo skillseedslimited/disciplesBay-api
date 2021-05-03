@@ -1,8 +1,10 @@
-const RelationshipReg = require("../../models/FamilyProcesses/RelationshipReg")
+const RelationshipReg = require("../../models/FamilyProcesses/RelationshipReg");
 
 module.exports = {
   getAll: async (req, res) => {
     await RelationshipReg.find({})
+    .sort({_id: -1})
+    .populate("author")
       .then(relationshiptRegs => {
         res.status(200).json({
           success: true,
@@ -15,6 +17,8 @@ module.exports = {
   },
 
   createNew: async (req, res) => {
+    let userId = req.user._id;
+
     let {
       p1_passport,
       p1_contact_address,
@@ -47,6 +51,7 @@ module.exports = {
     } = req.body;
 
     let newRelationshipReg = await new RelationshipReg({
+      author: userId,
       p1_passport,
       p1_contact_address,
       p1_email,
@@ -204,6 +209,7 @@ module.exports = {
     let itemId = req.params.id;
 
     await RelationshipReg.findById({_id: itemId})
+      .populate("author")
       .then(singleItem => {
 
         if (singleItem != null) {

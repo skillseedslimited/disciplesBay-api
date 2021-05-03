@@ -16,6 +16,8 @@ module.exports = {
   },
 
   createNew: async (req, res) => {
+    let userId = req.user._id;
+
     let {
       author,
       name,
@@ -29,7 +31,7 @@ module.exports = {
     } = req.body;
 
     let newWeddingDedication = await new WeddingDedication({
-      author,
+      author: userId,
       name,
       contact_address,
       phone_number,
@@ -129,6 +131,7 @@ module.exports = {
     let itemId = req.params.id;
 
     await WeddingDedication.findById({_id: itemId})
+      .populate("author")
       .then(singleItem => {
 
         if (singleItem != null) {

@@ -1,8 +1,10 @@
-const MarriageForm = require("../../models/FamilyProcesses/MarriageForm")
+const MarriageForm = require("../../models/FamilyProcesses/MarriageForm");
 
 module.exports = {
   getAll: async (req, res) => {
     await MarriageForm.find({})
+    .sort({_id: -1})
+    .populate("author")
       .then(marriageForms => {
         res.status(200).json({
           success: true,
@@ -15,6 +17,8 @@ module.exports = {
   },
 
   createNew: async (req, res) => {
+    let userId = req.user._id;
+
     let {
       name,
       address,
@@ -76,6 +80,7 @@ module.exports = {
     } = req.body;
 
     let newMarriageForm = await new MarriageForm({
+      author: userId,
       name,
       address,
       physical_address,
@@ -320,6 +325,7 @@ module.exports = {
     let itemId = req.params.id;
 
     await MarriageForm.findById({_id: itemId})
+      .populate("author")
       .then(singleItem => {
 
         if (singleItem != null) {

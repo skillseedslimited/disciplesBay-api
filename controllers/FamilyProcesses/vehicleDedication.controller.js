@@ -3,6 +3,8 @@ const VehicleDedication = require("../../models/FamilyProcesses/VehicleDedicatio
 module.exports = {
   getAll: async (req, res) => {
     await VehicleDedication.find({})
+      .sort({_id: -1})
+      .populate("author")
       .then(vehicleDedications => {
         res.status(200).json({
           success: true,
@@ -15,6 +17,8 @@ module.exports = {
   },
 
   createNew: async (req, res) => {
+    let userId = req.user._id;
+
     let {
       vehicle_type,
       vehicle_owner,
@@ -26,6 +30,7 @@ module.exports = {
     } = req.body;
 
     let newVehicleDedication = await new VehicleDedication({
+      author: userId,
       vehicle_type,
       vehicle_owner,
       vehicle_owner_name,
@@ -120,6 +125,7 @@ module.exports = {
     let itemId = req.params.id;
 
     await VehicleDedication.findById({_id: itemId})
+      .populate("author")
       .then(singleItem => {
 
         if (singleItem != null) {

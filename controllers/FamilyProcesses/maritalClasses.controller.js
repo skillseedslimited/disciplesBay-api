@@ -1,9 +1,10 @@
-const MaritalClasses = require("../../models/FamilyProcesses/MaritalClasses")
+const MaritalClasses = require("../../models/FamilyProcesses/MaritalClasses");
 
 module.exports = {
   getAll: async (req, res) => {
     await MaritalClasses.find({})
       .sort({_id: -1})
+      .populate("author")
       .then(maritalClasses => {
         res.status(200).json({
           success: true,
@@ -16,6 +17,8 @@ module.exports = {
   },
 
   createNew: async (req, res) => {
+    let userId = req.user._id;
+
     let {
       p1_name,
       p1_passport,
@@ -47,6 +50,7 @@ module.exports = {
     // console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[", req.body)
 
     let newMaritalClass = await new MaritalClasses({
+      author: userId,
       p1_name,
       p1_passport,
       p1_contact_address,
@@ -200,6 +204,7 @@ module.exports = {
     let itemId = req.params.id;
 
     await MaritalClasses.findById({_id: itemId})
+    .populate("author")
       .then(singleItem => {
 
         if (singleItem != null) {

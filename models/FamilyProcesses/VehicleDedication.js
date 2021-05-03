@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const VehicleDedicationSchema = new Schema({
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users"
+  },
+  
   vehicle_owner: {
     type: String
   },

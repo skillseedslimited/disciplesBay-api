@@ -51,7 +51,7 @@ mongoose
   .catch((err) => console.log(`Server connection error: ${err.message}`.red));
 
 require("./routers/index.routes")(app);
-app.use(errorHandler);
+app.use(errorHandler); 
 
 // DB config
 // console.log(db);

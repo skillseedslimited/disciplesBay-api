@@ -8,6 +8,7 @@ module.exports = {
       .then(marriageForms => {
         res.status(200).json({
           success: true,
+          message: "Marriage forms",
           data: marriageForms
         })
       })
@@ -283,10 +284,10 @@ module.exports = {
 
         res.status(201).json({
           success: true,
-          message: "Updated successfully",
+          message: "Marriage form updated successfully",
           data: updateItem
         })
-
+ 
       }else{
         res.status(200).json({
           success: false,
@@ -331,7 +332,7 @@ module.exports = {
         if (singleItem != null) {
           res.status(200).json({
             success: true,
-            message: "Found successfully",
+            message: "Marriage form Found successfully",
             data: singleItem
           })
         }else{

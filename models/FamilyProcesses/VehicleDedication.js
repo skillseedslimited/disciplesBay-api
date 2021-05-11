@@ -33,11 +33,6 @@ const VehicleDedicationSchema = new Schema({
 
   vehicle_owner_phone: {
     type: String
-  },
-
-  date: {
-    type: Date,
-    default: Date.now()
   }
 
 }, { timestamps : true});

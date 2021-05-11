@@ -32,7 +32,6 @@ module.exports = {
       p1_relationship_stage,
       p1_when_wed,
       p1_where_wed,
-      p1_use_picture,
       p1_guarantor_name,
       p2_passport,
       p2_contact_address,
@@ -46,9 +45,9 @@ module.exports = {
       p2_relationship_stage,
       p2_when_wed,
       p2_where_wed,
-      p2_use_picture,
       p2_guarantor_name
     } = req.body;
+    console.log(userId)
 
     let newRelationshipReg = await new RelationshipReg({
       author: userId,
@@ -58,13 +57,11 @@ module.exports = {
       p1_phone,
       p1_name,
       p1_howlong,
-      p1_spouse,
       p1_when_born_again,
       p1_relationship_length,
       p1_relationship_stage,
       p1_when_wed,
       p1_where_wed,
-      p1_use_picture,
       p1_guarantor_name,
       p2_passport,
       p2_contact_address,
@@ -72,13 +69,11 @@ module.exports = {
       p2_phone,
       p2_name,
       p2_howlong,
-      p2_spouse,
       p2_when_born_again,
       p2_relationship_length,
       p2_relationship_stage,
       p2_when_wed,
       p2_where_wed,
-      p2_use_picture,
       p2_guarantor_name
     });
 
@@ -93,7 +88,7 @@ module.exports = {
         if (err)
           res.json({
             success: false,
-            message: "Something went wrong",
+            message: err.message,
             data: null 
           })
       })

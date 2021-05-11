@@ -60,7 +60,7 @@ module.exports = function (app) {
   app.use("/api/v1/child-dedication", [verifyToken], require("./FamilyProcesses/childDedication.routes"));
   app.use("/api/v1/house-dedication", [verifyToken], require("./FamilyProcesses/houseDedication.routes"));
   app.use("/api/v1/marital-class", [verifyToken], require("./FamilyProcesses/maritalClasses.routes"));
-  app.use("/api/v1/marriage-form", [verifyToken], require("./FamilyProcesses/marriageForm.routes"));
+  app.use("/api/v1/marriage-forms", [verifyToken], require("./FamilyProcesses/marriageForm.routes"));
   app.use("/api/v1/relationship-registration", [verifyToken], require("./FamilyProcesses/relationshipReg.routes"));
   app.use("/api/v1/vehicle-dedication", [verifyToken], require("./FamilyProcesses/vehicleDedication.routes"));
   app.use("/api/v1/wedding-dedication", [verifyToken], require("./FamilyProcesses/weddingDedication.routes"));

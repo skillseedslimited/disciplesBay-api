@@ -34,17 +34,13 @@ const RelationshipRegSchema = new Schema({
     required: true
   },
 
-  p1_spouse: {
-    type: String
-  },
-
   p1_when_born_again: {
     type: String,
     required: true
   },
 
   p1_relationship_length: {
-    type: String,
+    type: Date,
     required: true
   },
 
@@ -53,16 +49,11 @@ const RelationshipRegSchema = new Schema({
   },
 
   p1_when_wed: {
-    type: String,
+    type: Date,
     required: true
   }, 
 
   p1_where_wed: {
-    type: String,
-    required: true
-  },
-
-  p1_use_picture: {
     type: String,
     required: true
   },
@@ -100,12 +91,8 @@ const RelationshipRegSchema = new Schema({
     required: true
   },
 
-  p2_spouse: {
-    type: String
-  },
-
   p2_when_born_again: {
-    type: String,
+    type: Date,
     required: true
   },
 
@@ -119,16 +106,11 @@ const RelationshipRegSchema = new Schema({
   },
 
   p2_when_wed: {
-    type: String,
+    type: Date,
     required: true
   },
 
   p2_where_wed: {
-    type: String,
-    required: true
-  },
-
-  p2_use_picture: {
     type: String,
     required: true
   },

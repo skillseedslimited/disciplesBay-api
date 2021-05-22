@@ -13,6 +13,8 @@ const testimonyPost = async (req, res, next) =>{
     let {
         testimonyBody,
         anonymous,
+        mediaURL,
+        mediaType,
         imageUrl,
         videoUrl,
         category,
@@ -41,6 +43,8 @@ const testimonyPost = async (req, res, next) =>{
         picture,
         username,
         user,
+        mediaType,
+        mediaURL,
         videoUrl,
         imageUrl,
         category,

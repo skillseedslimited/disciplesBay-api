@@ -20,6 +20,7 @@ const TestimonySchema = new Schema({
     testimonyBody: {
         type: String
     },
+
     date:{
         type: Date,
         default: Date.now
@@ -42,6 +43,14 @@ const TestimonySchema = new Schema({
         type: String
     },
     videoUrl:{
+        type: String
+    },
+
+    mediaType: {
+        type: String
+    },
+
+    mediaURL: {
         type: String
     }
 });

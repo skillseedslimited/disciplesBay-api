@@ -104,6 +104,7 @@ const testimonyGet = (req, res) =>{
         // FINDING TESTIMONIES OF USER
         Testimony.find({user: req.user._id})
         .sort({date: -1})
+        .populate('user')
         .then(testimonies => res.json({
             success: true,
             message: 'user testimony',

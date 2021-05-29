@@ -124,6 +124,7 @@ const testimonyAll = (req, res) =>{
     // FINDING ALL TESTIMONIES
     Testimony.find()
         .sort({_id: -1})
+        .populate('user')
         .then(testimonies =>{
             console.log(testimonies)
             res.json({
@@ -140,6 +141,7 @@ const testimonyApproveAll = (req, res) =>{
     // FINDING ALL TESTIMONIES
     Testimony.find({status: true})
         .sort({_id: -1})
+        .populate('user')
         .then(testimonies =>{
             console.log(testimonies)
             res.json({
@@ -150,11 +152,12 @@ const testimonyApproveAll = (req, res) =>{
         })
         .catch(err => res.status(404).json(err));
 }
-
+ 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING SINGLE TESTIMONY::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const testimonySingle = (req, res, next) =>{
     // find the testimony
     Testimony.findOne({_id:req.params.id})
+    .populate('user')
     .then(test =>{
         if(!test){
             return next( new ErrorResponse('no testimony with this id', 404))

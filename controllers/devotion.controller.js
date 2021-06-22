@@ -12,12 +12,12 @@ const createDevotion = asyncHandler(async(req, res, next) => {
         data: devotion
     });
     let title = devotion.title;
-    NotificationAction.sendToGeneral(
-        `A new devotion: (${title}) has just been posted in the app `,
-        "devotion",
-        "#",
-        `${title}`
-      );
+    // NotificationAction.sendToGeneral(
+    //     `A new devotion: (${title}) has just been posted in the app `,
+    //     "devotion",
+    //     "#",
+    //     `${title}`
+    // );
 });
 
 const getDevotions = asyncHandler(async(req, res, next) => {

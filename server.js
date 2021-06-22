@@ -11,7 +11,8 @@ const compression = require("compression");
 const errorHandler = require("./middleware/error");
 const { cloudinaryConfig } = require("./config/cloudinary.config");
 const node_media_server = require("./media_server");
-const thumbnail_generator = require("./cron/thumbnails");
+// const thumbnail_generator = require("./cron/thumbnails"); 
+require('./cron/devotionals.cron')
 
 const app = express();
 
@@ -57,7 +58,7 @@ app.use(errorHandler);
 // console.log(db);
 // connect to mongoDB
 
-
+ 
 const port = process.env.PORT || 4100;
 
 const httpServer = require("http").createServer(app);

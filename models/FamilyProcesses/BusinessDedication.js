@@ -40,6 +40,20 @@ const BusinessDedicationSchema = new Schema({
   guarantor_name: {
     type: String,
     required: true
+  },
+
+  familyProcess: {
+    type: String, 
+    default: 'business-dedication'
+  },
+
+  message: {
+    type: String
+  },
+
+  processStatus: {
+    type: String, 
+    default: 'pending'
   }
 
 }, { timestamps : true});

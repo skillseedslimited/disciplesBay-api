@@ -33,6 +33,20 @@ const VehicleDedicationSchema = new Schema({
 
   vehicle_owner_phone: {
     type: String
+  },
+
+  familyProcess: {
+    type: String, 
+    default: 'vehicle-dedication'
+  },
+
+  message: {
+    type: String
+  },
+
+  processStatus: {
+    type: String, 
+    default: 'pending'
   }
 
 }, { timestamps : true});

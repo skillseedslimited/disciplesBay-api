@@ -42,6 +42,20 @@ const WeddingDedicationSchema = new Schema({
   date: {
     type: Date,
     default: Date.now()
+  },
+
+  familyProcess: {
+    type: String, 
+    default: 'wedding-dedication'
+  },
+
+  message: {
+    type: String
+  },
+
+  processStatus: {
+    type: String, 
+    default: 'pending'
   }
 
 

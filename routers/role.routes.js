@@ -3,6 +3,7 @@ const router = express.Router();
 const RolesController = require("../controllers/roles.controller");
 const { authorize } = require("../middleware/authJwt");
 const rolePolicies = require("../policies/rolePolicies");
+
 router.route("/:id").delete(authorize("admin"), RolesController.deleteRole);
 
 router

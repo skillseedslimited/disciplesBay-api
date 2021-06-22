@@ -28,7 +28,8 @@ const ActiveEventSchema = new Schema({
     },
     isLive:{
         type: Boolean
-    }
+    },
+    
 
 })
 

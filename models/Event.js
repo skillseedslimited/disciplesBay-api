@@ -49,7 +49,25 @@ const EventSchema = new Schema({
     creationDate: {
         type: Date,
         default: Date.now()
-    }
+    },
+
+    reoccurrant: {
+        type: Boolean,
+        default: false
+    },
+
+    // Reoccurring Events settings
+    reoccurrantDate: {
+        type: Date,
+    },
+
+    reoccurrantStartDate: {
+        type: Date,
+    },
+
+    reoccurrantEndDate: {
+        type: Date,
+    },
 
 }, { timestamps: true })
 

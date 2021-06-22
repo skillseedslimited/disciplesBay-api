@@ -41,6 +41,7 @@ module.exports = {
       coza_how_long,
       use_pictures
     });
+    console.log("I am here::::::::::::; ", newWeddingDedication)
 
     await newWeddingDedication.save()
       .then(newlyCreated => {

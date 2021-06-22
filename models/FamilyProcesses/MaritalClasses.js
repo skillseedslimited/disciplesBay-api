@@ -127,6 +127,20 @@ const MaritalClassesSchema = new Schema({
   p2_guarantor_name: {
     type: String,
     required: true
+  },
+
+  familyProcess: {
+    type: String, 
+    default: 'marital-class'
+  },
+
+  message: {
+    type: String
+  },
+
+  processStatus: {
+    type: String, 
+    default: 'pending'
   }
 
 }, { timestamps : true});

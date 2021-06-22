@@ -1,4 +1,4 @@
-const BusinessDedication = require("../../models/FamilyProcesses/BusinessDedication")
+const BusinessDedication = require("../../models/FamilyProcesses/BusinessDedication");
 
 module.exports = {
   getAll: async (req, res) => {

@@ -33,7 +33,7 @@ module.exports = function (app) {
   app.use("/api/v1/devotion", [verifyToken], require("./devotion.routes"));
   app.use("/api/v1/news", require("./news.routes"));
   app.use("/api/v1/profile", [verifyToken], require("./profile.routes"));
-  app.use("/api/v1/role", [verifyToken], require("./role.routes"));
+  app.use("/api/v1/role", require("./role.routes"));
   app.use("/api/v1/testimony", [verifyToken], require("./testimony.routes"));
   app.use("/api/v1/event", [verifyToken], require("./event.routes"));
   app.use("/api/v1/gallery", [verifyToken], require("./gallery.routers"));
@@ -53,8 +53,9 @@ module.exports = function (app) {
   app.use("/api/v1/communication", [verifyToken], require("./communication.routes"));
 
   app.use("/api/v1/mentorship", [verifyToken], require("./mentorship.routes"));
-
+ 
   // Family Processes
+  app.use("/api/v1/admin-actions", [verifyToken], require("./FamilyProcesses/actions.routes"));
   app.use("/api/v1/baby-christianing", [verifyToken], require("./FamilyProcesses/babyChristianing.routes"));
   app.use("/api/v1/business-dedication", [verifyToken], require("./FamilyProcesses/businessDedication.routes"));
   app.use("/api/v1/child-dedication", [verifyToken], require("./FamilyProcesses/childDedication.routes"));

@@ -7,16 +7,20 @@ const TestimonySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
+
     category:{
         type: Schema.Types.ObjectId,
         ref: 'testimonyCategory'
     },
+
     subject:{
         type: String
     },
+
     username:{
         type: String
     },
+
     testimonyBody: {
         type: String
     },
@@ -39,9 +43,11 @@ const TestimonySchema = new Schema({
         type: Boolean,
         default: false
     },
+    
     imageUrl:{
         type: String
     },
+
     videoUrl:{
         type: String
     },

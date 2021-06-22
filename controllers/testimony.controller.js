@@ -7,7 +7,7 @@ const TestimonyCategory = require("../models/TestimonyCategory");
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::CREATING USER TESTIMONY:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const testimonyPost = async (req, res, next) =>{
+const testimonyPost = async (req, res, next) => {
     
     // GETTING TESTIMONY BODY AND ANONYMOUS FROM USER
     let {

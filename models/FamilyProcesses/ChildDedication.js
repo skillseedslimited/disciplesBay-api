@@ -61,6 +61,20 @@ const ChildDedicationSchema = new Schema({
   guarantor_name: {
     type: String,
     required: true
+  },
+
+  familyProcess: {
+    type: String, 
+    default: 'child-dedication'
+  },
+
+  message: {
+    type: String
+  },
+
+  processStatus: {
+    type: String, 
+    default: 'pending'
   }
 
 }, { timestamps : true});

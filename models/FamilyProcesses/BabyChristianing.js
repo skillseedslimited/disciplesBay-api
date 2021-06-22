@@ -60,6 +60,20 @@ const BabyChristianingSchema = new Schema({
   guarantor_name: {
     type: String, 
     required: true
+  },
+
+  familyProcess: {
+    type: String, 
+    default: 'baby-christianing'
+  },
+
+  message: {
+    type: String
+  },
+
+  processStatus: {
+    type: String, 
+    default: 'pending'
   }
 
  

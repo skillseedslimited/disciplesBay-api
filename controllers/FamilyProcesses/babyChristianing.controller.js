@@ -1,4 +1,5 @@
-const BabyChristianing = require("../../models/FamilyProcesses/BabyChristianing")
+const BabyChristianing = require("../../models/FamilyProcesses/BabyChristianing");
+
 
 module.exports = {
   getAll: async (req, res) => {
@@ -46,7 +47,7 @@ module.exports = {
       baby_dob,
       baby_position,
       guarantor_name
-    });
+    }); 
 
     await newBabyChristianing.save()
       .then(newlyCreated => {

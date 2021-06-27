@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
-const cors = require("cors");
+const cors = require("cors");  
 const logger = require("morgan");
 const dotenv = require("dotenv").config();
 const colors = require("colors");
@@ -17,11 +17,11 @@ require('./cron/devotionals.cron')
 const app = express();
 
 // Cors config
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "https://portal.coza.org.ng"); // update to match the domain you will make the request from
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   next();
-// });
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "https://portal.coza.org.ng"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+}); 
 
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -10,32 +10,57 @@ const bcrypt = require('bcryptjs');
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL USER::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const getAllUsers = asyncHandler(async (req, res, next) =>{
+const getAllUsers = asyncHandler(async (req, res, next) => {
+    let perPage = 50;
+    let page = Math.max(0, req.params.page);
 
     // finding all user
     await User.find()
-    .populate({
-        path: 'role',
-        match: {name: {$gte: 'counsellor'}},
-        select: 'name'
-    })
-    .sort({_id: -1})
-    .then(users =>{
-        if(!users){
-            return next( new ErrorResponse('No users at the moment', 404))
-        }
+        .populate({
+            path: 'role',
+            match: {name: {$gte: 'counsellor'}},
+            select: 'name'
+        })
+        .limit(perPage)
+        .skip(perPage * page)
+        .sort({_id: -1})
+        .exec(function(err, users) {
+            User.count().exec(function(err, count) {
+                if (err) return res.status(404).json({
+                    success: false,
+                    message:'Unable to fetch users',
+                    data: err
+                })
 
-        res.status(200).json({
-            success: true,
-            message: 'All user',
-            data: users
-        });
-    })
-    .catch(err =>res.status(404).json({
-        success:false,
-        message:'Unable to get users',
-        data: {}
-    }));
+                res.status(200).json({
+                    success: true,
+                    message: 'All user',
+                    data: {
+                        users,
+                        page: page,
+                        pages: count / perPage
+                    }
+                });
+            })
+        })
+
+
+    // .then(users =>{
+    //     if(!users){
+    //         return next( new ErrorResponse('No users at the moment', 404))
+    //     }
+
+    //     res.status(200).json({
+    //         success: true,
+    //         message: 'All user',
+    //         data: users
+    //     });
+    // })
+    // .catch(err =>res.status(404).json({
+    //     success:false,
+    //     message:'Unable to get users',
+    //     data: {}
+    // }));
 });
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::GETTING SINGLE USER::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

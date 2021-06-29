@@ -356,7 +356,7 @@ const getUserByRole = asyncHandler(async(req, res, next) =>{
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::COUNTER OF SCHEMAS:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const counter = asyncHandler(async(req, res, next) =>{
-
+    
     let giving  = await Giving.count();
     let users = await User.count();
     let sermon = await Sermon.count();
@@ -372,7 +372,7 @@ const counter = asyncHandler(async(req, res, next) =>{
             'purchased':purchased
         }
     })
-
+ 
 })
 
 module.exports = {

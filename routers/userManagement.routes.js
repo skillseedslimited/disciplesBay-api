@@ -5,10 +5,10 @@ const userMangementController = require('../controllers/userMangement.controller
 // @route /getAllUser
 // @desc getting all users
 // @access private
-router.route('/:page')
+router.route('/all-users/:page')
 .get(userMangementController.getAllUsers);
 
-
+ 
 // @route /getSingleUser
 // @desc getting single user
 // @access private

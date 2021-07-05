@@ -5,7 +5,7 @@ const Event  = require('../models/Event');
 // Schedule tasks to be run on the server at 4:00 am.
 cron.schedule('0 4 * * *', function() {
   NotificationAction.sendToGeneral(
-    `Hello, its time to Decree Your Day with Pastor Modele Fatyinbo. We celebrate you!`,
+    `Hello, its time to Decree Your Day with Pastor Modele Fatoyinbo. We celebrate you!`,
     "devotion",
     "#",
     `Daily Decree`

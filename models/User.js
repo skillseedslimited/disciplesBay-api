@@ -8,6 +8,7 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+
   email: {
     type: String,
     unique: true,
@@ -16,15 +17,19 @@ const UserSchema = new Schema({
       "Please add a valid email",
     ],
   },
+
   campus:{
     type: String
   },
+
   stream_key:{
     type: String
   },
+
   fullName:{
     type:String
   },
+
   phoneNumber: {
     type: String,
   },
@@ -128,5 +133,6 @@ const UserSchema = new Schema({
   resetPasswordToken: String,
   resetPasswordExpires: Date,
 });
+
 
 module.exports = User = mongoose.model("users", UserSchema);

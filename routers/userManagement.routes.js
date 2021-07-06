@@ -6,7 +6,13 @@ const userMangementController = require('../controllers/userMangement.controller
 // @desc getting all users
 // @access private
 router.route('/all-users/:page')
-.get(userMangementController.getAllUsers);
+  .get(userMangementController.getAllUsers);
+
+// @route /getAllUser
+// @desc getting all users
+// @access private
+router.route('/all-users')
+  .get(userMangementController.allUsers);
 
  
 // @route /getSingleUser
@@ -15,6 +21,12 @@ router.route('/all-users/:page')
 router
 .route('/getSingleUser/:id')
 .get(userMangementController.getSingleUser);
+
+// @route /getSingleUser
+// @desc getting single user
+// @access private
+router.route('/single-user-fullname')
+  .post(userMangementController.getUserByFullName);
 
 // @route /deleteUser
 // @desc deleting user

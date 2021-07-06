@@ -88,6 +88,63 @@ const getSingleUser = asyncHandler(async (req, res, next) =>{
     }));
 });
 
+//::::::::::::::::::::::::::::::::::::::::: GET SINGLE USER BY FULLNAME ::::::::::::::::::::::::::::::::
+// db.myCollection.find({city: "new york"}).collation({locale: "en", strength: 2});
+const getUserByFullName = asyncHandler(async (req, res, next) => {
+    let { fullname } = req.body;
+
+    let user = await User.findOne({fullName: fullname}).collation({locale: "en", strength: 2});
+    res.json(user)
+});
+
+const allUsers = asyncHandler(async (req, res, next) => {
+    await User.find()
+    .lean()
+    .populate({
+        path: 'role',
+        match: {name: {$gte: 'counsellor'}},
+        select: 'name'
+    })
+    .sort({_id: -1})
+    .exec((err, result) => {
+        if (err) {
+            res.status(404).json({
+                success: false,
+                message:'Unable to get users',
+                data: {}
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: 'All user (Unpaginated)',
+            data: result
+        });
+    })
+    // .then(users =>{
+    //     if(!users){
+    //         return next( new ErrorResponse('No users at the moment', 404))
+    //     }
+
+    //     res.status(200).json({
+    //         success: true,
+    //         message: 'All user (Unpaginated)',
+    //         data: users
+    //     });
+    // })
+    // .catch(err =>res.status(404).json({
+    //     success:false,
+    //     message:'Unable to get users',
+    //     data: {}
+    // }));
+
+    // Avowal Forms: 
+    //     .category
+    // Admin creates subscription plan from dashboard
+    // Templates schema should have "default" field
+
+});
+
+
 // :::::::::::::::::::::::::::::::::::::::::::::::::::DELETING USER:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const deleteUser = asyncHandler(async (req, res, next) =>{
 
@@ -376,8 +433,10 @@ const counter = asyncHandler(async(req, res, next) =>{
 })
 
 module.exports = {
+    allUsers,
     getAllUsers,
     getSingleUser,
+    getUserByFullName,
     deleteUser,
     suspendUser,
     unsuspendUser,

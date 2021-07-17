@@ -3,7 +3,7 @@ const ErrorResponse = require("../utils/errorResponse.js");
 const Testimony = require('../models/Testimony');
 const User = require('../models/User');
 const TestimonyCategory = require("../models/TestimonyCategory");
-
+ 
 
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::CREATING USER TESTIMONY:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -120,14 +120,18 @@ const testimonyGet = (req, res) =>{
 
 
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING ALL USERS TESTIMONY:::::::::::::::::::::::::::::::::::::::::::::::::::::::
-const testimonyAll = (req, res) =>{
+const testimonyAll = (req, res) => {
 
     // FINDING ALL TESTIMONIES
     Testimony.find()
         .sort({_id: -1})
-        .populate('user')
-        .then(testimonies =>{
-            console.log(testimonies)
+        .populate({
+            path: 'user',
+            populate: {
+                path: 'role'
+              } 
+        })
+        .then(testimonies => {
             res.json({
                 success: true,
                 message: 'users testimonies',
@@ -136,6 +140,7 @@ const testimonyAll = (req, res) =>{
         })
         .catch(err => res.status(404).json(err));
 }
+
 // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::GETTING APPROVE ALL USERS TESTIMONIES::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const testimonyApproveAll = (req, res) =>{
 

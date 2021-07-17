@@ -527,6 +527,7 @@ module.exports = {
   getSermonWithNoLimit:async(req, res, nesxt) => {
     await Sermon.find({$and:[{ isDeleted: false }, { subscription_type:"free" }]})
     .sort({_id: -1})
+    .populate('category')
     .then(sermon =>{
       res.status(200).json({
         success:true,

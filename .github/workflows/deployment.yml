@@ -41,8 +41,6 @@ jobs:
           port: ${{ secrets.DISCIPLEBAY_KEY_PORT }}
           source: "dist.tar.gz,package.json"
           target: "/home/ubuntu/disciplesBay-api"
-
-
       # - name: Untar artefact and remove file
       #   uses: appleboy/ssh-action@master
       #   with:

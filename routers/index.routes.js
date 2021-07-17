@@ -35,7 +35,7 @@ module.exports = function (app) {
   app.use("/api/v1/news", require("./news.routes"));
   app.use("/api/v1/profile", [verifyToken], require("./profile.routes"));
   app.use("/api/v1/role", require("./role.routes"));
-  app.use("/api/v1/testimony", [verifyToken], require("./testimony.routes"));
+  app.use("/api/v1/testimony", require("./testimony.routes"));
   app.use("/api/v1/event", [verifyToken], require("./event.routes"));
   app.use("/api/v1/gallery", [verifyToken], require("./gallery.routers"));
   app.use("/api/v1/branch", [verifyToken], require("./branch.routes"));
